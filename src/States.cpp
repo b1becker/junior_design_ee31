@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <WiFiNINA.h>
 #include "States.h"
 
 States::States(int led0, int led1, int led2) {

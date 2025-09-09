@@ -14,7 +14,7 @@ enum LightState {
 LightState currentState = STATE_0;
 int lastButtonState = HIGH;
 
-// Create global States object
+// Create global States object for the 2^3 states
 States states(LED0, LED1, LED2);
 
 void setup() {
