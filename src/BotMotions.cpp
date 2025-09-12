@@ -16,13 +16,20 @@ void BotMotions::loop() {
     // Set motor to rotate forward at half speed
     digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
+    digitalWrite(motor_a1, HIGH);
+    digitalWrite(motor_a2, LOW);
     analogWrite(enb, 128); // Speed: 0 (stopped) to 255 (full speed)
+    analogWrite(ena, 128); // Speed: 0 (stopped) to 255 (full speed)
     delay(2000); // Run for 2 seconds
 
     // Set motor to rotate backward at full speed
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, HIGH);
+
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
     analogWrite(enb, 255);
+    analogWrite(ena, 255); 
     delay(2000);
 
     // Stop the motor
