@@ -77,36 +77,3 @@ void loop() {
   // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
 }
 
-
-// Add this debug code to see what's actually happening
-// void setup() {
-//   Serial.begin(9600);
-
-//   pinMode(MOTOR_A1, OUTPUT);
-//   pinMode(MOTOR_A2, OUTPUT);
-//   pinMode(MOTOR_B1, OUTPUT);
-//   pinMode(MOTOR_B2, OUTPUT);
-    
-//   pinMode(ENA, OUTPUT);
-//   pinMode(ENB, OUTPUT);
-// }
-
-// void loop() {
-//   // Set motor to rotate forward at half speed
-//   digitalWrite(MOTOR_B1, HIGH);
-//   digitalWrite(MOTOR_B2, LOW);
-//   analogWrite(ENB, 128); // Speed: 0 (stopped) to 255 (full speed)
-//   delay(2000); // Run for 2 seconds
-
-//   // Set motor to rotate backward at full speed
-//   digitalWrite(MOTOR_B1, LOW);
-//   digitalWrite(MOTOR_B2, HIGH);
-//   analogWrite(ENB, 255);
-//   delay(2000);
-
-//   // Stop the motor
-//   digitalWrite(MOTOR_B1, LOW);
-//   digitalWrite(MOTOR_B2, LOW);
-//   delay(1000);
-//   Serial.print("cycle complete \n");
-// }

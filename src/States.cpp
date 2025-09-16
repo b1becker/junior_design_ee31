@@ -4,7 +4,7 @@
 
 States::States(int led0, int led1, int led2) {
     _led0 = led0;
-    _led1 = led1;
+    _led1 = led1;   
     _led2 = led2;
 }
 
@@ -13,6 +13,7 @@ void States::handleState0() {
     digitalWrite(_led1, LOW);
     digitalWrite(_led2, LOW);
     Serial.println("In state 0");
+    
 }
 
 void States::handleState1() {
