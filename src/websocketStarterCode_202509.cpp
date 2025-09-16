@@ -8,8 +8,9 @@
   for EE 31
   this example is in the public domain
 */
+#include <Arduino.h>
 #include <ArduinoHttpClient.h>
-#include <WiFi.h>
+#include <WiFiNINA.h>
 
 /////// you can enter your sensitive data in the Secret tab/arduino_secrets.h
 /////// WiFi Settings ///////
