@@ -9,8 +9,11 @@
   this example is in the public domain
 */
 #include <Arduino.h>
-// #include <Wifi
+
 #include <ArduinoHttpClient.h>
+
+#include <WiFiNINA.h> 
+
 /////// you can enter your sensitive data in the Secret tab/arduino_secrets.h
 /////// WiFi Settings ///////
 char ssid[] = "tufts_eecs";
@@ -21,7 +24,7 @@ int port = 80;
 
 WiFiClient wifi;
 WebSocketClient client = WebSocketClient(wifi, serverAddress, port);
-String clientID = "YOUR_ID_HERE"; //Insert your Client ID Here!
+String clientID = "56FC703ACE1A"; //Insert your Client ID Here!
 int status = WL_IDLE_STATUS;
 int count = 0;
 
