@@ -25,12 +25,11 @@ loop() {
   int redBrightness = map(light, 0, 1023, 0, 255); 
   int blueBrightness = 255 - redBrightness; // Constrain values to valid PWM range 
   
-  redBrightness = constrain(redBrightness, 0, 255); 
-  blueBrightness = constrain(blueBrightness, 0, 255); 
+  int brightness = map(light, 0, 1023, 0, 255);
+brightness = constrain(brightness, 0, 255);
 
-  analogWrite(RED_LED_PIN,  redBrightness);
-  delay(1000);
-  analogWrite(BLUE_LED_PIN, blueBrightness);
+analogWrite(RED_LED_PIN, brightness);
+analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
 
   Serial.print("raw= ");
   Serial.print(raw);  
