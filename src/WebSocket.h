@@ -7,21 +7,23 @@
 
 class WebSocket
 {
-private:
-    char* ssid;
-    char* pass;
-    char* serverAddress;
-    int port;
-    String clientID;
-
-    WebSocketClient client;
-
 public:
-    WebSocket(char* network, char* password, char* server, int portId,
-                                                                String botId);
-    WebSocket();
+    WebSocket(const char* serverAddy, int port);
     ~WebSocket();
-    void WebSocket::loop();
+    void NetworkConnect();
+    void SocketConnect(String clientID);
+    void PingSerial();
+    void PingServer();
+    bool ConnectionStatus();
+    void WriteServer(String message);
+
+private:
+    WiFiClient wifi;
+    WebSocketClient *myClient;
+    int port;
+    char serverAddress[13];
+    const char ssid[11] = "tufts_eecs";
+    const char pass[14] = "foundedin1883";
 };
 
 #endif
