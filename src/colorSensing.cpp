@@ -1,34 +1,82 @@
-// #include <Arduino.h>
+// Simple Photoresistor Analog Read with LED Control
+// UTI 1893 Photoresistor connected to A0
+#include <Arduino.h>
+#include "colorSensing.h"
 
-// #define LED_RED 5
-// #define LED_BLUE 6
-// #define SENSOR A0 
-// volatile int value = 0;
+#define PHOTORESISTOR_PIN A0 
+#define RED_LED_PIN 5 
+#define BLUE_LED_PIN 9 
+// Must be PWM pin 
 
-// void set_up() {
-//     pinMode(LED_RED, OUTPUT);
-//     pinMode(LED_BLUE, OUTPUT);
-//     pinMode(SENSOR, INPUT);
+// void setup() { 
+//     Serial.begin(9600); 
+//     pinMode(RED_LED_PIN, OUTPUT); 
+//     pinMode(BLUE_LED_PIN, OUTPUT); 
+//     Serial.println("PWM LED Fade Controller Started"); 
+// } 
 
-//     analogWrite(LED_RED, 0);
-//     analogWrite(LED_BLUE, 0);
+// colorSensing::colorSensing() {
+//     Serial.print("yeerrrr");
 // }
 
-// void loop() {
-//     delay(500);
-//     value = analogRead(SENSOR);
-//     Serial.println(value);
-//     delay(500);
-    
-//     if (value>100){
-//         Serial.println("White");
-//     } else if (value<15) { 
-//         Serial.println("Black");
-//     } else if (value<= 65 && value >50) {
-//         Serial.println("RED");
-//     } else if (value>=68 && value<80) {
-//         Serial.println("Green");
-//     } else if (value<30 && value>20) {
-//         Serial.println("Blue");
-//     }
+void setup() {
+    Serial.begin(9600);
+
+    // Set LED pins as outputs
+    pinMode(RED_LED_PIN, OUTPUT);
+    pinMode(BLUE_LED_PIN, OUTPUT);
+
+    // Turn off both LEDs initially
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(BLUE_LED_PIN, LOW);
+
+    Serial.println("=== Photoresistor Analog Read with LEDs ===");
+    Serial.println("Cover sensor with hand to see values change");
+    Serial.println("Red LED = Bright light, Blue LED = Dark light");
+    Serial.println();
+}
+
+void loop() { 
+    // Read photoresistor (0-1023) 
+
+    int raw = analogRead(PHOTORESISTOR_PIN);
+    // If wired: collector->A0 with pull-up, emitter->GND, then more light => lower 'raw'.
+    // Invert so brighter = bigger number:
+    int light = 1023 - raw;
+    // Map light level to LED brightness (0-255 for PWM) 
+    int redBrightness = map(light, 0, 1023, 0, 255); 
+    int blueBrightness = 255 - redBrightness; // Constrain values to valid PWM range 
+
+    int brightness = map(light, 0, 1023, 0, 255);
+    brightness = constrain(brightness, 0, 255);
+
+    analogWrite(RED_LED_PIN, brightness);
+    analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
+
+    delay(1000);
+
+    // brightness = 0;
+    // analogWrite(RED_LED_PIN, brightness);
+    // analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
+
+
+
+    Serial.print("raw= ");
+    Serial.print(raw);  
+
+    Serial.print("  light(inv)= "); 
+    Serial.print(light);
+
+    Serial.print("  R=");  Serial.print(redBrightness);
+    Serial.print("  B=");  Serial.println(blueBrightness);
+
+    delay(1000);
+}
+
+// colorSensing::colorSensing(/* args */)
+// {
+// }
+
+// colorSensing::~colorSensing()
+// {
 // }

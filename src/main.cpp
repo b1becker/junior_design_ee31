@@ -1,47 +1,49 @@
-// Simple Photoresistor Analog Read with LED Control
-// UTI 1893 Photoresistor connected to A0
-#include <Arduino.h>
+// // Simple Photoresistor Analog Read with LED Control
+// // UTI 1893 Photoresistor connected to A0
+// #include <Arduino.h>
 
-#define PHOTORESISTOR_PIN A0 
-#define RED_LED_PIN 5 
-#define BLUE_LED_PIN 9 
-// Must be PWM pin 
+// #define PHOTORESISTOR_PIN A0 
+// #define RED_LED_PIN 5 
+// #define BLUE_LED_PIN 9 
+// // Must be PWM pin 
 
-void setup() { 
-  Serial.begin(9600); 
-  pinMode(RED_LED_PIN, OUTPUT); 
-  pinMode(BLUE_LED_PIN, OUTPUT); 
-  Serial.println("PWM LED Fade Controller Started"); 
-} void 
+// void setup() { 
+//   Serial.begin(9600); 
+//   pinMode(RED_LED_PIN, OUTPUT); 
+//   pinMode(BLUE_LED_PIN, OUTPUT); 
+//   Serial.println("PWM LED Fade Controller Started"); 
+// } 
 
-loop() { 
-  // Read photoresistor (0-1023) 
+// void loop() { 
+//   // Read photoresistor (0-1023) 
   
-  int raw = analogRead(PHOTORESISTOR_PIN);
-  // If wired: collector->A0 with pull-up, emitter->GND, then more light => lower 'raw'.
-  // Invert so brighter = bigger number:
-  int light = 1023 - raw;
-  // Map light level to LED brightness (0-255 for PWM) 
-  int redBrightness = map(light, 0, 1023, 0, 255); 
-  int blueBrightness = 255 - redBrightness; // Constrain values to valid PWM range 
+//   int raw = analogRead(PHOTORESISTOR_PIN);
+//   // If wired: collector->A0 with pull-up, emitter->GND, then more light => lower 'raw'.
+//   // Invert so brighter = bigger number:
+//   int light = 1023 - raw;
+//   // Map light level to LED brightness (0-255 for PWM) 
+//   int redBrightness = map(light, 0, 1023, 0, 255); 
+//   int blueBrightness = 255 - redBrightness; // Constrain values to valid PWM range 
   
-  int brightness = map(light, 0, 1023, 0, 255);
-brightness = constrain(brightness, 0, 255);
+//   int brightness = map(light, 0, 1023, 0, 255);
+//   brightness = constrain(brightness, 0, 255);
 
-analogWrite(RED_LED_PIN, brightness);
-analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
+//   analogWrite(RED_LED_PIN, brightness);
+//   analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
 
-  Serial.print("raw= ");
-  Serial.print(raw);  
+//   Serial.print("raw= ");
+//   Serial.print(raw);  
   
-  Serial.print("  light(inv)= "); 
-  Serial.print(light);
+//   Serial.print("  light(inv)= "); 
+//   Serial.print(light);
   
-  Serial.print("  R=");  Serial.print(redBrightness);
-  Serial.print("  B=");  Serial.println(blueBrightness);
+//   Serial.print("  R=");  Serial.print(redBrightness);
+//   Serial.print("  B=");  Serial.println(blueBrightness);
 
-  delay(100);
-}
+//   delay(100);
+// }
+
+
 
 // #define PHOTORESISTOR_PIN A0
 // #define RED_LED_PIN 5
@@ -204,7 +206,7 @@ analogWrite(BLUE_LED_PIN, brightness);  // Same value for both
 // void loop() {
 //   while (Server_31.ConnectionStatus() == true) {
 //     if (count % 10000 == 0) {
-//       Server_31.WriteServer("We love DEI");
+//       Server_31.WriteServer("Hoang Mai");
 //     }
 //     count++;
 //     delay(1); // Small delay to prevent overwhelming the loop

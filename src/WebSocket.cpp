@@ -81,3 +81,19 @@ void WebSocket::WriteServer(String message)
     myClient->print(message);
     myClient->endMessage();
 }
+
+void WebSocket::ReadServer(String message)
+{
+    int messageSize = myClient->parseMessage();
+    if (messageSize > 0) {
+      Serial.println("Received a message:");
+      Serial.print("Message: ");
+      
+      // Read and print the message
+      while (myClient->available()) {
+        Serial.print((char)myClient->read());
+      }
+      Serial.println();
+    }
+
+}
