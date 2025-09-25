@@ -76,14 +76,18 @@ bool WebSocket::ConnectionStatus()
 
 void WebSocket::WriteServer(String message)
 {
-    Serial.print("Writing Server\n");
+    Serial.println("Writing Server\n");
     myClient->beginMessage(TYPE_TEXT);
     myClient->print(message);
     myClient->endMessage();
 }
 
-void WebSocket::ReadServer(String message)
+String WebSocket::ReadServer()
 {
+    String message = "";
+    String ID = "WebClient_56FC703ACE1A";
+    String command;
+    bool ours;
     int messageSize = myClient->parseMessage();
     if (messageSize > 0) {
       Serial.println("Received a message:");
@@ -91,9 +95,27 @@ void WebSocket::ReadServer(String message)
       
       // Read and print the message
       while (myClient->available()) {
-        Serial.print((char)myClient->read());
+        message += (char)myClient->read();
+        // Serial.print((char)myClient->read());
       }
-      Serial.println();
+      for (unsigned int i = 0; i < ID.length(); i++)
+      {
+        if(message.charAt(i) == ID.charAt(i))
+        {
+            ours = true;
+            continue;
+        } else {
+            ours = false;
+            break;
+        }
+      }
+      if(ours == true)
+      {
+        command = message.substring(ID.length() + 1);
+        return command;
+      } else
+        return "NULL";
     }
-
+    
+    
 }

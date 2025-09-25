@@ -16,7 +16,7 @@ public:
     void PingServer();
     bool ConnectionStatus();
     void WriteServer(String message);
-    void ReadServer(String message);
+    String ReadServer();
 
 
 private:
