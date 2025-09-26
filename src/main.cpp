@@ -156,17 +156,17 @@
 // }
 
 // void loop() {
-//   Serial.write("hellowrld");
-//   int currentButtonState = digitalRead(BUTTON_PIN);
+//     Serial.write("hellowrld");
+//     int currentButtonState = digitalRead(BUTTON_PIN);
 
-//   if (lastButtonState == HIGH && currentButtonState == LOW) {
+//     if (lastButtonState == HIGH && currentButtonState == LOW) {
 //     currentState = static_cast<LightState>((currentState + 1) % 8);
-//   }
+//     }
 
-//   // When functional, will have bot go forward, backward, or whatever we want it to do
-//   bm.loop();
+//     // When functional, will have bot go forward, backward, or whatever we want it to do
+//     bm.loop();
 
-//   switch (currentState) {
+//     switch (currentState) {
 //     case STATE_0: states.handleState0(); break;
 //     case STATE_1: states.handleState1(); break;
 //     case STATE_2: states.handleState2(); break;
@@ -175,11 +175,11 @@
 //     case STATE_5: states.handleState5(); break;
 //     case STATE_6: states.handleState6(); break;
 //     case STATE_7: states.handleState7(); break;
-//   }
+//     }
 
-//   lastButtonState = currentButtonState;
+//     lastButtonState = currentButtonState;
 
-//   // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
+//     // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
 // }
 
 // #include "WebSocket.h"
