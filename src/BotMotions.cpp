@@ -40,9 +40,9 @@ void BotMotions::loop() {
     // // Stop the motor
     // digitalWrite(motor_b1, LOW);
     // digitalWrite(motor_b2, LOW);
-    left();
+    forward();
     delay(MOTION_DELAY);
-    right();
+    backward();
     delay(1000);
     Serial.print("cycle complete \n");  
 }
