@@ -4,6 +4,7 @@
 
 #include <Arduino.h>
 #include "BotMotions.h"
+#include "colorSensing.h"
 
 class States {
 public:
@@ -23,6 +24,8 @@ public:
 
 private:
     BotMotions *ourBot;
+    colorSensing *cs;
+
     int _led0, _led1, _led2;
 };
 
