@@ -6,7 +6,7 @@
 // #define RED_LED_PIN 5 
 // #define BLUE_LED_PIN 9 
 // // Must be PWM pin 
-
+ 
 // void setup() { 
 //   Serial.begin(9600); 
 //   pinMode(RED_LED_PIN, OUTPUT); 
@@ -156,17 +156,17 @@
 // }
 
 // void loop() {
-//   Serial.write("hellowrld");
-//   int currentButtonState = digitalRead(BUTTON_PIN);
+//     Serial.write("hellowrld");
+//     int currentButtonState = digitalRead(BUTTON_PIN);
 
-//   if (lastButtonState == HIGH && currentButtonState == LOW) {
+//     if (lastButtonState == HIGH && currentButtonState == LOW) {
 //     currentState = static_cast<LightState>((currentState + 1) % 8);
-//   }
+//     }
 
-//   // When functional, will have bot go forward, backward, or whatever we want it to do
-//   bm.loop();
+//     // When functional, will have bot go forward, backward, or whatever we want it to do
+//     bm.loop();
 
-//   switch (currentState) {
+//     switch (currentState) {
 //     case STATE_0: states.handleState0(); break;
 //     case STATE_1: states.handleState1(); break;
 //     case STATE_2: states.handleState2(); break;
@@ -175,44 +175,11 @@
 //     case STATE_5: states.handleState5(); break;
 //     case STATE_6: states.handleState6(); break;
 //     case STATE_7: states.handleState7(); break;
-//   }
-
-//   lastButtonState = currentButtonState;
-
-//   // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
-// }
-
-// #include "WebSocket.h"
-// #include <Arduino.h>
-// #include <ArduinoHttpClient.h>
-// #include <WiFiNINA.h> 
-
-// // Declare Connection Specifics
-// String clientID = "56FC703ACE1A";
-// char serverAddress[] = "34.28.153.91"; 
-// int port = 80;
-// WebSocket Server_31(serverAddress, port);
-
-// int count = 0;
-
-// void setup() {
-//   Serial.begin(9600);
-//   Server_31.PingSerial();
-//   Server_31.NetworkConnect();
-//   Server_31.SocketConnect(clientID);
-//   Server_31.PingServer();
-// }
-
-// void loop() {
-//   while (Server_31.ConnectionStatus() == true) {
-//     if (count % 10000 == 0) {
-//       Server_31.WriteServer("Hoang Mai");
 //     }
-//     count++;
-//     delay(1); // Small delay to prevent overwhelming the loop
-//   }
 
-//   if(Server_31.ConnectionStatus() == false){
-//     Serial.println("WebSocket connection lost.");
-//   }
+//     lastButtonState = currentButtonState;
+
+//     // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
 // }
+
+

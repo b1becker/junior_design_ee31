@@ -19,6 +19,7 @@ public:
     void backward();
     void left();
     void right();
+    void NinetyLeft();
     // ~BotMotions();
 };
 
