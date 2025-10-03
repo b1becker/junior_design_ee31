@@ -102,117 +102,83 @@
 //   delay(500); // Read every half second
 // }
 
-// #include <Arduino.h>
-// #include "States.h"
-// #include "BotMotions.h"
-// #include "WebSocket.h"
 
-// // state machine
-// #define LED0 13
-// #define LED1 12
-// #define LED2 11
-// #define BUTTON_PIN A0
 
-// // Motor A
-// #define MOTOR_A1 4    // L293 IN1
-// #define MOTOR_A2 7    // L293 IN2  
-// #define ENA 10        // L293 EN1 (PWM pin for Motor A)
+#include "States.h"
+#include "WebSocket.h"
+#include "BotMotions.h"
+#include "States.h"
+#include <Arduino.h>
+#include <ArduinoHttpClient.h>
+#include <WiFiNINA.h> 
 
-// // Motor B
-// #define MOTOR_B1 12    // L293 IN3
-// #define MOTOR_B2 8    // L293 IN4
-// #define ENB 3         // L293 EN2 (PWM pin for Motor B)
+// Motor A
+#define MOTOR_A1 4    // L293 IN1
+#define MOTOR_A2 7    // L293 IN2  
+#define ENA 10        // L293 EN1 (PWM pin for Motor A)
 
-// enum LightState {
-//   STATE_0, STATE_1, STATE_2, STATE_3,
-//   STATE_4, STATE_5, STATE_6, STATE_7
-// };
+// Motor B
+#define MOTOR_B1 12    // L293 IN3
+#define MOTOR_B2 8    // L293 IN4
+#define ENB 3         // L293 EN2 (PWM pin for Motor B)
 
-// LightState currentState = STATE_0;
-// int lastButtonState = HIGH;
 
-// // Create global States object for the 2^3 states
-// States states(LED0, LED1, LED2);
+enum LightState {
+  STATE_0, STATE_1, STATE_2, STATE_3,
+  STATE_4, STATE_5, STATE_6
+};
 
-// BotMotions bm(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
+LightState currentState = STATE_0;
 
-// void setup() {
-//   // state machine setup
-//   pinMode(LED0, OUTPUT);
-//   pinMode(LED1, OUTPUT);
-//   pinMode(LED2, OUTPUT);
-//   pinMode(BUTTON_PIN, INPUT_PULLUP);
+// Declare Connection Specifics
+String clientID = "56FC703ACE1A";
+char serverAddress[] = "34.28.153.91"; 
+int port = 80;
+WebSocket Server_31(serverAddress, port);
 
-//   // Motor Setup
-//   pinMode(MOTOR_A1, OUTPUT);
-//   pinMode(MOTOR_A2, OUTPUT);
-//   pinMode(MOTOR_B1, OUTPUT);
-//   pinMode(MOTOR_B2, OUTPUT);
+int count = 0;
+String message;
 
-//   pinMode(ENA, OUTPUT);
-//   pinMode(ENB, OUTPUT);
-  
-//   Serial.begin(9600);
-// }
+States my_states(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
-// void loop() {
-//   Serial.write("hellowrld");
-//   int currentButtonState = digitalRead(BUTTON_PIN);
+void setup() {
+  Serial.begin(9600);
+  Server_31.NetworkConnect();
+  Server_31.SocketConnect(clientID);
 
-//   if (lastButtonState == HIGH && currentButtonState == LOW) {
-//     currentState = static_cast<LightState>((currentState + 1) % 8);
-//   }
+  // Motor Setup
+  pinMode(MOTOR_A1, OUTPUT);
+  pinMode(MOTOR_A2, OUTPUT);
+  pinMode(MOTOR_B1, OUTPUT);
+  pinMode(MOTOR_B2, OUTPUT);
+}
 
-//   // When functional, will have bot go forward, backward, or whatever we want it to do
-//   bm.loop();
 
-//   switch (currentState) {
-//     case STATE_0: states.handleState0(); break;
-//     case STATE_1: states.handleState1(); break;
-//     case STATE_2: states.handleState2(); break;
-//     case STATE_3: states.handleState3(); break;
-//     case STATE_4: states.handleState4(); break;
-//     case STATE_5: states.handleState5(); break;
-//     case STATE_6: states.handleState6(); break;
-//     case STATE_7: states.handleState7(); break;
-//   }
+void loop() {
+  while (Server_31.ConnectionStatus() == true) {
 
-//   lastButtonState = currentButtonState;
+    message = Server_31.ReadServer();
 
-//   // Motor Control - Motor A: MOTOR_A1, MOTOR_A2 & Motor B: MOTOR_B1, MOTOR_B2
-// }
+      // if(message != "NULL")
+      // {
+      //     Serial.print("Message: ");
+      //     Serial.print(message);
+      //     Serial.println();
+      // }
+    switch (currentState) {
+      case STATE_0: my_states.handleState0(); break;
+      case STATE_1: my_states.handleState1(); break;
+      case STATE_2: my_states.handleState2(); break;
+      case STATE_3: my_states.handleState3(); break;
+      case STATE_4: my_states.handleState4(); break;
+      case STATE_5: my_states.handleState5(); break;
+      case STATE_6: my_states.handleState6(); break;
+    }
+    
+    delay(1); 
+  }
 
-// #include "WebSocket.h"
-// #include <Arduino.h>
-// #include <ArduinoHttpClient.h>
-// #include <WiFiNINA.h> 
-
-// // Declare Connection Specifics
-// String clientID = "56FC703ACE1A";
-// char serverAddress[] = "34.28.153.91"; 
-// int port = 80;
-// WebSocket Server_31(serverAddress, port);
-
-// int count = 0;
-
-// void setup() {
-//   Serial.begin(9600);
-//   Server_31.PingSerial();
-//   Server_31.NetworkConnect();
-//   Server_31.SocketConnect(clientID);
-//   Server_31.PingServer();
-// }
-
-// void loop() {
-//   while (Server_31.ConnectionStatus() == true) {
-//     if (count % 10000 == 0) {
-//       Server_31.WriteServer("Hoang Mai");
-//     }
-//     count++;
-//     delay(1); // Small delay to prevent overwhelming the loop
-//   }
-
-//   if(Server_31.ConnectionStatus() == false){
-//     Serial.println("WebSocket connection lost.");
-//   }
-// }
+  if(Server_31.ConnectionStatus() == false){
+    Serial.println("WebSocket connection lost.");
+  }
+}
