@@ -3,11 +3,14 @@
 #define STATES_H
 
 #include <Arduino.h>
+#include "BotMotions.h"
 
 class States {
 public:
     // Constructor: pass LED pins if you want to keep things flexible
-    States(int led0, int led1, int led2);
+    // States(int led0, int led1, int led2);
+    States(int motor_a1, int motor_a2, int motor_b1, int motor_b2, int ena,
+        int enb);
 
     // State handlers
     void handleState0();
@@ -17,9 +20,9 @@ public:
     void handleState4();
     void handleState5();
     void handleState6();
-    void handleState7();
 
 private:
+    BotMotions *ourBot;
     int _led0, _led1, _led2;
 };
 

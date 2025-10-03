@@ -89,14 +89,9 @@ String WebSocket::ReadServer()
     String command;
     bool ours;
     int messageSize = myClient->parseMessage();
-    if (messageSize > 0) {
-      Serial.println("Received a message:");
-      Serial.print("Message: ");
-      
-      // Read and print the message
+    if (messageSize > 0) {      
       while (myClient->available()) {
         message += (char)myClient->read();
-        // Serial.print((char)myClient->read());
       }
       for (unsigned int i = 0; i < ID.length(); i++)
       {
@@ -113,9 +108,8 @@ String WebSocket::ReadServer()
       {
         command = message.substring(ID.length() + 1);
         return command;
-      } else
-        return "NULL";
+      }
+        
     }
-    
-    
+    return "NULL";   
 }

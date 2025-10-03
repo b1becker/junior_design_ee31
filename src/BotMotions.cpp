@@ -65,6 +65,13 @@ void BotMotions::forward() {
 
 }
 
+void BotMotions::stop(){
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, LOW);
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, LOW);
+}
+
 void BotMotions::backward() {
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, HIGH);
@@ -131,4 +138,10 @@ void BotMotions::NinetyLeft() {
     digitalWrite(motor_a2, LOW);
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, LOW);
+}
+void BotMotions::pivotCW() {
+    //TO-DO
+}
+void BotMotions::pivotCCW() {
+    //TO-DO
 }
