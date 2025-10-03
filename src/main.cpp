@@ -158,13 +158,13 @@ void loop() {
   while (Server_31.ConnectionStatus() == true) {
 
     message = Server_31.ReadServer();
-
       // if(message != "NULL")
       // {
       //     Serial.print("Message: ");
       //     Serial.print(message);
       //     Serial.println();
       // }
+    //Josh TO-DO Add string parsing to get message into currentstate.
     switch (currentState) {
       case STATE_0: my_states.handleState0(); break;
       case STATE_1: my_states.handleState1(); break;
