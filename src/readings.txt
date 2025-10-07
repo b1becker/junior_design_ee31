@@ -1,36 +1,11 @@
-Blue Light
+Red
+- on red: 265-266
+- on black: 295-296
+- on blue: 292-293
+- on yellow: 253-254
 
-on blue
-941-943
-
-Blue on black
-
-
-970 ish
-
-
-on red
-
-935 - 938
-
-on yellow
-
-925-928
-
-
-
-Red light
-
-on red 
-
-855-858
-
-
-on black
-
-955-965
-
-on 
-
-
-
+Blue:
+- on blue: 290-291
+- on red: 293-294
+- on yellow: 282-283
+- on black: 300-301

@@ -49,9 +49,9 @@ void loop() {
     
     digitalWrite(RED_LED_PIN, HIGH);
     delay(STD_DELAY);
-    int redv = analogRead(PHOTORESISTOR_PIN);
+    int photov = analogRead(PHOTORESISTOR_PIN);
     delay(STD_DELAY);
-    Serial.print("RedV = "); Serial.println(redv);
+    Serial.print("RedV = "); Serial.println(photov);
     // digitalWrite(RED_LED_PIN, LOW);
     //digitalWrite(RED_LED_PIN, LOW);
     
