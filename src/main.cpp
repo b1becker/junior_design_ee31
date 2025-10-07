@@ -1,6 +1,3 @@
-
-
-
 #include "States.h"
 #include "WebSocket.h"
 #include "BotMotions.h"
@@ -24,13 +21,16 @@
 #define RED_LED_PIN 5 
 #define BLUE_LED_PIN 9
 
+#define STATE_0 0
+#define STATE_1 1
+#define STATE_2 2
+#define STATE_3 3
+#define STATE_4 4
+#define STATE_5 5
+#define STATE_6 6
 
-enum LightState {
-    STATE_0, STATE_1, STATE_2, STATE_3,
-    STATE_4, STATE_5, STATE_6
-};
 
-LightState currentState = STATE_0;
+int currentState = STATE_0;
 
 // Declare Connection Specifics
 String clientID = "56FC703ACE1A";
@@ -71,36 +71,34 @@ void setup() {
 
 
 void loop() {
-    while (Server_31.ConnectionStatus() == true) {
-        
+    while (Server_31.ConnectionStatus() == true) { 
         message = Server_31.ReadServer();
-        // if(message != "NULL")
-        // {
-            //     Serial.print("Message: ");
-            //     Serial.print(message);
-            //     Serial.println();
-            // }
-            //Josh TO-DO Add string parsing to get message into currentstate.
-            switch (currentState) {
-                case STATE_0: my_states.handleState0(); break;
-                case STATE_1: my_states.handleState1(); break;
-                case STATE_2: my_states.handleState2(); break;
-                case STATE_3: my_states.handleState3(); break;
-                case STATE_4: my_states.handleState4(); break;
-                case STATE_5: my_states.handleState5(); break;
-                case STATE_6: my_states.handleState6(); break;
-            }
-            cs.loop();
-            
-            
-            
-            delay(1); 
+        if(message != "NULL")
+        {
+            currentState = message.toInt();
         }
         
-        if(Server_31.ConnectionStatus() == false){
-            Serial.println("WebSocket connection lost.");
+
+        switch (currentState) {
+            case STATE_0: my_states.handleState0(); break;
+            case STATE_1: my_states.handleState1(); break;
+            case STATE_2: my_states.handleState2(); break;
+            case STATE_3: my_states.handleState3(); break;
+            case STATE_4: my_states.handleState4(); break;
+            case STATE_5: my_states.handleState5(); break;
+            case STATE_6: my_states.handleState6(); break;
+            default: my_states.handleErrorState(); break;
         }
+        
+        // cs.loop();
+            
+        delay(1); 
     }
+        
+    if(Server_31.ConnectionStatus() == false){
+        Serial.println("WebSocket connection lost.");
+    }
+}
 
 
 

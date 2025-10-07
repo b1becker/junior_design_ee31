@@ -88,28 +88,33 @@ String WebSocket::ReadServer()
     String ID = "WebClient_56FC703ACE1A";
     String command;
     bool ours;
+    bool valid_com;
     int messageSize = myClient->parseMessage();
     if (messageSize > 0) {      
-      while (myClient->available()) {
-        message += (char)myClient->read();
-      }
-      for (unsigned int i = 0; i < ID.length(); i++)
-      {
-        if(message.charAt(i) == ID.charAt(i))
-        {
-            ours = true;
-            continue;
-        } else {
-            ours = false;
-            break;
+        while (myClient->available()) {
+            message += (char)myClient->read();
         }
-      }
-      if(ours == true)
-      {
-        command = message.substring(ID.length() + 1);
-        return command;
-      }
-        
+        for (unsigned int i = 0; i < ID.length(); i++)
+        {
+            if(message.charAt(i) == ID.charAt(i))
+            {
+                ours = true;
+                continue;
+            } else {
+                ours = false;
+                break;
+            }
+        }
+        // coming from our serverid
+        if(ours == true)
+        {
+            // chopping off ID after valiaion
+            command = message.substring(ID.length() + 1);
+            // verification of message
+            if(command.charAt(0) == 'C'){
+                return command.substring(1);
+            }
+        }
     }
     return "NULL";   
 }

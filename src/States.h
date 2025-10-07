@@ -21,6 +21,7 @@ public:
     void handleState4();
     void handleState5();
     void handleState6();
+    void handleErrorState();
 
 private:
     BotMotions *ourBot;
