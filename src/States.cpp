@@ -26,6 +26,7 @@ void States::handleState0() {
     // digitalWrite(_led2, LOW);
     Serial.println("In state 0");
     delay(1000);
+    ourBot->stop();
 }
 
 void States::handleState1() {

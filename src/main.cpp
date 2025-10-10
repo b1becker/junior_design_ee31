@@ -49,7 +49,7 @@ void setup() {
     Serial.begin(9600);
     Server_31.NetworkConnect();
     Server_31.SocketConnect(clientID);
-    
+    Server_31.PingServer();
     // Motor Setup
     pinMode(MOTOR_A1, OUTPUT);
     pinMode(MOTOR_A2, OUTPUT);
@@ -76,9 +76,9 @@ void loop() {
         if(message != "NULL")
         {
             currentState = message.toInt();
+            Server_31.WriteServer("Received Command");
         }
         
-
         switch (currentState) {
             case STATE_0: my_states.handleState0(); break;
             case STATE_1: my_states.handleState1(); break;

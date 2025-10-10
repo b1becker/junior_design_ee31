@@ -3,8 +3,8 @@
 
 #define MOTION_DELAY 2000
 
-#define TURN_SPEED 100
-#define NEG_TURN_SPEED 75
+#define TURN_SPEED 200
+#define NEG_TURN_SPEED 150
 
 BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2, 
     int ena, int enb) {
@@ -48,6 +48,7 @@ void BotMotions::loop() {
 }
 
 void BotMotions::forward() {
+    Serial.println("going forward");
     digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
 
@@ -56,12 +57,9 @@ void BotMotions::forward() {
     analogWrite(enb, 255);
     analogWrite(ena, 255); 
 
-    delay(MOTION_DELAY);
+    // delay(MOTION_DELAY);
 
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, LOW);
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, LOW);
+    // stop();
 
 }
 
@@ -81,46 +79,45 @@ void BotMotions::backward() {
     analogWrite(enb, 255);
     analogWrite(ena, 255); 
 
-    delay(MOTION_DELAY);
+    // delay(MOTION_DELAY);
 
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, LOW);
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, LOW);
+    // stop();
 }
 
+// fix this
 void BotMotions::left() {
-    digitalWrite(motor_b1, HIGH);
-    digitalWrite(motor_b2, LOW);
-
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, HIGH);
-    analogWrite(enb, NEG_TURN_SPEED);
-    analogWrite(ena, TURN_SPEED); 
-
-    delay(MOTION_DELAY);
-
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, LOW);
+    
+    
+    stop();
     digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, LOW);
+    digitalWrite(motor_b2, HIGH);
+    analogWrite(enb, NEG_TURN_SPEED);  // Left motor faster
+    
+    
+    digitalWrite(motor_a1, HIGH);
+    digitalWrite(motor_a2, LOW);
+    analogWrite(ena, TURN_SPEED);  // Right motor slower/reverse
+    
+    // delay(MOTION_DELAY);
+    // stop();
+    
+
 }
 
 void BotMotions::right() {
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, HIGH);
-
-    digitalWrite(motor_a1, HIGH);
-    digitalWrite(motor_a2, LOW);
-    analogWrite(enb, TURN_SPEED);
-    analogWrite(ena, NEG_TURN_SPEED); 
-
-    delay(MOTION_DELAY);
-
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, LOW);
-    digitalWrite(motor_b1, LOW);
+    // Left motor forward (faster)
+    stop();
+    digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
+    analogWrite(enb, TURN_SPEED);  // Left motor faster
+    
+    // Right motor backward or slower
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
+    analogWrite(ena, NEG_TURN_SPEED);  // Right motor slower/reverse
+    
+    // delay(MOTION_DELAY);
+    // stop();
 }
 
 void BotMotions::NinetyLeft() {
@@ -133,11 +130,7 @@ void BotMotions::NinetyLeft() {
     analogWrite(ena, 255); 
 
     delay(MOTION_DELAY);
-
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, LOW);
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, LOW);
+    stop();
 }
 void BotMotions::pivotCW() {
     //TO-DO
