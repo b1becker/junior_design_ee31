@@ -22,7 +22,6 @@ public:
     void right();
     void pivotCW();
     void pivotCCW();
-    void NinetyLeft();
     // ~BotMotions();
 };
 

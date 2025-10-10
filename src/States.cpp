@@ -81,6 +81,7 @@ void States::handleState6() {
     Serial.println("In state 6");
     delay(1000);
     ourBot->left();
+    
 }
 
 void States::handleErrorState() {

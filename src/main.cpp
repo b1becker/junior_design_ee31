@@ -38,6 +38,7 @@ char serverAddress[] = "34.28.153.91";
 int port = 80;
 WebSocket Server_31(serverAddress, port);
 
+bool zeroEnter = true;
 int count = 0;
 String message;
 
@@ -76,18 +77,41 @@ void loop() {
         if(message != "NULL")
         {
             currentState = message.toInt();
-            Server_31.WriteServer("Received Command");
         }
-        
+
         switch (currentState) {
-            case STATE_0: my_states.handleState0(); break;
-            case STATE_1: my_states.handleState1(); break;
-            case STATE_2: my_states.handleState2(); break;
-            case STATE_3: my_states.handleState3(); break;
-            case STATE_4: my_states.handleState4(); break;
-            case STATE_5: my_states.handleState5(); break;
-            case STATE_6: my_states.handleState6(); break;
-            default: my_states.handleErrorState(); break;
+            case STATE_0:
+                if (zeroEnter) {
+                    Server_31.WriteServer("Ready to move!");
+                    zeroEnter = false;
+                }
+                my_states.handleState0(); 
+                break;
+            case STATE_1: 
+                my_states.handleState1(); 
+                break;
+            case STATE_2: 
+                my_states.handleState2(); 
+                break;
+            case STATE_3: 
+                my_states.handleState3(); 
+                break;
+            case STATE_4: 
+                my_states.handleState4(); 
+                break;
+            case STATE_5: 
+                my_states.handleState5(); 
+                break;
+            case STATE_6: 
+                my_states.handleState6(); 
+                break;
+            default: 
+                my_states.handleErrorState(); 
+                break;
+        }
+        if(currentState != 0){
+            currentState = 0;
+            zeroEnter = true;
         }
         
         // cs.loop();

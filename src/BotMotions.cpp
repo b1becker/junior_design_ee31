@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include "BotMotions.h"
 
-#define MOTION_DELAY 2000
+#define MOTION_DELAY 1700
 
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 150
+
+#define SPEED 175
 
 BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2, 
     int ena, int enb) {
@@ -49,13 +51,17 @@ void BotMotions::loop() {
 
 void BotMotions::forward() {
     Serial.println("going forward");
-    digitalWrite(motor_b1, HIGH);
-    digitalWrite(motor_b2, LOW);
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, HIGH);
 
-    digitalWrite(motor_a1, HIGH);
-    digitalWrite(motor_a2, LOW);
-    analogWrite(enb, 255);
-    analogWrite(ena, 255); 
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
+
+    //Left Motor
+    analogWrite(enb, SPEED);
+
+    //Right Motor
+    analogWrite(ena, SPEED); 
 
     // delay(MOTION_DELAY);
 
@@ -71,13 +77,13 @@ void BotMotions::stop(){
 }
 
 void BotMotions::backward() {
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, HIGH);
+    digitalWrite(motor_b1, HIGH);
+    digitalWrite(motor_b2, LOW);
 
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, HIGH);
-    analogWrite(enb, 255);
-    analogWrite(ena, 255); 
+    digitalWrite(motor_a1, HIGH);
+    digitalWrite(motor_a2, LOW);
+    analogWrite(enb, SPEED);
+    analogWrite(ena, SPEED); 
 
     // delay(MOTION_DELAY);
 
@@ -94,8 +100,8 @@ void BotMotions::left() {
     analogWrite(enb, NEG_TURN_SPEED);  // Left motor faster
     
     
-    digitalWrite(motor_a1, HIGH);
-    digitalWrite(motor_a2, LOW);
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
     analogWrite(ena, TURN_SPEED);  // Right motor slower/reverse
     
     // delay(MOTION_DELAY);
@@ -107,8 +113,8 @@ void BotMotions::left() {
 void BotMotions::right() {
     // Left motor forward (faster)
     stop();
-    digitalWrite(motor_b1, HIGH);
-    digitalWrite(motor_b2, LOW);
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, HIGH);
     analogWrite(enb, TURN_SPEED);  // Left motor faster
     
     // Right motor backward or slower
@@ -120,21 +126,28 @@ void BotMotions::right() {
     // stop();
 }
 
-void BotMotions::NinetyLeft() {
+void BotMotions::pivotCCW() {
     digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
 
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
     analogWrite(enb, 100);
-    analogWrite(ena, 255); 
+    analogWrite(ena, 150); 
 
     delay(MOTION_DELAY);
     stop();
 }
+
 void BotMotions::pivotCW() {
-    //TO-DO
-}
-void BotMotions::pivotCCW() {
-    //TO-DO
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, HIGH);
+
+    digitalWrite(motor_a1, HIGH);
+    digitalWrite(motor_a2, LOW);
+    analogWrite(enb, 150);
+    analogWrite(ena, 100); 
+
+    delay(MOTION_DELAY);
+    stop();
 }
