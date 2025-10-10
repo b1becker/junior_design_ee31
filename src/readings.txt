@@ -1,3 +1,66 @@
+Ambient light
+- 534-545
+
+Red:
+- on red: 925-950
+- on black: 980-990
+- on blue: 981
+- on yellow: 930-950ish
+
+
+Blue
+- on red: 955-975
+- on black: 930-950
+- on blue: 914-928ish
+- on yellow: 915-930
+
+
+yellow
+b915-930 r930-950
+
+blue
+b914-928 r981
+
+red
+b955-975 r925-950
+
+black
+b930-950 r980-990
+
+---------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Blue Light
 
 on blue
@@ -34,3 +97,288 @@ on
 
 
 
+
+blue:
+RedV = 1017
+BlueV = 1014
+RedV = 1017
+BlueV = 1014
+RedV = 1016
+BlueV = 1015
+RedV = 1018
+BlueV = 1018
+RedV = 1018
+BlueV = 1016
+RedV = 1018
+BlueV = 1016
+RedV = 1017
+BlueV = 1014
+RedV = 1016
+BlueV = 1016
+RedV = 1017
+BlueV = 1016
+RedV = 1018
+BlueV = 1015
+RedV = 1017
+BlueV = 1015
+RedV = 1014
+BlueV = 1009
+RedV = 1013
+BlueV = 1012
+RedV = 1013
+BlueV = 1011
+RedV = 1013
+BlueV = 1012
+RedV = 1014
+BlueV = 1011
+RedV = 1013
+BlueV = 1011
+RedV = 1014
+BlueV = 1012
+RedV = 1014
+BlueV = 1012
+RedV = 1014
+BlueV = 1013
+RedV = 1016
+BlueV = 1013
+RedV = 1015
+BlueV = 1014
+RedV = 1015
+BlueV = 1014
+RedV = 1015
+BlueV = 1014
+RedV = 1014
+BlueV = 1014
+RedV = 1015
+BlueV = 1014
+RedV = 1015
+BlueV = 1014
+RedV = 1016
+BlueV = 1013
+RedV = 1015
+BlueV = 1014
+RedV = 1016
+BlueV = 1014
+RedV = 1016
+BlueV = 1013
+
+Blue:
+RedV = 1002
+BlueV = 941
+RedV = 1002
+BlueV = 940
+RedV = 1002
+BlueV = 941
+RedV = 1002
+BlueV = 940
+RedV = 1002
+BlueV = 941
+RedV = 1002
+BlueV = 940
+RedV = 1002
+BlueV = 940
+RedV = 1003
+BlueV = 940
+RedV = 1002
+BlueV = 940
+RedV = 1002
+BlueV = 941
+RedV = 1002
+BlueV = 943
+RedV = 1003
+BlueV = 946
+RedV = 1003
+BlueV = 946
+RedV = 1003
+BlueV = 946
+RedV = 1003
+BlueV = 946
+RedV = 1003
+BlueV = 945
+RedV = 1003
+BlueV = 945
+RedV = 1003
+BlueV = 944
+RedV = 1002
+BlueV = 944
+RedV = 1003
+BlueV = 943
+RedV = 1002
+BlueV = 944
+RedV = 1003
+BlueV = 944
+RedV = 1003
+BlueV = 944
+RedV = 1002
+BlueV = 944
+RedV = 1003
+BlueV = 945
+RedV = 1003
+BlueV = 945
+RedV = 1003
+BlueV = 944
+RedV = 1003
+BlueV = 945
+RedV = 1002
+BlueV = 944
+RedV = 1003
+BlueV = 944
+RedV = 1002
+BlueV = 945
+
+red:
+BlueV = 999
+RedV = 963
+BlueV = 999
+RedV = 962
+BlueV = 998
+RedV = 962
+BlueV = 998
+RedV = 960
+BlueV = 998
+RedV = 950
+BlueV = 995
+RedV = 948
+BlueV = 995
+RedV = 948
+BlueV = 996
+RedV = 950
+BlueV = 996
+RedV = 950
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 951
+BlueV = 995
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 998
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 997
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 953
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 951
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 996
+RedV = 952
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 996
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 954
+BlueV = 997
+RedV = 954
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+RedV = 953
+BlueV = 997
+
+yellow:
+BlueV = 941
+RedV = 917
+BlueV = 940
+RedV = 917
+BlueV = 940
+RedV = 916
+BlueV = 940
+RedV = 916
+BlueV = 940
+RedV = 915
+BlueV = 939
+RedV = 915
+BlueV = 940
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 939
+RedV = 915
+BlueV = 939
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 939
+RedV = 914
+BlueV = 938
+RedV = 915
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 913
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 914
+BlueV = 938
+RedV = 913
+BlueV = 938
+RedV = 913
+BlueV = 938
+RedV = 914

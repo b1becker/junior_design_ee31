@@ -21,7 +21,7 @@ void States::handleState0() {
     // digitalWrite(_led0, LOW);
     // digitalWrite(_led1, LOW);
     // digitalWrite(_led2, LOW);
-    Serial.println("In state 0");
+    // Serial.println("In state 0");
     
 }
 
