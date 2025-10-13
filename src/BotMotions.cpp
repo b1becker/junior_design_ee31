@@ -58,7 +58,7 @@ void BotMotions::forward() {
     digitalWrite(motor_a2, HIGH);
 
     //Left Motor
-    analogWrite(enb, SPEED);
+    analogWrite(enb, (SPEED * .85));
 
     //Right Motor
     analogWrite(ena, SPEED); 
