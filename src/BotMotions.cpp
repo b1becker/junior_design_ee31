@@ -58,10 +58,10 @@ void BotMotions::forward() {
     digitalWrite(motor_a2, HIGH);
 
     //Left Motor
-    analogWrite(enb, (SPEED * .85));
+    analogWrite(enb, 135);
 
     //Right Motor
-    analogWrite(ena, SPEED); 
+    analogWrite(ena, 245); 
 
     // delay(MOTION_DELAY);
 
@@ -82,8 +82,8 @@ void BotMotions::backward() {
 
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
-    analogWrite(enb, SPEED);
-    analogWrite(ena, SPEED); 
+    analogWrite(enb, 135);
+    analogWrite(ena, 245); 
 
     // delay(MOTION_DELAY);
 
