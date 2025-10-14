@@ -8,6 +8,9 @@
 
 #define SPEED 175
 
+#define LSPEED 135
+#define RSPEED 250
+
 BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2, 
     int ena, int enb) {
 
@@ -20,28 +23,6 @@ BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2,
 }
 
 void BotMotions::loop() {
-    // Set motor to rotate forward at half speed
-    // digitalWrite(motor_b1, HIGH);
-    // digitalWrite(motor_b2, LOW);
-    // digitalWrite(motor_a1, HIGH);
-    // digitalWrite(motor_a2, LOW);
-    // analogWrite(enb, 128); // Speed: 0 (stopped) to 255 (full speed)
-    // analogWrite(ena, 128); // Speed: 0 (stopped) to 255 (full speed)
-    // delay(2000); // Run for 2 seconds
-
-    // // Set motor to rotate backward at full speed
-    // digitalWrite(motor_b1, LOW);
-    // digitalWrite(motor_b2, HIGH);
-
-    // digitalWrite(motor_a1, LOW);
-    // digitalWrite(motor_a2, HIGH);
-    // analogWrite(enb, 255);
-    // analogWrite(ena, 255); 
-    // delay(2000);
-
-    // // Stop the motor
-    // digitalWrite(motor_b1, LOW);
-    // digitalWrite(motor_b2, LOW);
     forward();
     delay(MOTION_DELAY);
     backward();
@@ -57,13 +38,22 @@ void BotMotions::forward() {
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
 
+
     //Left Motor
-    analogWrite(enb, 135);
+    // analogWrite(enb, SPEED);
+    digitalWrite(enb, 5);
 
     //Right Motor
-    analogWrite(ena, 245); 
+    // analogWrite(ena, SPEED); 
+    digitalWrite(ena, 5);
 
-    // delay(MOTION_DELAY);
+    // //Left Motor
+    // analogWrite(enb, LSPEED);
+
+    // //Right Motor
+    // analogWrite(ena, RSPEED); 
+
+    delay(MOTION_DELAY * 2);
 
     // stop();
 
@@ -74,6 +64,9 @@ void BotMotions::stop(){
     digitalWrite(motor_a2, LOW);
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, LOW);
+
+    digitalWrite(enb, 0);
+    digitalWrite(ena, 0);
 }
 
 void BotMotions::backward() {
@@ -82,8 +75,12 @@ void BotMotions::backward() {
 
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
-    analogWrite(enb, 135);
-    analogWrite(ena, 245); 
+
+    //Left Motor
+    analogWrite(enb, LSPEED);
+
+    //Right Motor
+    analogWrite(ena, RSPEED); 
 
     // delay(MOTION_DELAY);
 
@@ -132,10 +129,10 @@ void BotMotions::pivotCCW() {
 
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
-    analogWrite(enb, 100);
-    analogWrite(ena, 150); 
+    analogWrite(enb, LSPEED);
+    analogWrite(ena, RSPEED); 
 
-    delay(MOTION_DELAY);
+    delay(562);
     stop();
 }
 
@@ -145,9 +142,9 @@ void BotMotions::pivotCW() {
 
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
-    analogWrite(enb, 150);
-    analogWrite(ena, 100); 
+    analogWrite(enb, LSPEED);
+    analogWrite(ena, RSPEED); 
 
-    delay(MOTION_DELAY);
+    delay(585);
     stop();
 }
