@@ -8,14 +8,14 @@
 #include <WiFiNINA.h> 
 
 // Motor A
-#define MOTOR_A1 10    // L293 IN1
-#define MOTOR_A2 11    // L293 IN2  
-#define ENA 4        // L293 EN1 (PWM pin for Motor A)
+#define MOTOR_A1 4    // L293 IN1
+#define MOTOR_A2 7    // L293 IN2  
+#define ENA 6        // L293 EN1 (PWM pin for Motor A)
 
 // Motor B
-#define MOTOR_B1 6    // L293 IN3
-#define MOTOR_B2 5    // L293 IN4
-#define ENB 2         // L293 EN2 (PWM pin for Motor B)
+#define MOTOR_B1 12    // L293 IN3
+#define MOTOR_B2 8    // L293 IN4
+#define ENB 10         // L293 EN2 (PWM pin for Motor B)
 
 #define PHOTORESISTOR_PIN A3 
 #define RED_LED_PIN 5 
@@ -56,6 +56,8 @@ void setup() {
     pinMode(MOTOR_A2, OUTPUT);
     pinMode(MOTOR_B1, OUTPUT);
     pinMode(MOTOR_B2, OUTPUT);
+    pinMode(ENA, OUTPUT);
+    pinMode(ENB, OUTPUT);
     
     // Set LED pins as outputs
     // color sensing setup
@@ -66,7 +68,7 @@ void setup() {
     // Turn off LEDs initially
     // digitalWrite(red_led, LOW);
     // digitalWrite(blue_led, LOW);
-    
+    my_states.handleState0();
     
 }
 
