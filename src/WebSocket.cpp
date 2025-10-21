@@ -3,64 +3,82 @@
 #include <WiFiNINA.h>
 
 #include "WebSocket.h"
-
-WebSocket::WebSocket(const char* serverAddy, int port)
+/********** Constructor ********
+*
+* Sets all needed strings to establish connection
+*
+* Parameters:
+*      Server Address
+*      Port
+*      SSID
+*      Password
+************************/
+WebSocket::WebSocket(const char* serverAddy, int port, const char* id, const char* password)
 {
     strncpy(serverAddress, serverAddy, sizeof(serverAddress) - 1);
     serverAddress[sizeof(serverAddress) - 1] = '\0';
 
+    strncpy(ssid, id, sizeof(ssid) - 1);
+    ssid[sizeof(ssid) - 1] = '\0';
+
+    strncpy(pass, password, sizeof(pass) - 1);
+    pass[sizeof(pass) - 1] = '\0';
+
     myClient = new WebSocketClient(wifi, serverAddress, port);
 }
 
+/********** Desctucor ********
+*
+* Deletes Dynamically allocated object
+*
+************************/
 WebSocket::~WebSocket()
 {
     delete myClient;
 }
 
-void WebSocket::PingSerial()
-{
-    Serial.print("Socket Object Instantiated\n");
-}
 
-void WebSocket::PingServer()
-{
-    Serial.print("Pinging Server\n");
-    myClient->beginMessage(TYPE_TEXT);
-    myClient->print("Hewwo ");
-    myClient->endMessage();
-}
-
+/********** Network Connect ********
+*
+* Connects to the EE31 WiFi Network
+*
+************************/
 void WebSocket::NetworkConnect()
 {
     int status = WL_IDLE_STATUS;
 
     while (status != WL_CONNECTED) {
         Serial.print("Attempting to connect to Network named: ");
-        // print the network name (SSID);
+
         Serial.println(ssid);                   
 
-        // Connect to WPA/WPA2 network:
+
         status = WiFi.begin(ssid, pass);
     }
 
-    // print the SSID of the network you're attached to:
+
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
 
-    // print your WiFi shield's IP address:
+
     IPAddress ip = WiFi.localIP();
     Serial.print("IP Address: ");
     Serial.println(ip);
 }
 
+/********** Socket Connect ********
+*
+* Connects to the EE31 Web Socket
+*
+************************/
 void WebSocket::SocketConnect(String clientID)
 {
     Serial.println("Starting WebSocket connection...");
   
-    // Begin WebSocket connection
+
     myClient->begin();
     
-    // Send client ID to server
+
     myClient->beginMessage(TYPE_TEXT);
     myClient->print(clientID);
     myClient->endMessage();
@@ -74,6 +92,25 @@ bool WebSocket::ConnectionStatus()
     return myClient->connected();
 }
 
+/********** Unique Server Write Message to confirm connection ********
+*
+* Hewwo
+*
+************************/
+void WebSocket::PingServer()
+{
+    Serial.print("Pinging Server\n");
+    myClient->beginMessage(TYPE_TEXT);
+    myClient->print("Hewwo ");
+    myClient->endMessage();
+}
+
+/********** Server Write********
+*
+* Notes:
+*   Only processes strings rn
+*
+************************/
 void WebSocket::WriteServer(String message)
 {
     Serial.println("Writing Server\n");
@@ -82,6 +119,13 @@ void WebSocket::WriteServer(String message)
     myClient->endMessage();
 }
 
+/********** ReadServer ********
+*
+* Reads message from server
+* Parses message to see if from us
+* Further parses to see if a recognized command.
+*
+************************/
 String WebSocket::ReadServer()
 {
     String message = "";
@@ -105,12 +149,11 @@ String WebSocket::ReadServer()
                 break;
             }
         }
-        // coming from our serverid
+
         if(ours == true)
         {
-            // chopping off ID after valiaion
             command = message.substring(ID.length() + 1);
-            // verification of message
+
             if(command.charAt(0) == 'C'){
                 return command.substring(1);
             }

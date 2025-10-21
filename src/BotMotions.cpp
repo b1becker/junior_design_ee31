@@ -11,6 +11,14 @@
 #define LSPEED 135
 #define RSPEED 250
 
+/********** Constructor ********
+*
+* Assign Pin Values
+*
+* Parameters:
+*      Pin Values
+*
+************************/
 BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2, 
     int ena, int enb) {
 
@@ -24,6 +32,11 @@ BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2,
 
 }
 
+/********** Testing function ********
+*
+* Notes:
+*      Not for final use.
+************************/
 void BotMotions::loop() {
     forward();
     delay(MOTION_DELAY);
@@ -32,31 +45,11 @@ void BotMotions::loop() {
     Serial.print("cycle complete \n");  
 }
 
-void BotMotions::forward() {
-    Serial.println("going forward");
-    digitalWrite(motor_b1, LOW);
-    digitalWrite(motor_b2, HIGH);
-
-    digitalWrite(motor_a1, LOW);
-    digitalWrite(motor_a2, HIGH);
-
-
-
-    //Left Motor
-    analogWrite(enb, SPEED);
-    
-
-    //Right Motor
-    analogWrite(ena, SPEED); 
-    
-
-
-    delay(MOTION_DELAY / 2);
-
-    // stop();
-
-}
-
+/********** Stop ********
+*
+* Notes:
+*      Make sure to call this before anything done.
+************************/
 void BotMotions::stop(){
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, LOW);
@@ -75,6 +68,34 @@ void BotMotions::stop(){
     // Serial.println(enb);
 }
 
+/********** Forward ********
+*
+* Notes:
+*      ENB: Left Motor
+*      ENA: Right Motor
+************************/
+void BotMotions::forward() {
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, HIGH);
+
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
+
+    analogWrite(enb, SPEED);
+    analogWrite(ena, SPEED); 
+    
+    delay(MOTION_DELAY / 2);
+
+    // stop();
+
+}
+
+/********** Backward ********
+*
+* Notes:
+*      ENB: Left Motor
+*      ENA: Right Motor
+************************/
 void BotMotions::backward() {
     digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
@@ -82,10 +103,7 @@ void BotMotions::backward() {
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
 
-    //Left Motor
     analogWrite(enb, SPEED);
-
-    //Right Motor
     analogWrite(ena, SPEED); 
 
     // delay(MOTION_DELAY);
@@ -93,11 +111,12 @@ void BotMotions::backward() {
     // stop();
 }
 
-// fix this
+/********** Left ********
+*
+* Notes:
+*      Left Motor(ENB) < Right Motor(ENA)
+************************/
 void BotMotions::left() {
-    
-    
-    
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, HIGH);
     analogWrite(enb, NEG_TURN_SPEED); 
@@ -113,14 +132,18 @@ void BotMotions::left() {
 
 }
 
+/********** Right ********
+*
+* Notes:
+*      Same Direction
+*      Right Motor(ENA) < Left Motor(ENB)
+************************/
 void BotMotions::right() {
-    // Left motor forward (faster)
     stop();
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, HIGH);
     analogWrite(enb, TURN_SPEED);  
     
-    // Right motor backward or slower
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
     analogWrite(ena, NEG_TURN_SPEED);  
@@ -129,6 +152,12 @@ void BotMotions::right() {
     stop();
 }
 
+/********** Clockwise ********
+*
+* Notes:
+*      Diff motor directions
+*      ENB Backward, ENA Forward
+************************/
 void BotMotions::pivotCW() {
     digitalWrite(motor_b1, HIGH);
     digitalWrite(motor_b2, LOW);
@@ -142,6 +171,12 @@ void BotMotions::pivotCW() {
     stop();
 }
 
+/********** CounterClockwise ********
+*
+* Notes:
+*      Diff motor directions
+*      ENB Forward, ENA Backward
+************************/
 void BotMotions::pivotCCW() {
     digitalWrite(motor_b1, LOW);
     digitalWrite(motor_b2, HIGH);

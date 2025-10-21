@@ -8,11 +8,10 @@
 class WebSocket
 {
 public:
-    WebSocket(const char* serverAddy, int port);
+    WebSocket(const char* serverAddy, int port, const char* ssid, const char* pass);
     ~WebSocket();
     void NetworkConnect();
     void SocketConnect(String clientID);
-    void PingSerial();
     void PingServer();
     bool ConnectionStatus();
     void WriteServer(String message);
@@ -24,8 +23,8 @@ private:
     WebSocketClient *myClient;
     int port;
     char serverAddress[13];
-    const char ssid[11] = "tufts_eecs";
-    const char pass[14] = "foundedin1883";
+    char ssid[11];
+    char pass[14];
 };
 
 #endif

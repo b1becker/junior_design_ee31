@@ -8,12 +8,16 @@
 
 class States {
 public:
-    // Constructor: pass LED pins if you want to keep things flexible
-    // States(int led0, int led1, int led2);
-    States(int motor_a1, int motor_a2, int motor_b1, int motor_b2, int ena,
-        int enb);
+    /*****************************************************************
+    *                  Constructors & Deconstructors
+    *****************************************************************/
+    States(BotMotions *MyBot);
 
-    // State handlers
+
+
+    /*****************************************************************
+    *                  State Definitions
+    *****************************************************************/
     void handleState0();
     void handleState1();
     void handleState2();
@@ -27,7 +31,6 @@ private:
     BotMotions *ourBot;
     colorSensing *cs;
 
-    int _led0, _led1, _led2;
 };
 
 #endif

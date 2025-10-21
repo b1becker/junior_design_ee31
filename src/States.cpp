@@ -3,92 +3,106 @@
 #include "States.h"
 #include "BotMotions.h"
 #include "colorSensing.h"
-// States::States(int led0, int led1, int led2) {
-//     _led0 = led0;
-//     _led1 = led1;   
-//     _led2 = led2;
-// }
 
+#define StateDelay 500
 
-States::States(int motor_a1, int motor_a2, int motor_b1, int motor_b2, int ena,
-        int enb) {
-    ourBot = new BotMotions(motor_a1, motor_a2, motor_b1, motor_b2, ena, enb);
-    
-    
+/********** Constructir ********
+*
+* Makes BotMotion Object
+*
+* Parameters:
+*      Arduino Pins
+*
+************************/
+States::States(BotMotions *MyBot) {
+    ourBot = MyBot;
 }
 
 
-
-
+/********** State 0 ********
+*
+* Stops bot
+*
+************************/   
 void States::handleState0() {
-    // digitalWrite(_led0, LOW);
-    // digitalWrite(_led1, LOW);
-    // digitalWrite(_led2, LOW);
-    Serial.println("In state 0");
-    delay(1000);
+    delay(StateDelay);
     ourBot->stop();
 }
 
+/********** State 1 ********
+*
+* Bot go forward
+*
+************************/   
 void States::handleState1() {
-    // digitalWrite(_led0, HIGH);
-    // digitalWrite(_led1, LOW);
-    // digitalWrite(_led2, LOW);
-    Serial.println("In state 1");
-    delay(1000);
+    Serial.println("Going Forward");
+    delay(StateDelay);
     ourBot->forward();
 }
 
+/********** State 2 ********
+*
+* Back up da bot
+*
+************************/   
 void States::handleState2() {
-    // digitalWrite(_led0, LOW);
-    // digitalWrite(_led1, HIGH);
-    // digitalWrite(_led2, LOW);
-    Serial.println("In state 2");
-    delay(1000);
+    Serial.println("Going backwards");
+    delay(StateDelay);
     ourBot->backward();
 }
 
+/********** State 3 ********
+*
+* Clockwise spinning
+*
+************************/   
 void States::handleState3() {
-    // digitalWrite(_led0, HIGH);
-    // digitalWrite(_led1, HIGH);
-    // digitalWrite(_led2, LOW);
-    Serial.println("In state 3");
-    delay(1000);
+    Serial.println("Pivoting Clockwise");
+    delay(StateDelay);
     ourBot->pivotCW();
 }
 
+/********** State 4 ********
+*
+* Counter Clockwise spinning
+*
+************************/   
 void States::handleState4() {
-    // digitalWrite(_led0, LOW);
-    // digitalWrite(_led1, LOW);
-    // digitalWrite(_led2, HIGH);
-    Serial.println("In state 4");
-    delay(1000);
+    Serial.println("Pivoting Counterclockwise");
+    delay(StateDelay);
     ourBot->pivotCCW();
 }
 
+/********** State 5 ********
+*
+* Bus a right
+*
+************************/   
 void States::handleState5() {
-    // digitalWrite(_led0, HIGH);
-    // digitalWrite(_led1, LOW);
-    // digitalWrite(_led2, HIGH);
-    Serial.println("In state 5");
-    delay(1000);
+    Serial.println("Turning Right");
+    delay(StateDelay);
     ourBot->right();
 }
 
+/********** State 6 ********
+*
+* Bus a left
+*
+************************/   
 void States::handleState6() {
-    // digitalWrite(_led0, LOW);
-    // digitalWrite(_led1, HIGH);
-    // digitalWrite(_led2, HIGH);
-    Serial.println("In state 6");
-    delay(1000);
+    Serial.println("Turning Left");
+    delay(StateDelay);
     ourBot->left();
     
 }
 
+/********** State 7 ********
+*
+* Uh oh error scary
+*
+************************/   
 void States::handleErrorState() {
-    // digitalWrite(_led0, LOW);
-    // digitalWrite(_led1, HIGH);
-    // digitalWrite(_led2, HIGH);
     Serial.println("MISINPUT: ABORT");
-    delay(1000);
+    delay(StateDelay);
 
 }
