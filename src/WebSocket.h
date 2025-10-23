@@ -16,6 +16,7 @@ public:
     bool ConnectionStatus();
     void WriteServer(String message);
     String ReadServer();
+    String PartnerReadServer();
 
 
 private:

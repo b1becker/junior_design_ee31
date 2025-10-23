@@ -84,7 +84,8 @@ void setup() {
 
 void loop() {
     while (Server_31.ConnectionStatus() == true) { 
-        message = Server_31.ReadServer();
+        // message = Server_31.ReadServer();
+        message = Server_31.PartnerReadServer();
         if(message != "NULL")
         {
             currentState = message.toInt();

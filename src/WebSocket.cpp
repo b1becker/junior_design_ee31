@@ -161,3 +161,48 @@ String WebSocket::ReadServer()
     }
     return "NULL";   
 }
+
+/********** PartnerReadServer ********
+*
+* Reads message from server
+* Parses message to see if from us
+* Further parses to see if a recognized command.
+*
+************************/
+String WebSocket::PartnerReadServer()
+{
+    String message = "";
+    String partner_ID ="F79721857DC5";
+    String command;
+    bool ours;
+    bool valid_com;
+    int messageSize = myClient->parseMessage();
+    if (messageSize > 0) {      
+        while (myClient->available()) {
+            message += (char)myClient->read();
+        }
+        for (unsigned int i = 0; i < partner_ID.length(); i++)
+        {
+            if(message.charAt(i) == partner_ID.charAt(i))
+            {
+                ours = true;
+                continue;
+            } else {
+                ours = false;
+                break;
+            }
+        }
+        if(ours == true)
+        {
+            command = message.substring(partner_ID.length() + 1);
+
+            if(command.charAt(0) == '_'){
+                command = command.substring(6);
+            }
+            //Command Parsing Code:
+            //C1? Some other form.
+            Serial.println(command);
+        }
+    }
+    return "NULL";   
+}

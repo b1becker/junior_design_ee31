@@ -3,6 +3,8 @@
 #include "WebSocket.h"
 #include "Demo.h"
 
+#define Running true
+#define Complete false
 
 /********** Constructir ********
 *
@@ -88,29 +90,37 @@ void Demo::SoloDemo2(){
 *
 ************************/
 void Demo::PartnerDemo(){
-    /*
-    Bot 1 beeps its horn and starts.  Bot 2 waits (W).   
-    Once bot 1 has started moving along the red lane, it posts a "red lane found" signal to the server.  
-    This tells bot 2 that it is safe to start.
-    */
-    /*
-    Bot 2 beeps its horn and starts.  
-    Bot 1 proceeds to the start of the yellow lane and waits.   
-    Once bot 2 has started moving along the blue lane, it posts a "blue lane found" signal to the server.   
-    This tells bot 1 that it is safe to proceed along the yellow lane.  
-    Bot 1 sends an acknowledgment signal, which tells bot 2 that it is safe to continue to the start of the yellow lane.
-    */
+    String partnerCommand;
+    bool demoStatus = Running;
+    while (demoStatus) {
+        partnerCommand = ourWeb->PartnerReadServer();
+        /*
+        Bot 1 beeps its horn and starts.  Bot 2 waits (W).   
+        Once bot 1 has started moving along the red lane, it posts a "red lane found" signal to the server.  
+        This tells bot 2 that it is safe to start.
+        */
+        
+        /*
+        Bot 2 beeps its horn and starts.  
+        Bot 1 proceeds to the start of the yellow lane and waits.   
+        Once bot 2 has started moving along the blue lane, it posts a "blue lane found" signal to the server.   
+        This tells bot 1 that it is safe to proceed along the yellow lane.  
+        Bot 1 sends an acknowledgment signal, which tells bot 2 that it is safe to continue to the start of the yellow lane.
+        */
 
-    /*
-    Bot 1 follows the yellow lane and returns home. 
-    Once home, it beeps its horn and posts a "returned" signal to the server.   
-    This tells bot 2 that it is safe to proceed along the yellow lane.
-    */
+        /*
+        Bot 1 follows the yellow lane and returns home. 
+        Once home, it beeps its horn and posts a "returned" signal to the server.   
+        This tells bot 2 that it is safe to proceed along the yellow lane.
+        */
 
-    /*
-    Bot 2 follows the yellow lane and returns home.  
-    Once home, it beeps its horn and posts a "returned" signal to the server.  
-    Bot 1 acknowledges the signal with a horn beep.
-    */
+        /*
+        Bot 2 follows the yellow lane and returns home.  
+        Once home, it beeps its horn and posts a "returned" signal to the server.  
+        Bot 1 acknowledges the signal with a horn beep.
+        */
+    }
+    
+    
 }
 
