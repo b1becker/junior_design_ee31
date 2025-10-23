@@ -25,13 +25,24 @@ Demo::Demo(BotMotions *MyBot, WebSocket* server) {
 *
 ************************/
 void Demo::remotePartnerMotions(){
-    // Both bots are next to each other and not moving.
+    pinMode(LED_BUILTIN, OUTPUT);
+    
     // Bot 1 flashes their Arduino LED.
+    digitalWrite(LED_BUILTIN, 1);
+
     // Bot 1 communicates to Bot 2 to move forward for five seconds. 
-    // Bot 2 receives the message and move forward for five seconds then stops.
-    // When Bot 2 is finished moving forward, it flashes it's built-in LED. 
-    // Bot 2 communicates to Bot 1 to move forward for five seconds. 
+    ourWeb->WriteServer("State: 1");
+    
+    String partnerCommand = ourWeb->PartnerReadServer();
+
     // Bot 1 receives the signal and moves forward for five seconds then stop.
+    while (partnerCommand != "State: 2") {
+        partnerCommand = ourWeb->PartnerReadServer();
+        delay(1);
+    }
+    ourBot->forward();
+    delay(5000);
+    ourBot->stop();
 }
 
 /********** SoloDemo1 ********
@@ -90,10 +101,7 @@ void Demo::SoloDemo2(){
 *
 ************************/
 void Demo::PartnerDemo(){
-    String partnerCommand;
-    bool demoStatus = Running;
-    while (demoStatus) {
-        partnerCommand = ourWeb->PartnerReadServer();
+
         /*
         Bot 1 beeps its horn and starts.  Bot 2 waits (W).   
         Once bot 1 has started moving along the red lane, it posts a "red lane found" signal to the server.  
@@ -119,7 +127,6 @@ void Demo::PartnerDemo(){
         Once home, it beeps its horn and posts a "returned" signal to the server.  
         Bot 1 acknowledges the signal with a horn beep.
         */
-    }
     
     
 }

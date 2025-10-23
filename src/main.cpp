@@ -30,7 +30,10 @@
 #define STATE_4 4
 #define STATE_5 5
 #define STATE_6 6
-
+#define STATE_7 7
+#define STATE_8 8
+#define STATE_9 9
+#define STATE_10 10
 
 int currentState = STATE_0;
 
@@ -71,6 +74,8 @@ void setup() {
     pinMode(RED_LED_PIN, OUTPUT);
     pinMode(BLUE_LED_PIN, OUTPUT);
     pinMode(PHOTORESISTOR_PIN, INPUT);
+
+    cs.setup();
     
     // Turn off LEDs initially
     // digitalWrite(red_led, LOW);
@@ -83,7 +88,10 @@ void setup() {
 
 
 void loop() {
+    Serial.print("hello");
+    
     while (Server_31.ConnectionStatus() == true) { 
+        cs.loop();
         // message = Server_31.ReadServer();
         message = Server_31.PartnerReadServer();
         if(message != "NULL")
@@ -100,25 +108,33 @@ void loop() {
                 break;
             case STATE_1: 
                 my_states.handleState1();
-                // my_demo.SoloDemo1();
                 break;
             case STATE_2: 
                 my_states.handleState2();
-                // my_demo.SoloDemo2();
                 break;
             case STATE_3: 
                 my_states.handleState3(); 
-                // my_demo.PartnerDemo();
                 break;
             case STATE_4: 
                 my_states.handleState4(); 
-                // my_demo.remotePartnerMotions();
                 break;
             case STATE_5: 
                 my_states.handleState5(); 
                 break;
             case STATE_6: 
                 my_states.handleState6(); 
+                break;
+            case STATE_7:
+                my_demo.remotePartnerMotions();
+                break;
+            case STATE_8:
+                my_demo.SoloDemo1();
+                break;
+            case STATE_9:   
+                my_demo.SoloDemo2();
+                break;
+            case STATE_10:
+                my_demo.PartnerDemo();
                 break;
             default: 
                 my_states.handleErrorState(); 
