@@ -92,8 +92,8 @@ void loop() {
     
     while (Server_31.ConnectionStatus() == true) { 
         cs.loop();
-        // message = Server_31.ReadServer();
-        message = Server_31.PartnerReadServer();
+        message = Server_31.ReadServer();
+        // message = Server_31.PartnerReadServer();
         if(message != "NULL")
         {
             currentState = message.toInt();
@@ -125,6 +125,7 @@ void loop() {
                 my_states.handleState6(); 
                 break;
             case STATE_7:
+                Server_31.WriteServer("Partner Check Off.");
                 my_demo.remotePartnerMotions();
                 break;
             case STATE_8:

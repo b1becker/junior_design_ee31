@@ -25,6 +25,7 @@ Demo::Demo(BotMotions *MyBot, WebSocket* server) {
 *
 ************************/
 void Demo::remotePartnerMotions(){
+    Serial.println("Remote Partner Check");
     pinMode(LED_BUILTIN, OUTPUT);
     
     // Bot 1 flashes their Arduino LED.
@@ -38,6 +39,9 @@ void Demo::remotePartnerMotions(){
     // Bot 1 receives the signal and moves forward for five seconds then stop.
     while (partnerCommand != "State: 2") {
         partnerCommand = ourWeb->PartnerReadServer();
+        if (partnerCommand != "NULL") {
+            Serial.print(partnerCommand);
+        }
         delay(1);
     }
     ourBot->forward();

@@ -35,7 +35,7 @@ void colorSensing::loop() {
     delay(STD_DELAY);
     int redv = analogRead(photoresistor_pin);
     // delay(STD_DELAY);
-    // Serial.print("RedV = "); Serial.println(redv);
+    Serial.print("RedV = "); Serial.println(redv);
     digitalWrite(red_led, LOW);
     
     delay(STD_DELAY);
@@ -46,7 +46,7 @@ void colorSensing::loop() {
     int bluev = analogRead(photoresistor_pin);
     // delay(STD_DELAY);
     digitalWrite(blue_led, LOW);
-    // Serial.print("BlueV = "); Serial.println(bluev);
+    Serial.print("BlueV = "); Serial.println(bluev);
 
     delay(STD_DELAY);
 
@@ -121,6 +121,11 @@ void colorSensing::read_blue(int &blue_v) {
 //     return String(ColorTag(current));
 // }
 
+// Blue: Red-780 Blue-359
+// Black: Red-800 Blue-677
+// Red: Red-638 Blue-589
+// Yellow: Red-554 Blue-317
+
 String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   // Sanity
   if (bvout < 0 || rvout < 0 || bvout > maxv || rvout > maxv) {
@@ -134,32 +139,33 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   // --- Clusters from your new data (+ reasonable slack) ---
 
   // BLACK / "both very high":
-  // Obs: Red ~1014–1018, Blue ~1009–1018  => S ~2025–2035, D near 0
-  if (bvout >= 1008 && rvout >= 1010 && S >= 1990) {
+  // Obs: Red ~800, Blue ~677 
+  if (bvout >= 660 && rvout >= 790) { // && S >= 1990) {
     current = COLOR_BLACK;
     return String(ColorTag(current));
   }
 
   // BLUE:
-  // Obs: Red ~1002–1003, Blue ~940–946 => D ~ +56..+63, S ~ 1942..2006
-  if (inRange(bvout, 930, 960) && inRange(rvout, 990, 1015) &&
-      D >= 45 && D <= 80 && S >= 1900 && S <= 2050) {
+  // Obs: Red ~780, Blue ~359 => D ~ +56..+63, S ~ 1942..2006
+  // if (inRange(bvout, 340, 370) && inRange(rvout, 770, 800)) { // &&
+  if (inRange(bvout, 340, 370) && rvout > 785) { // &&
+      // D >= 45 && D <= 80 && S >= 1900 && S <= 2050) {
     current = COLOR_BLUE;
     return String(ColorTag(current));
   }
 
   // RED:
-  // Obs: Blue ~995–999, Red ~950–963 => D ~ -47..-32, S ~ 1943..1962
-  if (inRange(bvout, 990, 1010) && inRange(rvout, 940, 970) &&
-      D <= -25 && D >= -70 && S >= 1900 && S <= 2050) {
+  // Obs: Blue ~589+-5, Red ~638+-5 => D ~ -47..-32, S ~ 1943..1962
+  if (inRange(bvout, 580, 600) && inRange(rvout, 620, 650)){ //&&
+      // D <= -25 && D >= -70 && S >= 1900 && S <= 2050) {
     current = COLOR_RED;
     return String(ColorTag(current));
   }
 
   // YELLOW:
-  // Obs: Blue ~938–941, Red ~913–917 => D ~ -28..-21, S ~ 1851..1858 (both lower)
-  if (inRange(bvout, 930, 960) && inRange(rvout, 905, 930) &&
-      D <= -15 && D >= -40 && S >= 1800 && S <= 1900) {
+  // Obs: Blue ~317, Red ~554 => D ~ -28..-21, S ~ 1851..1858 (both lower)
+  if (inRange(bvout, 310, 330) && inRange(rvout, 540, 570)) {// &&
+      // D <= -15 && D >= -40 && S >= 1800 && S <= 1900) {
     current = COLOR_YELLOW;
     return String(ColorTag(current));
   }

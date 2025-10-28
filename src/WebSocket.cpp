@@ -138,6 +138,7 @@ String WebSocket::ReadServer()
         while (myClient->available()) {
             message += (char)myClient->read();
         }
+        Serial.println(message);
         for (unsigned int i = 0; i < ID.length(); i++)
         {
             if(message.charAt(i) == ID.charAt(i))
@@ -149,11 +150,12 @@ String WebSocket::ReadServer()
                 break;
             }
         }
-
         if(ours == true)
         {
-            command = message.substring(ID.length() + 1);
-
+            command = message.substring(ID.length());
+            if(command.charAt(0) == '_'){
+                command = command.substring(6);
+            }
             if(command.charAt(0) == 'C'){
                 return command.substring(1);
             }
@@ -194,7 +196,7 @@ String WebSocket::PartnerReadServer()
         }
         if(ours == true)
         {
-            command = message.substring(partner_ID.length() + 1);
+            command = message.substring(partner_ID.length());
 
             if(command.charAt(0) == '_'){
                 command = command.substring(6);
