@@ -6,6 +6,13 @@
 
 #define STD_DELAY 50
 
+// the normalised ratio formula can be computed using V_ratio = V_red / (V_red + V_blue)
+#define BLACK_RATIO 0.63
+#define RED_RATIO 0.573
+#define BLUE_RATIO 0.99
+#define YELLOW_RATIO 0.26
+#define TOLERANCE 0.05 // +- 0.05, very generous but could be lower
+
 
 colorSensing::colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin) {
     red_led = red_led_pin;
@@ -128,59 +135,27 @@ void colorSensing::read_blue(int &blue_v) {
 
 String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   // Sanity
-  if (bvout < 0 || rvout < 0 || bvout > maxv || rvout > maxv) {
-    current = COLOR_UNKNOWN;
-    return String(ColorTag(current));
+  float color_ratio = 1.0 * rvout / (rvout + bvout);
+
+  Serial.println("Color ratio: ");
+  Serial.println(color_ratio);
+  // red
+   if (color_ratio >= BLACK_RATIO - TOLERANCE and color_ratio <= BLACK_RATIO + TOLERANCE) {
+      current = COLOR_BLACK;
+  }
+  else if (color_ratio >= RED_RATIO - TOLERANCE and color_ratio <= RED_RATIO + TOLERANCE) {
+      current = COLOR_RED;
+  }
+  else if (color_ratio >= BLUE_RATIO - TOLERANCE and color_ratio <= BLUE_RATIO + TOLERANCE) {
+      current = COLOR_BLUE;
+  }
+  else if (color_ratio >= YELLOW_RATIO - TOLERANCE and color_ratio <= YELLOW_RATIO + TOLERANCE) {
+      current = COLOR_YELLOW;
+  }
+  else {
+      current = COLOR_UNKNOWN;
   }
 
-  const int D = rvout - bvout;  // +D => Red higher than Blue
-  const int S = rvout + bvout;  // overall brightness
-
-  // --- Clusters from your new data (+ reasonable slack) ---
-
-  // BLACK / "both very high":
-  // Obs: Red ~800, Blue ~677 
-  if (bvout >= 660 && rvout >= 790) { // && S >= 1990) {
-    current = COLOR_BLACK;
-    return String(ColorTag(current));
-  }
-
-  // BLUE:
-  // Obs: Red ~780, Blue ~359 => D ~ +56..+63, S ~ 1942..2006
-  // if (inRange(bvout, 340, 370) && inRange(rvout, 770, 800)) { // &&
-  if (inRange(bvout, 340, 370) && rvout > 785) { // &&
-      // D >= 45 && D <= 80 && S >= 1900 && S <= 2050) {
-    current = COLOR_BLUE;
-    return String(ColorTag(current));
-  }
-
-  // RED:
-  // Obs: Blue ~589+-5, Red ~638+-5 => D ~ -47..-32, S ~ 1943..1962
-  if (inRange(bvout, 580, 600) && inRange(rvout, 620, 650)){ //&&
-      // D <= -25 && D >= -70 && S >= 1900 && S <= 2050) {
-    current = COLOR_RED;
-    return String(ColorTag(current));
-  }
-
-  // YELLOW:
-  // Obs: Blue ~317, Red ~554 => D ~ -28..-21, S ~ 1851..1858 (both lower)
-  if (inRange(bvout, 310, 330) && inRange(rvout, 540, 570)) {// &&
-      // D <= -15 && D >= -40 && S >= 1800 && S <= 1900) {
-    current = COLOR_YELLOW;
-    return String(ColorTag(current));
-  }
-
-  // --- Fallbacks (looser) ---
-  if (S >= 1980 && bvout >= 1000 && rvout >= 1005 && abs(D) <= 25) {
-    current = COLOR_BLACK;  // very bright, neutral-ish
-    return String(ColorTag(current));
-  }
-  if (D >= 40 && S >= 1880) { current = COLOR_BLUE;   return String(ColorTag(current)); }
-  if (D <= -30 && S >= 1880) { current = COLOR_RED;    return String(ColorTag(current)); }
-  if (S <= 1920 && D <= -18 && D >= -45) {
-    current = COLOR_YELLOW; return String(ColorTag(current));
-  }
-
-  current = COLOR_UNKNOWN;
+  
   return String(ColorTag(current));
 }
