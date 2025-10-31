@@ -43,12 +43,9 @@ void collision::loop() {
         Serial.print("Collition approaching! Reflected = ");
         Serial.println(reflected);
 
-        //idk add bot movements to reflect this
     } else {
         Serial.print("Continue with clear path. Reflected = ");
         Serial.println(reflected);
-        //idk add bot movements to reflect this
     }
-    
 
 }

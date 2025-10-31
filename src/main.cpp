@@ -4,6 +4,7 @@
 #include "BotMotions.h"
 #include "States.h"
 #include "colorSensing.h"
+#include "collision.h"
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h> 
@@ -37,6 +38,10 @@
 #define STATE_9 9
 #define STATE_10 10
 
+#define STD_DELAY 50
+#define N_SAMPLES 10
+#define DISTANCE_THRESHOLD 10
+
 int currentState = STATE_0;
 
 // Declare Connection Data
@@ -55,87 +60,8 @@ BotMotions ourBot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
 States my_states(&ourBot);
 Demo my_demo(&ourBot, &Server_31);
-colorSensing cs(RED_LED_PIN, BLUE_LED_PIN, PHOTORESISTOR_PIN);
-
-// collision cll(PHOTODIODE_PIN, IR_LED);
-
-#define STD_DELAY 50
-#define N_SAMPLES 10
-#define DISTANCE_THRESHOLD 10
-
-// void setup () {
-//     int photodiode = PHOTODIODE_PIN;
-//     int irLED = IR_LED;
-// }
-// void setup() {
-//     // Initialize Serial Monitor
-//     Serial.begin(9600);
-//     Server_31.NetworkConnect();
-//     Server_31.SocketConnect(clientID);
-//     Server_31.PingServer();
-
-//     // Set all motor pins
-//     pinMode(MOTOR_A1, OUTPUT);
-//     pinMode(MOTOR_A2, OUTPUT);
-//     pinMode(MOTOR_B1, OUTPUT);
-//     pinMode(MOTOR_B2, OUTPUT);
-//     pinMode(ENA, OUTPUT);
-//     pinMode(ENB, OUTPUT);
-    
-//     // Set all color sensing pins
-//     pinMode(RED_LED_PIN, OUTPUT);
-//     pinMode(BLUE_LED_PIN, OUTPUT);
-//     pinMode(PHOTORESISTOR_PIN, INPUT);
-
-//     cs.setup();
-    
-//     // Turn off LEDs initially
-//     // digitalWrite(red_led, LOW);
-//     // digitalWrite(blue_led, LOW);
-
-//     // Set all motor values low
-//     my_states.handleState0();
-    
-// }
-
-
-// void loop() {
-
-//     pinMode(PHOTODIODE_PIN, INPUT);
-//     pinMode(IR_LED, OUTPUT);
-//     float onSUM = 0;
-//     float offSUM = 0; 
-
-//     // irLED high and sample
-//     digitalWrite(IR_LED, HIGH);
-//     delay(STD_DELAY);
-//     for (int i = 0; i < N_SAMPLES; i++) {
-//         offSUM += analogRead(PHOTODIODE_PIN);
-//     }
-//     int offAVG = offSUM / N_SAMPLES;
-
-//     // irLED low and sample
-//     digitalWrite(IR_LED, LOW);
-//     delay(STD_DELAY);
-//         for (int i = 0; i < N_SAMPLES; i++) {
-//         onSUM += analogRead(PHOTODIODE_PIN);
-//     }
-//     int onAVG = onSUM / N_SAMPLES;
-
-//     // reflection with ambient - ambient = just reflected
-//     int reflected = onAVG - offAVG;
-
-//     if (reflected > DISTANCE_THRESHOLD) {
-//         Serial.print("Collition approaching! Reflected = ");
-//         Serial.println(reflected);
-
-//         //idk add bot movements to reflect this
-//     } else {
-//         Serial.print("Continue with clear path. Reflected = ");
-//         Serial.println(reflected);
-//         //idk add bot movements to reflect this
-//     }
-// }
+colorSensing my_ColorSensor(RED_LED_PIN, BLUE_LED_PIN, PHOTORESISTOR_PIN);
+collision my_Collider(PHOTODIODE_PIN, IR_LED);
 
 
 void setup() {
@@ -148,7 +74,7 @@ void setup() {
     pinMode(MOTOR_A2, OUTPUT);
     pinMode(MOTOR_B1, OUTPUT);
     pinMode(MOTOR_B2, OUTPUT);
-    
+    ourBot.stop();
     // Set LED pins as outputs
     // color sensing setup
     pinMode(RED_LED_PIN, OUTPUT);
@@ -156,9 +82,10 @@ void setup() {
     pinMode(PHOTORESISTOR_PIN, INPUT);
     
     // Turn off LEDs initially
-    // digitalWrite(red_led, LOW);
-    // digitalWrite(blue_led, LOW)
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(BLUE_LED_PIN, LOW);
     
+    my_Collider.setup();
 }
 
 
@@ -218,8 +145,8 @@ void loop() {
             zeroEnter = true;
         }
         
-        cs.loop();
-            
+        my_ColorSensor.loop();
+        my_Collider.loop();
         delay(1); 
     }
         
