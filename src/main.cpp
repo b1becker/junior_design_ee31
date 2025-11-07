@@ -37,6 +37,7 @@
 #define STATE_8 8
 #define STATE_9 9
 #define STATE_10 10
+#define STATE_11 11
 
 #define STD_DELAY 50
 #define N_SAMPLES 10
@@ -46,7 +47,8 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-char serverAddress[] = "34.28.153.91";
+// char serverAddress[] = "34.28.153.91";
+char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
@@ -58,10 +60,12 @@ String message;
 
 BotMotions ourBot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
-States my_states(&ourBot);
+States my_states(&ourBot, &Server_31);
 Demo my_demo(&ourBot, &Server_31);
 colorSensing my_ColorSensor(RED_LED_PIN, BLUE_LED_PIN, PHOTORESISTOR_PIN);
 collision my_Collider(PHOTODIODE_PIN, IR_LED);
+
+String output_color;
 
 
 void setup() {
@@ -86,10 +90,29 @@ void setup() {
     digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
+    
 }
-
+/********** overview of states ********
+*
+* 0: stop
+* 1: forward
+  2: backwards
+  3: spin cw
+  4: spin ccw
+  5: turn right
+  6: turn left
+  7: error
+*
+************************/  
 
 void loop() {
+    my_ColorSensor.loop(output_color);
+    Serial.print("Color = "); Serial.println(output_color);
+
+    my_Collider.loop();
+    
+    // this is the loop for the lane detection
+
     while (Server_31.ConnectionStatus() == true) { 
         message = Server_31.ReadServer();
         
@@ -136,6 +159,8 @@ void loop() {
             case STATE_10:
                 my_demo.PartnerDemo();
                 break;
+            case STATE_11:
+                my_states.goForward(output_color, my_ColorSensor);
             default: 
                 my_states.handleErrorState(); 
                 break;
@@ -144,13 +169,19 @@ void loop() {
             currentState = 0;
             zeroEnter = true;
         }
-        
-        my_ColorSensor.loop();
+
+        my_ColorSensor.loop(output_color);
+        Serial.print("Color = "); 
+        Serial.println(output_color);
+
         my_Collider.loop();
         delay(1); 
     }
         
     if(Server_31.ConnectionStatus() == false){
         Serial.println("WebSocket connection lost.");
+        delay(1000);
     }
 }
+
+

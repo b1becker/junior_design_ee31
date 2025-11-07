@@ -3,15 +3,15 @@
 #include <Arduino.h>
 #include "colorSensing.h"
 
+// the normalised ratio formula can be computed using V_ratio = V_red / (V_red + V_blue)
 
 #define STD_DELAY 50
 
-// the normalised ratio formula can be computed using V_ratio = V_red / (V_red + V_blue)
-#define BLACK_RATIO 0.63
-#define RED_RATIO 0.573
-#define BLUE_RATIO 0.99
-#define YELLOW_RATIO 0.26
-#define TOLERANCE 0.05 // +- 0.05, very generous but could be lower
+#define BLACK_RATIO 0.53
+#define RED_RATIO 0.03
+#define BLUE_RATIO 0.68
+#define YELLOW_RATIO 0.45
+#define TOLERANCE 0.05 // +- 0.0015
 
 
 colorSensing::colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin) {
@@ -30,7 +30,7 @@ void colorSensing::setup() {
     
 }
 
-void colorSensing::loop() {
+void colorSensing::loop(String &output_color) {
     // // digitalWrite(red_led, HIGH);
     // int vout = analogRead(photoresistor_pin);
     // delay(STD_DELAY);
@@ -72,7 +72,8 @@ void colorSensing::loop() {
         detectedColor = "unknown";
     }
 
-    Serial.print("Color = "); Serial.println(detectedColor);
+    output_color = detectedColor;
+    
 
     delay(STD_DELAY);
 }

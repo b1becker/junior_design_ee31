@@ -14,10 +14,41 @@
 *      Arduino Pins
 *
 ************************/
-States::States(BotMotions *MyBot) {
+States::States(BotMotions *MyBot, WebSocket* server) {
     ourBot = MyBot;
+    ourWeb = server;
 }
 
+void States::goForward(String output_color, colorSensing &cs) {
+    // hard coded inputs
+    String myCommand = ourWeb->ReadServer();
+
+    // Bot 1 receives the signal and moves forward for five seconds then stop.
+    while (myCommand != "Stop") {
+        if(output_color != "blue" ) {
+            // correct itself
+            // correct to the left
+            handleState3();
+            cs.loop(output_color);
+            if(output_color != "blue") {
+                // correct to the right
+                handleState4();
+                handleState4();
+            }
+            
+
+            
+            
+        }
+        else {
+            handleState1();
+        }
+        delay(1);
+        myCommand = ourWeb->ReadServer();
+        
+    }
+
+}
 
 /********** State 0 ********
 *
@@ -58,7 +89,7 @@ void States::handleState2() {
 ************************/   
 void States::handleState3() {
     Serial.println("Pivoting Clockwise");
-    delay(StateDelay);
+    delay(StateDelay / 8);
     ourBot->pivotCW();
 }
 
@@ -69,7 +100,7 @@ void States::handleState3() {
 ************************/   
 void States::handleState4() {
     Serial.println("Pivoting Counterclockwise");
-    delay(StateDelay);
+    delay(StateDelay / 8);
     ourBot->pivotCCW();
 }
 

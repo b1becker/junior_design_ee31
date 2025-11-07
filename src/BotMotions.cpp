@@ -2,6 +2,7 @@
 #include "BotMotions.h"
 
 #define MOTION_DELAY 1700
+#define TURN_DELAY 1124 / 8
 
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
@@ -84,7 +85,7 @@ void BotMotions::forward() {
     analogWrite(enb, SPEED);
     analogWrite(ena, SPEED); 
     
-    delay(MOTION_DELAY / 2);
+    delay(MOTION_DELAY / 8);
 
     // stop();
 
@@ -167,7 +168,7 @@ void BotMotions::pivotCW() {
     analogWrite(enb, LSPEED);
     analogWrite(ena, RSPEED); 
 
-    delay(1124);
+    delay(TURN_DELAY);
     stop();
 }
 
@@ -186,6 +187,6 @@ void BotMotions::pivotCCW() {
     analogWrite(enb, RSPEED);
     analogWrite(ena, LSPEED); 
 
-    delay(1124);
+    delay(TURN_DELAY);
     stop();
 }

@@ -3,6 +3,7 @@
 #define STATES_H
 
 #include <Arduino.h>
+#include "WebSocket.h"
 #include "BotMotions.h"
 #include "colorSensing.h"
 
@@ -11,7 +12,7 @@ public:
     /*****************************************************************
     *                  Constructors & Deconstructors
     *****************************************************************/
-    States(BotMotions *MyBot);
+    States(BotMotions *MyBot, WebSocket* server);
 
 
 
@@ -27,8 +28,12 @@ public:
     void handleState6();
     void handleErrorState();
 
+    // for lane following testing
+    void goForward(String output_color, colorSensing &cs);
+
 private:
     BotMotions *ourBot;
+    WebSocket *ourWeb;
     colorSensing *cs;
 
 };

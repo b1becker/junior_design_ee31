@@ -16,7 +16,7 @@ private:
 
 public:
     colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin);
-    void loop();
+    void loop(String &output_color);
     void setup();
     void read_red(int &red_v);
     void read_blue(int &blue_v);

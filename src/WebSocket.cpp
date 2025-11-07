@@ -129,7 +129,8 @@ void WebSocket::WriteServer(String message)
 String WebSocket::ReadServer()
 {
     String message = "";
-    String ID = "WebClient_56FC703ACE1A";
+    // String ID = "WebClient_56FC703ACE1A";
+    String ID = "DEI";
     String command;
     bool ours;
     bool valid_com;
