@@ -8,7 +8,7 @@ private:
     int irLED;
     /* data */
 public:
-    void loop();
+    int loop(bool* wall);
     void setup();
     collision(int photodiode_pin, int irLED_pin);
 };

@@ -24,7 +24,7 @@
 #define BLUE_LED_PIN 9
 
 #define PHOTODIODE_PIN A2
-#define IR_LED 10
+#define IR_LED 2
 
 #define STATE_0 0
 #define STATE_1 1
@@ -52,18 +52,17 @@ char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
-WebSocket Server_31(serverAddress, port, ssid, password);
-
 bool zeroEnter = true;
 int count = 0;
 String message;
 
-BotMotions ourBot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
-
-States my_states(&ourBot, &Server_31);
-Demo my_demo(&ourBot, &Server_31);
+WebSocket Server_31(serverAddress, port, ssid, password);
 colorSensing my_ColorSensor(RED_LED_PIN, BLUE_LED_PIN, PHOTORESISTOR_PIN);
 collision my_Collider(PHOTODIODE_PIN, IR_LED);
+BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
+
+States my_states(&my_Bot, &Server_31, &my_Collider, &my_ColorSensor);
+Demo my_demo(&my_Bot, &Server_31);
 
 String output_color;
 
@@ -78,7 +77,7 @@ void setup() {
     pinMode(MOTOR_A2, OUTPUT);
     pinMode(MOTOR_B1, OUTPUT);
     pinMode(MOTOR_B2, OUTPUT);
-    ourBot.stop();
+    my_Bot.stop();
     // Set LED pins as outputs
     // color sensing setup
     pinMode(RED_LED_PIN, OUTPUT);
@@ -106,10 +105,10 @@ void setup() {
 ************************/  
 
 void loop() {
-    my_ColorSensor.loop(output_color);
-    Serial.print("Color = "); Serial.println(output_color);
+    // my_ColorSensor.loop(output_color);
+    // Serial.print("Color = "); Serial.println(output_color);
 
-    my_Collider.loop();
+    // my_Collider.loop();
     
     // this is the loop for the lane detection
 
@@ -160,7 +159,7 @@ void loop() {
                 my_demo.PartnerDemo();
                 break;
             case STATE_11:
-                my_states.goForward(output_color, my_ColorSensor);
+                my_states.laneFollow(output_color);
             default: 
                 my_states.handleErrorState(); 
                 break;
@@ -170,11 +169,11 @@ void loop() {
             zeroEnter = true;
         }
 
-        my_ColorSensor.loop(output_color);
-        Serial.print("Color = "); 
-        Serial.println(output_color);
+        // my_ColorSensor.loop(output_color);
+        // Serial.print("Color = "); 
+        // Serial.println(output_color);
 
-        my_Collider.loop();
+        // my_Collider.loop();
         delay(1); 
     }
         

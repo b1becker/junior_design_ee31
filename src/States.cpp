@@ -3,6 +3,7 @@
 #include "States.h"
 #include "BotMotions.h"
 #include "colorSensing.h"
+#include "collision.h"
 
 #define StateDelay 500
 
@@ -14,22 +15,32 @@
 *      Arduino Pins
 *
 ************************/
-States::States(BotMotions *MyBot, WebSocket* server) {
+States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *my_CS) {
     ourBot = MyBot;
     ourWeb = server;
+    ourCollider = my_Collider;
+    ourCS = my_CS;
 }
 
-void States::goForward(String output_color, colorSensing &cs) {
+void States::laneFollow(String output_color) {
     // hard coded inputs
     String myCommand = ourWeb->ReadServer();
-
+    bool wallFound = false;
+    int distance;
     // Bot 1 receives the signal and moves forward for five seconds then stop.
     while (myCommand != "Stop") {
+        distance = ourCollider->loop(&wallFound);
+        // ourWeb->WriteServer(String(distance)); 
+        if (wallFound == true) {
+            handleState0();
+            break;
+        }
+        handleState1();
         if(output_color != "blue" ) {
             // correct itself
             // correct to the left
             handleState3();
-            cs.loop(output_color);
+            ourCS->loop(output_color);
             if(output_color != "blue") {
                 // correct to the right
                 handleState4();
@@ -37,8 +48,6 @@ void States::goForward(String output_color, colorSensing &cs) {
             }
             
 
-            
-            
         }
         else {
             handleState1();
@@ -67,7 +76,7 @@ void States::handleState0() {
 ************************/   
 void States::handleState1() {
     Serial.println("Going Forward");
-    delay(StateDelay);
+    // delay(StateDelay);
     ourBot->forward();
 }
 

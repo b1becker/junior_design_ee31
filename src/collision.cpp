@@ -2,8 +2,8 @@
 #include "collision.h"
 
 #define STD_DELAY 50
-#define N_SAMPLES 10
-#define DISTANCE_THRESHOLD 10
+#define N_SAMPLES 20
+#define DISTANCE_THRESHOLD 170
 
 collision::collision(int photodiode_pin, int irLED_pin) {
     photodiode = photodiode_pin;
@@ -15,21 +15,21 @@ void collision::setup() {
     pinMode(irLED, OUTPUT);
 }
 
-void collision::loop() {
+int collision::loop(bool* wall) {
 
     float onSUM = 0;
     float offSUM = 0; 
 
-    // irLED high and sample
-    digitalWrite(irLED, HIGH);
+    // irLED low and sample
+    digitalWrite(irLED, LOW);
     delay(STD_DELAY);
     for (int i = 0; i < N_SAMPLES; i++) {
         offSUM += analogRead(photodiode);
     }
     int offAVG = offSUM / N_SAMPLES;
 
-    // irLED low and sample
-    digitalWrite(irLED, LOW);
+    // irLED high and sample
+    digitalWrite(irLED, HIGH);
     delay(STD_DELAY);
         for (int i = 0; i < N_SAMPLES; i++) {
         onSUM += analogRead(photodiode);
@@ -42,10 +42,12 @@ void collision::loop() {
     if (reflected > DISTANCE_THRESHOLD) {
         Serial.print("Collition approaching! Reflected = ");
         Serial.println(reflected);
+        *wall = true;
 
     } else {
         Serial.print("Continue with clear path. Reflected = ");
         Serial.println(reflected);
+        *wall = false;
     }
-
+    return reflected;
 }

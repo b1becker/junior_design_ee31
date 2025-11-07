@@ -6,13 +6,14 @@
 #include "WebSocket.h"
 #include "BotMotions.h"
 #include "colorSensing.h"
+#include "collision.h"
 
 class States {
 public:
     /*****************************************************************
     *                  Constructors & Deconstructors
     *****************************************************************/
-    States(BotMotions *MyBot, WebSocket* server);
+    States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *cs);
 
 
 
@@ -29,13 +30,13 @@ public:
     void handleErrorState();
 
     // for lane following testing
-    void goForward(String output_color, colorSensing &cs);
+    void laneFollow(String output_color);
 
 private:
     BotMotions *ourBot;
     WebSocket *ourWeb;
-    colorSensing *cs;
-
+    colorSensing *ourCS;
+    collision *ourCollider;
 };
 
 #endif
