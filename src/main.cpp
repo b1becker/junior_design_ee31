@@ -69,9 +69,9 @@ String output_color;
 
 void setup() {
     Serial.begin(9600);
-    Server_31.NetworkConnect();
-    Server_31.SocketConnect(clientID);
-    Server_31.PingServer();
+    // Server_31.NetworkConnect();
+    // Server_31.SocketConnect(clientID);
+    // Server_31.PingServer();
     // Motor Setup
     pinMode(MOTOR_A1, OUTPUT);
     pinMode(MOTOR_A2, OUTPUT);
@@ -111,76 +111,77 @@ void loop() {
     // my_Collider.loop();
     
     // this is the loop for the lane detection
+    my_states.laneFollow(output_color);
 
-    while (Server_31.ConnectionStatus() == true) { 
-        message = Server_31.ReadServer();
+    // while (Server_31.ConnectionStatus() == true) { 
+    //     message = Server_31.ReadServer();
         
-        if(message != "NULL")
-        {
-            currentState = message.toInt();
-        }
+    //     if(message != "NULL")
+    //     {
+    //         currentState = message.toInt();
+    //     }
 
-        switch (currentState) {
-            case STATE_0:
-                if (zeroEnter) {
-                    Server_31.WriteServer("Ready to move!");
-                    zeroEnter = false;
-                }
-                my_states.handleState0(); 
-                break;
-            case STATE_1: 
-                my_states.handleState1(); 
-                break;
-            case STATE_2: 
-                my_states.handleState2(); 
-                break;
-            case STATE_3: 
-                my_states.handleState3(); 
-                break;
-            case STATE_4: 
-                my_states.handleState4(); 
-                break;
-            case STATE_5: 
-                my_states.handleState5(); 
-                break;
-            case STATE_6: 
-                my_states.handleState6(); 
-                break;
-            case STATE_7:
-                my_demo.remotePartnerMotions();
-                break;
-            case STATE_8:
-                my_demo.SoloDemo1();
-                break;
-            case STATE_9:   
-                my_demo.SoloDemo2();
-                break;
-            case STATE_10:
-                my_demo.PartnerDemo();
-                break;
-            case STATE_11:
-                my_states.laneFollow(output_color);
-            default: 
-                my_states.handleErrorState(); 
-                break;
-        }
-        if(currentState != 0){
-            currentState = 0;
-            zeroEnter = true;
-        }
+    //     switch (currentState) {
+    //         case STATE_0:
+    //             if (zeroEnter) {
+    //                 Server_31.WriteServer("Ready to move!");
+    //                 zeroEnter = false;
+    //             }
+    //             my_states.handleState0(); 
+    //             break;
+    //         case STATE_1: 
+    //             my_states.handleState1(); 
+    //             break;
+    //         case STATE_2: 
+    //             my_states.handleState2(); 
+    //             break;
+    //         case STATE_3: 
+    //             my_states.handleState3(); 
+    //             break;
+    //         case STATE_4: 
+    //             my_states.handleState4(); 
+    //             break;
+    //         case STATE_5: 
+    //             my_states.handleState5(); 
+    //             break;
+    //         case STATE_6: 
+    //             my_states.handleState6(); 
+    //             break;
+    //         case STATE_7:
+    //             my_demo.remotePartnerMotions();
+    //             break;
+    //         case STATE_8:
+    //             my_demo.SoloDemo1();
+    //             break;
+    //         case STATE_9:   
+    //             my_demo.SoloDemo2();
+    //             break;
+    //         case STATE_10:
+    //             my_demo.PartnerDemo();
+    //             break;
+    //         case STATE_11:
+                
+    //         default: 
+    //             my_states.handleErrorState(); 
+    //             break;
+    //     }
+    //     if(currentState != 0){
+    //         currentState = 0;
+    //         zeroEnter = true;
+    //     }
 
-        // my_ColorSensor.loop(output_color);
-        // Serial.print("Color = "); 
-        // Serial.println(output_color);
+    //     // my_ColorSensor.loop(output_color);
+    //     // Serial.print("Color = "); 
+    //     // Serial.println(output_color);
 
-        // my_Collider.loop();
-        delay(1); 
-    }
+    //     // my_Collider.loop();
+    //     delay(1); 
+    // }
         
-    if(Server_31.ConnectionStatus() == false){
-        Serial.println("WebSocket connection lost.");
-        delay(1000);
-    }
+    // if(Server_31.ConnectionStatus() == false){
+    //     Serial.println("WebSocket connection lost.");
+    //     delay(1000);
+    // }
 }
 
 

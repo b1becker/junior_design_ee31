@@ -35,28 +35,28 @@ void States::laneFollow(String output_color) {
             handleState0();
             break;
         }
-        handleState1();
-        if(output_color != "blue" ) {
+        
+        // UPDATE COLOR READING EVERY LOOP (no assignment needed)
+        ourCS->loop(output_color);
+        
+        if(output_color != "red") {
             // correct itself
             // correct to the left
             handleState3();
             ourCS->loop(output_color);
-            if(output_color != "blue") {
+            if(output_color != "red") {
                 // correct to the right
                 handleState4();
                 handleState4();
+                handleState4();
             }
-            
-
         }
         else {
             handleState1();
         }
         delay(1);
         myCommand = ourWeb->ReadServer();
-        
     }
-
 }
 
 /********** State 0 ********
