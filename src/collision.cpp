@@ -2,8 +2,8 @@
 #include "collision.h"
 
 #define STD_DELAY 50
-#define N_SAMPLES 20
-#define DISTANCE_THRESHOLD 170
+#define N_SAMPLES 10
+#define DISTANCE_THRESHOLD 250
 
 collision::collision(int photodiode_pin, int irLED_pin) {
     photodiode = photodiode_pin;
@@ -27,6 +27,8 @@ int collision::loop(bool* wall) {
         offSUM += analogRead(photodiode);
     }
     int offAVG = offSUM / N_SAMPLES;
+    Serial.println(offAVG);
+    delay(STD_DELAY);
 
     // irLED high and sample
     digitalWrite(irLED, HIGH);
@@ -35,6 +37,8 @@ int collision::loop(bool* wall) {
         onSUM += analogRead(photodiode);
     }
     int onAVG = onSUM / N_SAMPLES;
+    Serial.println(onAVG);
+    delay(STD_DELAY);
 
     // reflection with ambient - ambient = just reflected
     int reflected = onAVG - offAVG;

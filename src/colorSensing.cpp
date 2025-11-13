@@ -8,10 +8,10 @@
 #define STD_DELAY 50
 
 #define BLACK_RATIO 0.53
-#define RED_RATIO 0.03
-#define BLUE_RATIO 0.68
+#define RED_RATIO 0.51
+#define BLUE_RATIO 0.65
 #define YELLOW_RATIO 0.45
-#define TOLERANCE 0.05 // +- 0.0015
+#define TOLERANCE 0.01 // +- 0.0015
 
 
 colorSensing::colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin) {
