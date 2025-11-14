@@ -43,6 +43,7 @@ void States::laneFollow(String output_color) {
             // correct itself
             // correct to the left
             handleState3();
+            handleState3();
             ourCS->loop(output_color);
             if(output_color != "red") {
                 // correct to the right

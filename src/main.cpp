@@ -112,6 +112,7 @@ void loop() {
     
     // this is the loop for the lane detection
     my_states.laneFollow(output_color);
+    // my_states.handleState1();
 
     // while (Server_31.ConnectionStatus() == true) { 
     //     message = Server_31.ReadServer();

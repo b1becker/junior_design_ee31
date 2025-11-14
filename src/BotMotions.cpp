@@ -2,7 +2,7 @@
 #include "BotMotions.h"
 
 #define MOTION_DELAY 1700
-#define TURN_DELAY 1124 / 8
+#define TURN_DELAY 1124 / 6
 
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
