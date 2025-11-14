@@ -31,29 +31,31 @@ void States::laneFollow(String output_color) {
     while (myCommand != "Stop") {
         distance = ourCollider->loop(&wallFound);
         ourWeb->WriteServer(String(distance)); 
-        if (wallFound == true) {
-            handleState0();
-            break;
-        }
+        // handleState1();
+        // if (wallFound == true) {
+        //     handleState0();
+        //     break;
+        // }
         
-        // UPDATE COLOR READING EVERY LOOP (no assignment needed)
+
         ourCS->loop(output_color);
-        
-        if(output_color != "red") {
-            // correct itself
-            // correct to the left
-            handleState3();
-            ourCS->loop(output_color);
-            if(output_color != "red") {
-                // correct to the right
-                handleState4();
-                handleState4();
-                handleState4();
-            }
-        }
-        else {
-            handleState1();
-        }
+        Serial.println(output_color);
+        delay(StateDelay);
+        // if(output_color != "red") {
+        //     // correct itself
+        //     // correct to the left
+        //     handleState3();
+        //     ourCS->loop(output_color);
+        //     if(output_color != "red") {
+        //         // correct to the right
+        //         handleState4();
+        //         handleState4();
+        //         handleState4();
+        //     }
+        // }
+        // else {
+        //     handleState1();
+        // }
         delay(1);
         myCommand = ourWeb->ReadServer();
     }
