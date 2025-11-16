@@ -28,8 +28,11 @@ void Demo::remotePartnerMotions(){
     Serial.println("Remote Partner Check");
     pinMode(LED_BUILTIN, OUTPUT);
     
-    // Bot 1 flashes their Arduino LED.
-    digitalWrite(LED_BUILTIN, 1);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(10);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(10);
+    digitalWrite(LED_BUILTIN, LOW);
 
     // Bot 1 communicates to Bot 2 to move forward for five seconds. 
     ourWeb->WriteServer("State: 1");

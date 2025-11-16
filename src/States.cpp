@@ -31,7 +31,7 @@ void States::laneFollow(String output_color) {
     while (myCommand != "Stop") {
         distance = ourCollider->loop(&wallFound);
         ourWeb->WriteServer(String(distance)); 
-        // handleState1();
+        handleState1();
         // if (wallFound == true) {
         //     handleState0();
         //     break;

@@ -197,7 +197,6 @@ String WebSocket::PartnerReadServer()
         if(ours == true)
         {
             command = message.substring(partner_ID.length());
-
             if(command.charAt(0) == '_'){
                 command = command.substring(6);
             } else {

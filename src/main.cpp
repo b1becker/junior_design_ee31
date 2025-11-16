@@ -69,10 +69,13 @@ String output_color;
 /*****************************************************************
 *                  SET ON WHEN SOCKET CONNECTED
 *****************************************************************/
-bool socketOn = false;
+bool socketOn = true;
 
 void setup() {
     Serial.begin(9600);
+    if (socketOn == false) {
+        Serial.println("Not looking for socket");
+    }
     if (socketOn) {
         Server_31.NetworkConnect();
         Server_31.SocketConnect(clientID);
@@ -97,7 +100,7 @@ void setup() {
     digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
-    
+
 }
 /********** overview of states ********
 *
@@ -129,74 +132,73 @@ void loop() {
         *                  Websocket Stuff Here
         *****************************************************************/
         if (socketOn == true) {
-                message = Server_31.ReadServer();
-                if(message != "NULL") {
-                    currentState = message.toInt();
-                }
-
-                switch (currentState) {
-                    case STATE_0:
-                        if (zeroEnter) {
-                            Server_31.WriteServer("Ready to move!");
-                            zeroEnter = false;
-                        }
-                        my_states.handleState0(); 
-                        break;
-                    case STATE_1: 
-                        my_states.handleState1(); 
-                        break;
-                    case STATE_2: 
-                        my_states.handleState2(); 
-                        break;
-                    case STATE_3: 
-                        my_states.handleState3(); 
-                        break;
-                    case STATE_4: 
-                        my_states.handleState4(); 
-                        break;
-                    case STATE_5: 
-                        my_states.handleState5(); 
-                        break;
-                    case STATE_6: 
-                        my_states.handleState6(); 
-                        break;
-                    case STATE_7:
-                        my_demo.remotePartnerMotions();
-                        break;
-                    case STATE_8:
-                        my_demo.SoloDemo1();
-                        break;
-                    case STATE_9:   
-                        my_demo.SoloDemo2();
-                        break;
-                    case STATE_10:
-                        my_demo.PartnerDemo();
-                        break;
-                    case STATE_11:
-                        my_states.laneFollow(output_color);
-                    default: 
-                        my_states.handleErrorState(); 
-                        break;
-                }
-                if(currentState != 0){
-                    currentState = 0;
-                    zeroEnter = true;
-                }
-
-                // my_ColorSensor.loop(output_color);
-                // Serial.print("Color = "); 
-                // Serial.println(output_color);
-
-                // my_Collider.loop();
-                delay(1); 
+            message = Server_31.ReadServer();
+            if(message != "NULL") {
+                currentState = message.toInt();
             }
-                
+
+            switch (currentState) {
+                case STATE_0:
+                    if (zeroEnter) {
+                        Server_31.WriteServer("Ready to move!");
+                        zeroEnter = false;
+                    }
+                    my_states.handleState0(); 
+                    break;
+                case STATE_1: 
+                    my_states.handleState1(); 
+                    break;
+                case STATE_2: 
+                    my_states.handleState2(); 
+                    break;
+                case STATE_3: 
+                    my_states.handleState3(); 
+                    break;
+                case STATE_4: 
+                    my_states.handleState4(); 
+                    break;
+                case STATE_5: 
+                    my_states.handleState5(); 
+                    break;
+                case STATE_6: 
+                    my_states.handleState6(); 
+                    break;
+                case STATE_7:
+                    my_demo.remotePartnerMotions();
+                    break;
+                case STATE_8:
+                    my_demo.SoloDemo1();
+                    break;
+                case STATE_9:   
+                    my_demo.SoloDemo2();
+                    break;
+                case STATE_10:
+                    my_demo.PartnerDemo();
+                    break;
+                case STATE_11:
+                    my_states.laneFollow(output_color);
+                default: 
+                    my_states.handleErrorState(); 
+                    break;
+            }
+            if(currentState != 0){
+                currentState = 0;
+                zeroEnter = true;
+            }
+
+            // my_ColorSensor.loop(output_color);
+            // Serial.print("Color = "); 
+            // Serial.println(output_color);
+
+            // my_Collider.loop();
+            delay(1); 
+
             if(Server_31.ConnectionStatus() == false){
                 Serial.println("WebSocket connection lost.");
                 delay(1000);
             }
-        }
-        
+        }       
+    }
 }
 
 
