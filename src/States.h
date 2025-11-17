@@ -20,6 +20,7 @@ public:
     /*****************************************************************
     *                  State Definitions
     *****************************************************************/
+    void handleState00();
     void handleState0();
     void handleState1();
     void handleState2();

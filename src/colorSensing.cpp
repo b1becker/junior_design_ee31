@@ -5,6 +5,11 @@
 
 // the normalised ratio formula can be computed using V_ratio = V_red / (V_red + V_blue)
 
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
+
 #define STD_DELAY 50
 
 #define BLACK_RATIO 0.53
@@ -18,7 +23,6 @@ colorSensing::colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_
     red_led = red_led_pin;
     blue_led = blue_led_pin;
     photoresistor_pin = photoresistor_led_pin;
-
 }
 
 void colorSensing::setup() {
@@ -29,6 +33,8 @@ void colorSensing::setup() {
     // Turn off LEDs initially
     
 }
+
+
 
 void colorSensing::loop(String &output_color) {
     // // digitalWrite(red_led, HIGH);
@@ -141,22 +147,64 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   Serial.println("Color ratio: ");
   Serial.println(color_ratio);
   // red
-   if (color_ratio >= BLACK_RATIO - TOLERANCE and color_ratio <= BLACK_RATIO + TOLERANCE) {
-      current = COLOR_BLACK;
-  }
-  else if (color_ratio >= RED_RATIO - TOLERANCE and color_ratio <= RED_RATIO + TOLERANCE) {
-      current = COLOR_RED;
-  }
-  else if (color_ratio >= BLUE_RATIO - TOLERANCE and color_ratio <= BLUE_RATIO + TOLERANCE) {
-      current = COLOR_BLUE;
-  }
-  else if (color_ratio >= YELLOW_RATIO - TOLERANCE and color_ratio <= YELLOW_RATIO + TOLERANCE) {
-      current = COLOR_YELLOW;
-  }
-  else {
-      current = COLOR_UNKNOWN;
-  }
+    if (color_ratio >= BLACK_RATIO - TOLERANCE and color_ratio <= BLACK_RATIO + TOLERANCE) {
+        current = COLOR_BLACK;
+    }
+    else if (color_ratio >= RED_RATIO - TOLERANCE and color_ratio <= RED_RATIO + TOLERANCE) {
+        current = COLOR_RED;
+    }
+    else if (color_ratio >= BLUE_RATIO - TOLERANCE and color_ratio <= BLUE_RATIO + TOLERANCE) {
+        current = COLOR_BLUE;
+    }
+    else if (color_ratio >= YELLOW_RATIO - TOLERANCE and color_ratio <= YELLOW_RATIO + TOLERANCE) {
+        current = COLOR_YELLOW;
+    }
+    else {
+        current = COLOR_UNKNOWN;
+    }
 
+    // Bot Calibration code.
+    // if (color_ratio >= colorVal[Black] - TOLERANCE and color_ratio <= colorVal[Black] + TOLERANCE) {
+    //     current = COLOR_BLACK;
+    // }
+    // else if (color_ratio >= colorVal[Red] - TOLERANCE and color_ratio <= colorVal[Red] + TOLERANCE) {
+    //     current = COLOR_RED;
+    // }
+    // else if (color_ratio >= colorVal[Blue] - TOLERANCE and color_ratio <= colorVal[Blue] + TOLERANCE) {
+    //     current = COLOR_BLUE;
+    // }
+    // else if (color_ratio >= colorVal[Yellow] - TOLERANCE and color_ratio <= colorVal[Yellow] + TOLERANCE) {
+    //     current = COLOR_YELLOW;
+    // }
+    // else {
+    //     current = COLOR_UNKNOWN;
+    // }
   
+
   return String(ColorTag(current));
+}
+
+void colorSensing::Calibrate(int color){
+    float colorSum = 0.0;
+    for (int i = 0; i < 100; i++) {
+        digitalWrite(red_led, HIGH);
+        delay(STD_DELAY);
+        int redv = analogRead(photoresistor_pin);
+        // delay(STD_DELAY);
+        Serial.print("RedV = "); Serial.println(redv);
+        digitalWrite(red_led, LOW);
+        
+        delay(STD_DELAY);
+        
+        // Measure and print blue voltage output
+        digitalWrite(blue_led, HIGH);
+        delay(STD_DELAY);
+        int bluev = analogRead(photoresistor_pin);
+        // delay(STD_DELAY);
+        digitalWrite(blue_led, LOW);
+        Serial.print("BlueV = "); Serial.println(bluev);
+        delay(STD_DELAY);
+        colorSum += 1.0 * redv / (redv + bluev);
+    }
+    colorVal[color] = colorSum;
 }

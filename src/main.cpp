@@ -9,6 +9,13 @@
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h> 
 
+//Color Sensing Calibration:
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
+
+
 // Motor A (Right Motor)
 #define MOTOR_A1 4    // L293 IN1
 #define MOTOR_A2 7    // L293 IN2  
@@ -26,6 +33,7 @@
 #define PHOTODIODE_PIN A2
 #define IR_LED 2
 
+#define STATE_00 100
 #define STATE_0 0
 #define STATE_1 1
 #define STATE_2 2
@@ -138,6 +146,9 @@ void loop() {
             }
 
             switch (currentState) {
+                case STATE_00:
+                    my_states.handleState00();
+                    break;
                 case STATE_0:
                     if (zeroEnter) {
                         Server_31.WriteServer("Ready to move!");

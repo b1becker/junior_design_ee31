@@ -7,6 +7,11 @@
 
 #define StateDelay 500
 
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
+
 /********** Constructir ********
 *
 * Makes BotMotion Object
@@ -20,6 +25,55 @@ States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, col
     ourWeb = server;
     ourCollider = my_Collider;
     ourCS = my_CS;
+}
+
+/********** State 00 ********
+*
+* Calibrates bot colors
+*
+************************/   
+void States::handleState00() {
+    String myCommand;
+
+    //Black Calibration
+    delay(StateDelay);
+    ourWeb->WriteServer("Place Bot on Black");
+    while (myCommand != "Black"){
+        myCommand = ourWeb->ReadServer();
+    }
+    ourWeb->WriteServer("Starting Calibration...");
+    ourCS->Calibrate(Black);
+    ourWeb->WriteServer("Black Done.");
+
+    //Red Calibration
+    delay(StateDelay);
+    ourWeb->WriteServer("Place Bot on Red");
+    while (myCommand != "Red"){
+        myCommand = ourWeb->ReadServer();
+    }
+    ourWeb->WriteServer("Starting Calibration...");
+    ourCS->Calibrate(Red);
+    ourWeb->WriteServer("Red Done.");
+
+    //Blue Calibration
+    delay(StateDelay);
+    ourWeb->WriteServer("Place Bot on Blue");
+    while (myCommand != "Blue"){
+        myCommand = ourWeb->ReadServer();
+    }
+    ourWeb->WriteServer("Starting Calibration...");
+    ourCS->Calibrate(Blue);
+    ourWeb->WriteServer("Blue Done.");
+
+    //Yellow Calibration 
+    delay(StateDelay);
+    ourWeb->WriteServer("Place Bot on Yellow");
+    while (myCommand != "Yellow"){
+        myCommand = ourWeb->ReadServer();
+    }
+    ourWeb->WriteServer("Starting Calibration...");
+    ourCS->Calibrate(Yellow);
+    ourWeb->WriteServer("Yellow Done.");
 }
 
 void States::laneFollow(String output_color) {

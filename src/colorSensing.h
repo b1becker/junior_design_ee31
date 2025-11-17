@@ -14,6 +14,9 @@ private:
     int photoresistor_pin;
     bool inRange(int v, int lo, int hi) { return v >= lo && v <= hi; }
 
+    //Black = 0, Red = 1, Blue = 2, Yellow = 3
+    int colorVal[4];
+
 public:
     colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin);
     void loop(String &output_color);
@@ -23,6 +26,8 @@ public:
     String colorDetector(int bvout, int rvout, int maxv);
     ColorTag current = COLOR_UNKNOWN;
     String colorSensed;
+    void Calibrate(int color);
+
     // ~colorSensing();
 };
 
