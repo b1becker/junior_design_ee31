@@ -26,13 +26,23 @@
 #define MOTOR_B2 8    // L293 IN4
 #define ENB 10         // L293 EN2 (PWM pin for Motor B)
 
-#define PHOTORESISTOR_PIN A3 
-#define RED_LED_PIN 5 
-#define BLUE_LED_PIN 9
 
+// Left Color Sensor
+#define L_Photoresistor_PIN A3 
+#define L_RED_LED_PIN 5 
+#define L_BLUE_LED_PIN 9
+
+// Right Color Sensor TO-DO
+#define R_Photoresistor_PIN 0
+#define R_RED_LED_PIN 0
+#define R_BLUE_LED_PIN 0
+
+
+// Collision Sensor
 #define PHOTODIODE_PIN A2
 #define IR_LED 2
 
+// State Definition
 #define STATE_00 100
 #define STATE_0 0
 #define STATE_1 1
@@ -46,10 +56,6 @@
 #define STATE_9 9
 #define STATE_10 10
 #define STATE_11 11
-
-#define STD_DELAY 50
-#define N_SAMPLES 10
-#define DISTANCE_THRESHOLD 10
 
 int currentState = STATE_0;
 
@@ -65,14 +71,14 @@ int count = 0;
 String message;
 
 WebSocket Server_31(serverAddress, port, ssid, password);
-colorSensing my_ColorSensor(RED_LED_PIN, BLUE_LED_PIN, PHOTORESISTOR_PIN);
+colorSensing myLeftSensor(L_RED_LED_PIN, L_BLUE_LED_PIN, L_Photoresistor_PIN);
+colorSensing myRightSensor(R_RED_LED_PIN, R_BLUE_LED_PIN, R_Photoresistor_PIN);
 collision my_Collider(PHOTODIODE_PIN, IR_LED);
 BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
-States my_states(&my_Bot, &Server_31, &my_Collider, &my_ColorSensor);
+States my_states(&my_Bot, &Server_31, &my_Collider, &myLeftSensor, &myRightSensor);
 Demo my_demo(&my_Bot, &Server_31);
 
-String output_color;
 
 /*****************************************************************
 *                  SET ON WHEN SOCKET CONNECTED
@@ -99,36 +105,19 @@ void setup() {
     my_Bot.stop();
     // Set LED pins as outputs
     // color sensing setup
-    pinMode(RED_LED_PIN, OUTPUT);
-    pinMode(BLUE_LED_PIN, OUTPUT);
-    pinMode(PHOTORESISTOR_PIN, INPUT);
+    pinMode(L_RED_LED_PIN, OUTPUT);
+    pinMode(L_BLUE_LED_PIN, OUTPUT);
+    pinMode(L_Photoresistor_PIN, INPUT);
     
     // Turn off LEDs initially
-    digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, LOW);
+    digitalWrite(L_RED_LED_PIN, LOW);
+    digitalWrite(L_BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
 
 }
-/********** overview of states ********
-*
-* 0: stop
-* 1: forward
-  2: backwards
-  3: spin cw
-  4: spin ccw
-  5: turn right
-  6: turn left
-  7: error
-*
-************************/  
 
 void loop() {
-    // my_ColorSensor.loop(output_color);
-    // Serial.print("Color = "); Serial.println(output_color);
-
-    // my_Collider.loop();
-    
     // this is the loop for the lane detection
 
     while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
@@ -187,9 +176,9 @@ void loop() {
                     my_demo.PartnerDemo();
                     break;
                 case STATE_11:
-                    my_states.laneFollow(output_color);
+                    my_states.laneFollow();
                 default: 
-                    my_states.handleErrorState(); 
+                    my_states.handleErrorState();
                     break;
             }
             if(currentState != 0){
@@ -197,11 +186,6 @@ void loop() {
                 zeroEnter = true;
             }
 
-            // my_ColorSensor.loop(output_color);
-            // Serial.print("Color = "); 
-            // Serial.println(output_color);
-
-            // my_Collider.loop();
             delay(1); 
 
             if(Server_31.ConnectionStatus() == false){

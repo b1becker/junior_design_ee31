@@ -20,11 +20,12 @@
 *      Arduino Pins
 *
 ************************/
-States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *my_CS) {
+States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *my_LeftCS, colorSensing *my_RightCS) {
     ourBot = MyBot;
     ourWeb = server;
     ourCollider = my_Collider;
-    ourCS = my_CS;
+    ourLeftCS = my_LeftCS;
+    ourRightCS = my_RightCS;
 }
 
 /********** State 00 ********
@@ -42,7 +43,8 @@ void States::handleState00() {
         myCommand = ourWeb->ReadServer();
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourCS->Calibrate(Black);
+    ourLeftCS->Calibrate(Black);
+    ourRightCS->Calibrate(Black);
     ourWeb->WriteServer("Black Done.");
 
     //Red Calibration
@@ -52,7 +54,8 @@ void States::handleState00() {
         myCommand = ourWeb->ReadServer();
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourCS->Calibrate(Red);
+    ourLeftCS->Calibrate(Red);
+    ourRightCS->Calibrate(Red);
     ourWeb->WriteServer("Red Done.");
 
     //Blue Calibration
@@ -62,7 +65,8 @@ void States::handleState00() {
         myCommand = ourWeb->ReadServer();
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourCS->Calibrate(Blue);
+    ourLeftCS->Calibrate(Blue);
+    ourRightCS->Calibrate(Blue);
     ourWeb->WriteServer("Blue Done.");
 
     //Yellow Calibration 
@@ -72,12 +76,15 @@ void States::handleState00() {
         myCommand = ourWeb->ReadServer();
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourCS->Calibrate(Yellow);
+    ourLeftCS->Calibrate(Yellow);
+    ourRightCS->Calibrate(Yellow);
     ourWeb->WriteServer("Yellow Done.");
 }
 
-void States::laneFollow(String output_color) {
+void States::laneFollow() {
     // hard coded inputs
+    String LeftColor;
+    String RightColor;
     String myCommand = ourWeb->ReadServer();
     bool wallFound = false;
     int distance;
@@ -86,20 +93,27 @@ void States::laneFollow(String output_color) {
         distance = ourCollider->loop(&wallFound);
         ourWeb->WriteServer(String(distance)); 
         handleState1();
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        if (wallFound == true) {
+            handleState0();
+            break;
+        }
         
 
-        ourCS->loop(output_color);
-        Serial.println(output_color);
-        delay(StateDelay);
+        ourLeftCS->loop(LeftColor);
+        ourRightCS->loop(RightColor);
+        if(LeftColor != "red" && RightColor == "red") {
+            // We have veered left
+            handleState4();
+        } else if (RightColor != "red" && LeftColor == "red"){
+            handleState3();
+        } else {
+            handleState1();
+        }
         // if(output_color != "red") {
         //     // correct itself
         //     // correct to the left
         //     handleState3();
-        //     ourCS->loop(output_color);
+        //     ourLeftCS->loop(output_color);
         //     if(output_color != "red") {
         //         // correct to the right
         //         handleState4();
