@@ -13,7 +13,7 @@ public:
     /*****************************************************************
     *                  Constructors & Deconstructors
     *****************************************************************/
-    States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *cs);
+    States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, colorSensing *my_LeftCS, colorSensing *my_RightCS);
 
 
 
@@ -31,12 +31,13 @@ public:
     void handleErrorState();
 
     // for lane following testing
-    void laneFollow(String output_color);
+    void laneFollow();
 
 private:
     BotMotions *ourBot;
     WebSocket *ourWeb;
-    colorSensing *ourCS;
+    colorSensing *ourLeftCS;
+    colorSensing *ourRightCS;
     collision *ourCollider;
 };
 
