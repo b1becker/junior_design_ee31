@@ -5,7 +5,7 @@
 #include "colorSensing.h"
 #include "collision.h"
 
-#define StateDelay 500
+#define StateDelay 50
 
 #define Black 0
 #define Red 1
@@ -77,6 +77,7 @@ void States::handleState00() {
 }
 
 void States::laneFollow(String output_color) {
+    ourCollider->setup();
     // hard coded inputs
     String myCommand = ourWeb->ReadServer();
     bool wallFound = false;
@@ -86,14 +87,14 @@ void States::laneFollow(String output_color) {
         distance = ourCollider->loop(&wallFound);
         ourWeb->WriteServer(String(distance)); 
         handleState1();
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        if (wallFound == true) {
+            handleState0();
+            break;
+        }
         
 
-        ourCS->loop(output_color);
-        Serial.println(output_color);
+        // ourCS->loop(output_color);
+        // Serial.println(output_color);
         delay(StateDelay);
         // if(output_color != "red") {
         //     // correct itself

@@ -3,9 +3,9 @@
 
 using namespace std;
 
-#define STD_DELAY 50
-#define N_SAMPLES 10
-#define DISTANCE_THRESHOLD 250
+#define STD_DELAY 1
+#define N_SAMPLES 7
+#define DISTANCE_THRESHOLD 300
 
 
 
@@ -24,7 +24,7 @@ void collision::setup() {
     pinMode(irLED, OUTPUT);
     
     // Initialize buffers with N_SAMPLES readings using for loop
-    Serial.println("Initializing collision sensor buffers...");
+    // Serial.println("Initializing collision sensor buffers...");
     
     for (int i = 0; i < N_SAMPLES; i++) {
         // irLED low and sample OFF
@@ -44,10 +44,10 @@ void collision::setup() {
     offAVG /= N_SAMPLES;
     onAVG /= N_SAMPLES;
     
-    Serial.print("Initial offAVG: ");
-    Serial.println(offAVG);
-    Serial.print("Initial onAVG: ");
-    Serial.println(onAVG);
+    // Serial.print("Initial offAVG: ");
+    // Serial.println(offAVG);
+    // Serial.print("Initial onAVG: ");
+    // Serial.println(onAVG);
 }
 
 int collision::loop(bool* wall) {
@@ -66,8 +66,8 @@ int collision::loop(bool* wall) {
     offAVG -= curr_off_buffer / N_SAMPLES;
     offAVG += curr_off_read / N_SAMPLES;
     
-    Serial.print("offAVG: ");
-    Serial.println(offAVG);
+    // Serial.print("offAVG: ");
+    // Serial.println(offAVG);
     delay(STD_DELAY);
     
     // irLED high and sample
@@ -81,23 +81,23 @@ int collision::loop(bool* wall) {
     onAVG -= curr_on_buffer / N_SAMPLES;
     onAVG += curr_on_read / N_SAMPLES;
     
-    Serial.print("onAVG: ");
-    Serial.println(onAVG);
+    // Serial.print("onAVG: ");
+    // Serial.println(onAVG);
     delay(STD_DELAY);
     
-    // Advance circular buffer index with wraparound
+    // Advance circular buffer with wrap around
     curr_buffer_index = (curr_buffer_index + 1) % N_SAMPLES;
     
-    // reflection with ambient - ambient = just reflected
+    
     int reflected = onAVG - offAVG;
     
     if (reflected > DISTANCE_THRESHOLD) {
-        Serial.print("Collision approaching! Reflected = ");
-        Serial.println(reflected);
+        // Serial.print("Collision approaching! Reflected = ");
+        // Serial.println(reflected);
         *wall = true;
     } else {
-        Serial.print("Continue with clear path. Reflected = ");
-        Serial.println(reflected);
+        // Serial.print("Continue with clear path. Reflected = ");
+        // Serial.println(reflected);
         *wall = false;
     }
     
