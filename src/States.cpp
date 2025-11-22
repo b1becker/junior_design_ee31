@@ -92,7 +92,7 @@ void States::handleState00() {
     ourWeb->WriteServer(message);
 }
 
-void States::laneFollow(String output_color) {
+void States::laneFollow() {
     ourCollider->setup();
     // hard coded inputs
     String LeftColor;
