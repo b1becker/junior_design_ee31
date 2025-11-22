@@ -29,13 +29,12 @@
 
 // Left Color Sensor
 #define L_Photoresistor_PIN A3 
-#define L_RED_LED_PIN 5 
-#define L_BLUE_LED_PIN 9
+#define RED_LED_PIN 5 
+#define BLUE_LED_PIN 9
 
 // Right Color Sensor TO-DO
-#define R_Photoresistor_PIN 0
-#define R_RED_LED_PIN 0
-#define R_BLUE_LED_PIN 0
+#define R_Photoresistor_PIN A1
+
 
 
 // Collision Sensor
@@ -71,8 +70,8 @@ int count = 0;
 String message;
 
 WebSocket Server_31(serverAddress, port, ssid, password);
-colorSensing myLeftSensor(L_RED_LED_PIN, L_BLUE_LED_PIN, L_Photoresistor_PIN);
-colorSensing myRightSensor(R_RED_LED_PIN, R_BLUE_LED_PIN, R_Photoresistor_PIN);
+colorSensing myLeftSensor(RED_LED_PIN, BLUE_LED_PIN, L_Photoresistor_PIN);
+colorSensing myRightSensor(RED_LED_PIN, BLUE_LED_PIN, R_Photoresistor_PIN);
 collision my_Collider(PHOTODIODE_PIN, IR_LED);
 BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
@@ -105,13 +104,13 @@ void setup() {
     my_Bot.stop();
     // Set LED pins as outputs
     // color sensing setup
-    pinMode(L_RED_LED_PIN, OUTPUT);
-    pinMode(L_BLUE_LED_PIN, OUTPUT);
+    pinMode(RED_LED_PIN, OUTPUT);
+    pinMode(BLUE_LED_PIN, OUTPUT);
     pinMode(L_Photoresistor_PIN, INPUT);
     
     // Turn off LEDs initially
-    digitalWrite(L_RED_LED_PIN, LOW);
-    digitalWrite(L_BLUE_LED_PIN, LOW);
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
 

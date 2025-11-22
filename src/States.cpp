@@ -79,6 +79,17 @@ void States::handleState00() {
     ourLeftCS->Calibrate(Yellow);
     ourRightCS->Calibrate(Yellow);
     ourWeb->WriteServer("Yellow Done.");
+
+    ourWeb->WriteServer("Final Values");
+    String message;
+    message = "Black, Left: " + String(ourLeftCS->colorVal[Black]) +  " Right: " + String(ourRightCS->colorVal[Black]);
+    ourWeb->WriteServer(message);
+    message = "Red, Left: " + String(ourLeftCS->colorVal[Red]) +  " Right: " + String(ourRightCS->colorVal[Red]);
+    ourWeb->WriteServer(message);
+    message = "Blue, Left: " + String(ourLeftCS->colorVal[Blue]) +  " Right: " + String(ourRightCS->colorVal[Blue]);
+    ourWeb->WriteServer(message);
+    message = "Yellow, Left: " + String(ourLeftCS->colorVal[Yellow]) +  " Right: " + String(ourRightCS->colorVal[Yellow]);
+    ourWeb->WriteServer(message);
 }
 
 void States::laneFollow(String output_color) {
@@ -94,15 +105,22 @@ void States::laneFollow(String output_color) {
         distance = ourCollider->loop(&wallFound);
         ourWeb->WriteServer(String(distance)); 
         handleState1();
-        if (wallFound == true) {
-            handleState0();
-            break;
-        }
+        // if (wallFound == true) {
+        //     handleState0();
+        //     break;
+        // }
         
 
-        ourCS->loop(output_color);
-        Serial.println(output_color);
-        delay(StateDelay);
+        ourLeftCS->loop(LeftColor);
+        ourRightCS->loop(RightColor);
+        // if(LeftColor != "red" && RightColor == "red") {
+        //     // We have veered left
+        //     handleState4();
+        // } else if (RightColor != "red" && LeftColor == "red"){
+        //     handleState3();
+        // } else {
+        //     handleState1();
+        // }
         // if(output_color != "red") {
         //     // correct itself
         //     // correct to the left

@@ -206,5 +206,5 @@ void colorSensing::Calibrate(int color){
         delay(STD_DELAY);
         colorSum += 1.0 * redv / (redv + bluev);
     }
-    colorVal[color] = colorSum;
+    colorVal[color] = (colorSum * 0.01);
 }
