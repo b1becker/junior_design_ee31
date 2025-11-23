@@ -237,10 +237,12 @@ void States::handleState0() {
 ************************/   
 void States::handleState1() {
     delay(FORWARD_DELAY);
+    
     Serial.println("Going Forward");
     // delay(StateDelay);
     ourBot->forward();
     delay(FORWARD_DELAY);
+    
     
 }
 

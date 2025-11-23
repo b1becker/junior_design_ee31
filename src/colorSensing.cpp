@@ -10,7 +10,7 @@
 #define Blue 2
 #define Yellow 3
 
-#define STD_DELAY 500
+#define STD_DELAY 5
 #define BUFFER_SIZE 5
 
 #define SAMPLE_SIZE 50
