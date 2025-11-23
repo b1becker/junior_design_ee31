@@ -36,59 +36,55 @@ States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, col
 void States::handleState00() {
     String myCommand;
 
-    //Black Calibration
-    delay(StateDelay);
     ourWeb->WriteServer("Place Bot on Black");
     while (myCommand != "Black"){
         myCommand = ourWeb->ReadServer();
+        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(Black);
-    ourRightCS->Calibrate(Black);
+    ourLeftCS->Calibrate(COLOR_BLACK);
+    ourRightCS->Calibrate(COLOR_BLACK);
     ourWeb->WriteServer("Black Done.");
 
     //Red Calibration
-    delay(StateDelay);
     ourWeb->WriteServer("Place Bot on Red");
     while (myCommand != "Red"){
         myCommand = ourWeb->ReadServer();
+        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(Red);
-    ourRightCS->Calibrate(Red);
+    ourLeftCS->Calibrate(COLOR_RED);
+    ourRightCS->Calibrate(COLOR_RED);
     ourWeb->WriteServer("Red Done.");
 
     //Blue Calibration
-    delay(StateDelay);
     ourWeb->WriteServer("Place Bot on Blue");
     while (myCommand != "Blue"){
         myCommand = ourWeb->ReadServer();
+        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(Blue);
-    ourRightCS->Calibrate(Blue);
+    ourLeftCS->Calibrate(COLOR_BLUE);
+    ourRightCS->Calibrate(COLOR_BLUE);
     ourWeb->WriteServer("Blue Done.");
 
     //Yellow Calibration 
-    delay(StateDelay);
     ourWeb->WriteServer("Place Bot on Yellow");
     while (myCommand != "Yellow"){
         myCommand = ourWeb->ReadServer();
+        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(Yellow);
-    ourRightCS->Calibrate(Yellow);
+    ourLeftCS->Calibrate(COLOR_YELLOW);
+    ourRightCS->Calibrate(COLOR_YELLOW);
     ourWeb->WriteServer("Yellow Done.");
 
     ourWeb->WriteServer("Final Values");
     String message;
-    message = "Black, Left: " + String(ourLeftCS->colorVal[Black]) +  " Right: " + String(ourRightCS->colorVal[Black]);
-    ourWeb->WriteServer(message);
-    message = "Red, Left: " + String(ourLeftCS->colorVal[Red]) +  " Right: " + String(ourRightCS->colorVal[Red]);
-    ourWeb->WriteServer(message);
-    message = "Blue, Left: " + String(ourLeftCS->colorVal[Blue]) +  " Right: " + String(ourRightCS->colorVal[Blue]);
-    ourWeb->WriteServer(message);
-    message = "Yellow, Left: " + String(ourLeftCS->colorVal[Yellow]) +  " Right: " + String(ourRightCS->colorVal[Yellow]);
+    message = "Black, Left: " + String(ourLeftCS->colorVal[COLOR_BLACK]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLACK])
+    + "\nRed, Left: " + String(ourLeftCS->colorVal[COLOR_RED]) +  " Right: " + String(ourRightCS->colorVal[COLOR_RED])
+    + "\nBlue, Left: " + String(ourLeftCS->colorVal[COLOR_BLUE]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLUE]) 
+    + "\nYellow, Left: " + String(ourLeftCS->colorVal[COLOR_YELLOW]) +  " Right: " + String(ourRightCS->colorVal[COLOR_YELLOW]);
     ourWeb->WriteServer(message);
 }
 
@@ -101,18 +97,23 @@ void States::laneFollow() {
     bool wallFound = false;
     int distance;
     // Bot 1 receives the signal and moves forward for five seconds then stop.
+    static unsigned long lastSend = 0;
     while (myCommand != "Stop") {
         distance = ourCollider->loop(&wallFound);
-        ourWeb->WriteServer(String(distance)); 
+        ourLeftCS->loop(LeftColor);
+        ourRightCS->loop(RightColor);
+        
+        if (millis() - lastSend > 2000) {      
+            String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
+            ourWeb->WriteServer(message);
+            lastSend = millis();
+        }
         handleState1();
         // if (wallFound == true) {
         //     handleState0();
         //     break;
         // }
         
-
-        ourLeftCS->loop(LeftColor);
-        ourRightCS->loop(RightColor);
         // if(LeftColor != "red" && RightColor == "red") {
         //     // We have veered left
         //     handleState4();
@@ -136,6 +137,11 @@ void States::laneFollow() {
         // else {
         //     handleState1();
         // }
+        if (!ourWeb->ConnectionStatus()) {
+            Serial.println("Connection lost");
+            break;
+        }
+        
         delay(1);
         myCommand = ourWeb->ReadServer();
     }

@@ -86,20 +86,22 @@ void colorSensing::loop(String &output_color) {
 
 void colorSensing::read_red(int &red_v) {
     digitalWrite(red_led, HIGH);
-    delay(STD_DELAY);
+    delay(5);
     red_v = analogRead(photoresistor_pin);
-    delay(STD_DELAY);
+    delay(5);
     Serial.print("RedV = "); Serial.println(red_v);
     digitalWrite(red_led, LOW);
+    delay(10);
 }
 
 void colorSensing::read_blue(int &blue_v) {
     digitalWrite(blue_led, HIGH);
-    delay(STD_DELAY);
+    delay(5);
     blue_v = analogRead(photoresistor_pin);
-    delay(STD_DELAY);
+    delay(5);
     Serial.print("RedV = "); Serial.println(blue_v);
     digitalWrite(blue_led, LOW);
+    delay(10);
 }
 
 // String colorSensing::colorDetector(int bvout, int rvout, int maxv) {
@@ -186,25 +188,12 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
 
 void colorSensing::Calibrate(int color){
     float colorSum = 0.0;
-    for (int i = 0; i < 100; i++) {
-        digitalWrite(red_led, HIGH);
-        delay(STD_DELAY);
-        int redv = analogRead(photoresistor_pin);
-        // delay(STD_DELAY);
-        Serial.print("RedV = "); Serial.println(redv);
-        digitalWrite(red_led, LOW);
-        
-        delay(STD_DELAY);
-        
-        // Measure and print blue voltage output
-        digitalWrite(blue_led, HIGH);
-        delay(STD_DELAY);
-        int bluev = analogRead(photoresistor_pin);
-        // delay(STD_DELAY);
-        digitalWrite(blue_led, LOW);
-        Serial.print("BlueV = "); Serial.println(bluev);
-        delay(STD_DELAY);
+    int redv;
+    int bluev;
+    for (int i = 0; i < 50; i++) {
+        read_red(redv);
+        read_blue(bluev);
         colorSum += 1.0 * redv / (redv + bluev);
     }
-    colorVal[color] = (colorSum * 0.01);
+    colorVal[color] = colorSum / 50;
 }
