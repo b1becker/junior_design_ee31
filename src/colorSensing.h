@@ -26,7 +26,8 @@ private:
 
 public:
     colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin);
-    void loop(String &output_color);
+    void colorSensing::loop(String &output_color, ColorRef &curr_index);
+    void colorSensing::greedyLoop(String &output_color, ColorRef &curr_index);
     void setup();
     void read_red(int &red_v);
     void read_blue(int &blue_v);
@@ -34,6 +35,7 @@ public:
     ColorTag current = COLOR_UNKNOWN;
     String colorSensed;
     void Calibrate(int color);
+
     
 
     ColorRef colorVal[4];

@@ -10,7 +10,7 @@
 #define Blue 2
 #define Yellow 3
 
-#define STD_DELAY 500
+#define STD_DELAY 5
 #define BUFFER_SIZE 5
 
 #define SAMPLE_SIZE 50
@@ -20,7 +20,11 @@
 #define RED_RATIO 0.51
 #define BLUE_RATIO 0.65
 #define YELLOW_RATIO 0.45
-#define TOLERANCE 0.01 // +- 0.0015
+
+
+#define TOLERANCE 15000
+
+
 
 
 colorSensing::colorSensing(int red_led_pin, int blue_led_pin, int photoresistor_led_pin) {
@@ -38,9 +42,34 @@ void colorSensing::setup() {
     
 }
 
+void colorSensing::greedyLoop(String &output_color, ColorRef &curr_index) {
+    digitalWrite(red_led, HIGH);
+    delay(STD_DELAY);
+    int redv = analogRead(photoresistor_pin);
+    digitalWrite(red_led, LOW);
+    delay(STD_DELAY);
+
+    digitalWrite(blue_led, HIGH);
+    delay(STD_DELAY);
+    int bluev = analogRead(photoresistor_pin);
+    digitalWrite(blue_led, LOW);
+    delay(STD_DELAY);
+
+    int dRed = redv - curr_index.red;
+    int dBlue = bluev - curr_index.blue; 
+    int distSquared = dRed * dRed + dBlue * dBlue;
+
+    if(distSquared < TOLERANCE) {
+        return;
+    }
+    output_color = "Black";
 
 
-void colorSensing::loop(String &output_color) {
+}
+
+
+
+void colorSensing::loop(String &output_color, ColorRef &curr_index) {
     digitalWrite(red_led, HIGH);
     delay(STD_DELAY);
     int redv = analogRead(photoresistor_pin);
@@ -54,10 +83,6 @@ void colorSensing::loop(String &output_color) {
     delay(STD_DELAY);
 
     // Debug: print current reading
-    Serial.print("Sample: R=");
-    Serial.print(redv);
-    Serial.print(" B=");
-    Serial.println(bluev);
 
     float minDist = 999999.0;
     int detectedColorIndex = COLOR_UNKNOWN;
@@ -78,9 +103,11 @@ void colorSensing::loop(String &output_color) {
             detectedColorIndex = i;
         }
     }
-
+    curr_index = colorVal[detectedColorIndex];  // Copy the values
+    
     switch(detectedColorIndex) {
-        case COLOR_BLUE:   output_color = "blue"; break;
+        case COLOR_BLUE:   
+            output_color = "blue"; break;
         case COLOR_RED:    output_color = "red"; break;
         case COLOR_YELLOW: output_color = "yellow"; break;
         case COLOR_BLACK:  output_color = "black"; break;

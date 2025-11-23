@@ -7,7 +7,7 @@
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
 
-#define SPEED 175
+#define SPEED 117
 
 #define LSPEED 135
 #define RSPEED 250
@@ -65,6 +65,7 @@ void BotMotions::forward() {
     // analogWrite(ena, SPEED); 
     analogWrite(enb, SPEED );
     analogWrite(ena, SPEED ); 
+
 
     // delay(MOTION_DELAY / 8);
 

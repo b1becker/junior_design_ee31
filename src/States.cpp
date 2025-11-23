@@ -28,8 +28,10 @@ States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, col
     ourBot = MyBot;
     ourWeb = server;
     ourCollider = my_Collider;
-    ourLeftCS = my_LeftCS;
-    ourRightCS = my_RightCS;
+    
+    ourRightCS = my_LeftCS;
+    ourLeftCS = my_RightCS;
+    
 }
 
 /********** State 00 ********
@@ -105,7 +107,7 @@ void States::handleState00() {
     String myCommand;
     
     // Calibrate all 4 colors
-    const char* colors[] = {"Black", "Red", "Blue", "Yellow"};
+    const char *colors[] = {"Black", "Red", "Blue", "Yellow"};
     ColorTag colorTags[] = {COLOR_BLACK, COLOR_RED, COLOR_BLUE, COLOR_YELLOW};
     
     for (int i = 0; i < 4; i++) {
@@ -154,70 +156,65 @@ void States::handleState00() {
 void States::laneFollow() {
     ourCollider->setup();
     handleState0();
-    // hard coded inputs
+    
     String LeftColor;
     String RightColor;
     String myCommand = ourWeb->ReadServer();
+
+    ColorRef curr_ref_right;
+    ColorRef curr_ref_left;
     bool wallFound = false;
     int distance;
-    // Bot 1 receives the signal and moves forward for five seconds then stop.
+
+    String target_color;
+    ourRightCS->loop(target_color, curr_ref_right);
+
+    
     static unsigned long lastSend = 0;
-    handleState1();
+    handleState1();  // Start moving forward
+
     while (myCommand != "Stop") {
-        // distance = ourCollider->loop(&wallFound);
+        // Get color readings
+        ourRightCS->loop(RightColor, curr_ref_right);
+        ourLeftCS->loop(LeftColor, curr_ref_left);
 
-
-        ourRightCS->loop(RightColor);
-        ourLeftCS->loop(LeftColor);
-        
-        
-        
-        
-        if (millis() - lastSend > 2000) {      
+        // Send status every 10ms (independent of motion control)
+        if (millis() - lastSend > 10) {      
             String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
             ourWeb->WriteServer(message);
             lastSend = millis();
         }
-        
-        
 
-
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        // Lane following logic (runs every loop, not in else-if)
+        if (LeftColor != target_color && RightColor == target_color) {
+            // Left sensor off line, right on line → turn left
+            handleState3();
+        }
+        else if (RightColor != target_color && LeftColor == target_color) {
+            // Right sensor off line, left on line → turn right
+            handleState4();
+        }
+        else if (LeftColor == target_color && RightColor == target_color) {
+            // Both on line → go straight
+            handleState1();
+        }
+        else {
+            // Both off line → stop or continue last action
+            handleState3();  // or keep last state
+        }
         
-        // if(LeftColor != "red" && RightColor == "red") {
-        //     // We have veered left
-        //     handleState4();
-        // } else if (RightColor != "red" && LeftColor == "red"){
-        //     handleState3();
-        // } else {
-        //     handleState1();
-        // }
-        // if(output_color != "red") {
-        //     // correct itself
-        //     // correct to the left
-        //     handleState3();
-        //     ourLeftCS->loop(output_color);
-        //     if(output_color != "red") {
-        //         // correct to the right
-        //         handleState4();
-        //         handleState4();
-        //         handleState4();
-        //     }
-        // }
-        // else {
-        //     handleState1();
-        // }
+        // Check connection
         if (!ourWeb->ConnectionStatus()) {
             Serial.println("Connection lost");
+            handleState0();
             break;
         }
         
         delay(1);
         myCommand = ourWeb->ReadServer();
     }
+    
+    handleState0();  // Stop when exiting
 }
 
 /********** State 0 ********
