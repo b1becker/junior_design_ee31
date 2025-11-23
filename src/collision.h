@@ -1,7 +1,7 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#define N_SAMPLES 7
+#define N_SAMPLES 10
 
 class collision
 {
