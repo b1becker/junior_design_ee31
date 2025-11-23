@@ -5,6 +5,10 @@
 
 // the normalised ratio formula can be computed using V_ratio = V_red / (V_red + V_blue)
 
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
 
 #define STD_DELAY 50
 
@@ -33,6 +37,12 @@ void colorSensing::setup() {
 
 
 void colorSensing::loop(String &output_color) {
+    // // digitalWrite(red_led, HIGH);
+    // int vout = analogRead(photoresistor_pin);
+    // delay(STD_DELAY);
+    // Serial.print("Vout = ");Serial.println(vout);
+    // delay(STD_DELAY);
+
     // red flash
     digitalWrite(red_led, HIGH);
     delay(STD_DELAY);
@@ -53,8 +63,7 @@ void colorSensing::loop(String &output_color) {
 
     delay(STD_DELAY);
 
-    String color = calibratedColorDetector(bluev, redv, 1023);
-    // String color = colorDetector(bluev, redv, 1023);
+    String color = colorDetector(bluev, redv, 1023);
     String detectedColor;
 
     if (color == "0") {
@@ -77,22 +86,20 @@ void colorSensing::loop(String &output_color) {
 
 void colorSensing::read_red(int &red_v) {
     digitalWrite(red_led, HIGH);
-    delay(10);
+    delay(STD_DELAY);
     red_v = analogRead(photoresistor_pin);
-    delay(10);
-    // Serial.print("RedV = "); Serial.println(red_v);
+    delay(STD_DELAY);
+    Serial.print("RedV = "); Serial.println(red_v);
     digitalWrite(red_led, LOW);
-    delay(5);
 }
 
 void colorSensing::read_blue(int &blue_v) {
     digitalWrite(blue_led, HIGH);
-    delay(10);
+    delay(STD_DELAY);
     blue_v = analogRead(photoresistor_pin);
-    delay(10);
-    // Serial.print("RedV = "); Serial.println(blue_v);
+    delay(STD_DELAY);
+    Serial.print("RedV = "); Serial.println(blue_v);
     digitalWrite(blue_led, LOW);
-    delay(5);
 }
 
 // String colorSensing::colorDetector(int bvout, int rvout, int maxv) {
@@ -155,47 +162,49 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
     else {
         current = COLOR_UNKNOWN;
     }
+
+    // Bot Calibration code.
+    // if (color_ratio >= colorVal[Black] - TOLERANCE and color_ratio <= colorVal[Black] + TOLERANCE) {
+    //     current = COLOR_BLACK;
+    // }
+    // else if (color_ratio >= colorVal[Red] - TOLERANCE and color_ratio <= colorVal[Red] + TOLERANCE) {
+    //     current = COLOR_RED;
+    // }
+    // else if (color_ratio >= colorVal[Blue] - TOLERANCE and color_ratio <= colorVal[Blue] + TOLERANCE) {
+    //     current = COLOR_BLUE;
+    // }
+    // else if (color_ratio >= colorVal[Yellow] - TOLERANCE and color_ratio <= colorVal[Yellow] + TOLERANCE) {
+    //     current = COLOR_YELLOW;
+    // }
+    // else {
+    //     current = COLOR_UNKNOWN;
+    // }
   
 
   return String(ColorTag(current));
 }
 
-String colorSensing::calibratedColorDetector(int bvout, int rvout, int maxv /*=1023*/) {
-    float color_ratio = 1.0 * rvout / (rvout + bvout);
-
-    if (color_ratio >= colorVal[COLOR_BLACK] - TOLERANCE and color_ratio <= colorVal[COLOR_BLACK] + TOLERANCE) {
-        current = COLOR_BLACK;
-    }
-    else if (color_ratio >= colorVal[COLOR_RED] - TOLERANCE and color_ratio <= colorVal[COLOR_RED] + TOLERANCE) {
-        current = COLOR_RED;
-    }
-    else if (color_ratio >= colorVal[COLOR_BLUE] - TOLERANCE and color_ratio <= colorVal[COLOR_BLUE] + TOLERANCE) {
-        current = COLOR_BLUE;
-    }
-    else if (color_ratio >= colorVal[COLOR_YELLOW] - TOLERANCE and color_ratio <= colorVal[COLOR_YELLOW] + TOLERANCE) {
-        current = COLOR_YELLOW;
-    }
-    else {
-        current = COLOR_UNKNOWN;
-    }
-    return String(ColorTag(current));
-}
-
-void colorSensing::Calibrate(int color) {
+void colorSensing::Calibrate(int color){
     float colorSum = 0.0;
-    int redv;
-    int bluev;
-    for (int i = 0; i < 50; i++) {
-        read_red(redv);
-        read_blue(bluev);
-
-        int total = redv + bluev;
-        if (total != 0) {
-            float ratio = float(redv) / float(total);
-            colorSum += ratio;
-        }
+    for (int i = 0; i < 100; i++) {
+        digitalWrite(red_led, HIGH);
+        delay(STD_DELAY);
+        int redv = analogRead(photoresistor_pin);
+        // delay(STD_DELAY);
+        Serial.print("RedV = "); Serial.println(redv);
+        digitalWrite(red_led, LOW);
+        
+        delay(STD_DELAY);
+        
+        // Measure and print blue voltage output
+        digitalWrite(blue_led, HIGH);
+        delay(STD_DELAY);
+        int bluev = analogRead(photoresistor_pin);
+        // delay(STD_DELAY);
+        digitalWrite(blue_led, LOW);
+        Serial.print("BlueV = "); Serial.println(bluev);
+        delay(STD_DELAY);
+        colorSum += 1.0 * redv / (redv + bluev);
     }
-
-    // Average of the 50 samples
-    colorVal[color] = colorSum / 50.0;
+    colorVal[color] = (colorSum * 0.01);
 }

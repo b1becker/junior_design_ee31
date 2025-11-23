@@ -7,6 +7,10 @@
 
 #define StateDelay 50
 
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
 
 /********** Constructir ********
 *
@@ -37,11 +41,10 @@ void States::handleState00() {
     ourWeb->WriteServer("Place Bot on Black");
     while (myCommand != "Black"){
         myCommand = ourWeb->ReadServer();
-        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_BLACK);
-    ourRightCS->Calibrate(COLOR_BLACK);
+    ourLeftCS->Calibrate(Black);
+    ourRightCS->Calibrate(Black);
     ourWeb->WriteServer("Black Done.");
 
     //Red Calibration
@@ -49,11 +52,10 @@ void States::handleState00() {
     ourWeb->WriteServer("Place Bot on Red");
     while (myCommand != "Red"){
         myCommand = ourWeb->ReadServer();
-        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_RED);
-    ourRightCS->Calibrate(COLOR_RED);
+    ourLeftCS->Calibrate(Red);
+    ourRightCS->Calibrate(Red);
     ourWeb->WriteServer("Red Done.");
 
     //Blue Calibration
@@ -61,11 +63,10 @@ void States::handleState00() {
     ourWeb->WriteServer("Place Bot on Blue");
     while (myCommand != "Blue"){
         myCommand = ourWeb->ReadServer();
-        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_BLUE);
-    ourRightCS->Calibrate(COLOR_BLUE);
+    ourLeftCS->Calibrate(Blue);
+    ourRightCS->Calibrate(Blue);
     ourWeb->WriteServer("Blue Done.");
 
     //Yellow Calibration 
@@ -73,22 +74,21 @@ void States::handleState00() {
     ourWeb->WriteServer("Place Bot on Yellow");
     while (myCommand != "Yellow"){
         myCommand = ourWeb->ReadServer();
-        delay(2);
     }
     ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_YELLOW);
-    ourRightCS->Calibrate(COLOR_YELLOW);
+    ourLeftCS->Calibrate(Yellow);
+    ourRightCS->Calibrate(Yellow);
     ourWeb->WriteServer("Yellow Done.");
 
     ourWeb->WriteServer("Final Values");
     String message;
-    message = "Black, Left: " + String(ourLeftCS->colorVal[COLOR_BLACK]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLACK]);
+    message = "Black, Left: " + String(ourLeftCS->colorVal[Black]) +  " Right: " + String(ourRightCS->colorVal[Black]);
     ourWeb->WriteServer(message);
-    message = "Red, Left: " + String(ourLeftCS->colorVal[COLOR_RED]) +  " Right: " + String(ourRightCS->colorVal[COLOR_RED]);
+    message = "Red, Left: " + String(ourLeftCS->colorVal[Red]) +  " Right: " + String(ourRightCS->colorVal[Red]);
     ourWeb->WriteServer(message);
-    message = "Blue, Left: " + String(ourLeftCS->colorVal[COLOR_BLUE]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLUE]);
+    message = "Blue, Left: " + String(ourLeftCS->colorVal[Blue]) +  " Right: " + String(ourRightCS->colorVal[Blue]);
     ourWeb->WriteServer(message);
-    message = "Yellow, Left: " + String(ourLeftCS->colorVal[COLOR_YELLOW]) +  " Right: " + String(ourRightCS->colorVal[COLOR_YELLOW]);
+    message = "Yellow, Left: " + String(ourLeftCS->colorVal[Yellow]) +  " Right: " + String(ourRightCS->colorVal[Yellow]);
     ourWeb->WriteServer(message);
 }
 
@@ -101,19 +101,9 @@ void States::laneFollow() {
     bool wallFound = false;
     int distance;
     // Bot 1 receives the signal and moves forward for five seconds then stop.
-    static unsigned long lastSend = 0;
     while (myCommand != "Stop") {
         distance = ourCollider->loop(&wallFound);
-        ourLeftCS->loop(LeftColor);
-        ourRightCS->loop(RightColor);
-        
-        if (millis() - lastSend > 2000) {      
-            String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
-            ourWeb->WriteServer(message);
-            lastSend = millis();
-        }
-
-        
+        ourWeb->WriteServer(String(distance)); 
         handleState1();
         // if (wallFound == true) {
         //     handleState0();
@@ -121,8 +111,8 @@ void States::laneFollow() {
         // }
         
 
-        
-
+        ourLeftCS->loop(LeftColor);
+        ourRightCS->loop(RightColor);
         // if(LeftColor != "red" && RightColor == "red") {
         //     // We have veered left
         //     handleState4();
@@ -146,15 +136,8 @@ void States::laneFollow() {
         // else {
         //     handleState1();
         // }
-        if (!ourWeb->ConnectionStatus()) {
-            Serial.println("Connection lost");
-            break;
-        }
-        
-        
         delay(1);
         myCommand = ourWeb->ReadServer();
-        delay(1);
     }
 }
 
@@ -174,6 +157,7 @@ void States::handleState0() {
 *
 ************************/   
 void States::handleState1() {
+    Serial.println("Going Forward");
     // delay(StateDelay);
     ourBot->forward();
 }
@@ -184,6 +168,7 @@ void States::handleState1() {
 *
 ************************/   
 void States::handleState2() {
+    Serial.println("Going backwards");
     delay(StateDelay);
     ourBot->backward();
 }
@@ -194,6 +179,7 @@ void States::handleState2() {
 *
 ************************/   
 void States::handleState3() {
+    Serial.println("Pivoting Clockwise");
     delay(StateDelay / 8);
     ourBot->pivotCW();
 }
@@ -204,6 +190,7 @@ void States::handleState3() {
 *
 ************************/   
 void States::handleState4() {
+    Serial.println("Pivoting Counterclockwise");
     delay(StateDelay / 8);
     ourBot->pivotCCW();
 }
@@ -214,6 +201,7 @@ void States::handleState4() {
 *
 ************************/   
 void States::handleState5() {
+    Serial.println("Turning Right");
     delay(StateDelay);
     ourBot->right();
 }
@@ -224,6 +212,7 @@ void States::handleState5() {
 *
 ************************/   
 void States::handleState6() {
+    Serial.println("Turning Left");
     delay(StateDelay);
     ourBot->left();
     
