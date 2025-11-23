@@ -43,6 +43,11 @@ void collision::setup() {
     // Calculate initial averages
     offAVG /= N_SAMPLES;
     onAVG /= N_SAMPLES;
+    
+    // Serial.print("Initial offAVG: ");
+    // Serial.println(offAVG);
+    // Serial.print("Initial onAVG: ");
+    // Serial.println(onAVG);
 }
 
 int collision::loop(bool* wall) {
@@ -61,7 +66,8 @@ int collision::loop(bool* wall) {
     offAVG -= curr_off_buffer / N_SAMPLES;
     offAVG += curr_off_read / N_SAMPLES;
     
-
+    // Serial.print("offAVG: ");
+    // Serial.println(offAVG);
     delay(STD_DELAY);
     
     // irLED high and sample
@@ -75,7 +81,8 @@ int collision::loop(bool* wall) {
     onAVG -= curr_on_buffer / N_SAMPLES;
     onAVG += curr_on_read / N_SAMPLES;
     
-
+    // Serial.print("onAVG: ");
+    // Serial.println(onAVG);
     delay(STD_DELAY);
     
     // Advance circular buffer with wrap around
@@ -85,8 +92,12 @@ int collision::loop(bool* wall) {
     int reflected = onAVG - offAVG;
     
     if (reflected > DISTANCE_THRESHOLD) {
+        // Serial.print("Collision approaching! Reflected = ");
+        // Serial.println(reflected);
         *wall = true;
     } else {
+        // Serial.print("Continue with clear path. Reflected = ");
+        // Serial.println(reflected);
         *wall = false;
     }
     

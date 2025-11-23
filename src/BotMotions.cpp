@@ -33,6 +33,19 @@ BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2,
 
 }
 
+/********** Testing function ********
+*
+* Notes:
+*      Not for final use.
+************************/
+void BotMotions::loop() {
+    forward();
+    delay(MOTION_DELAY);
+    backward();
+    delay(1000);
+    Serial.print("cycle complete \n");  
+}
+
 /********** Stop ********
 *
 * Notes:
@@ -46,6 +59,14 @@ void BotMotions::stop(){
 
     digitalWrite(enb, 0);
     digitalWrite(ena, 0);
+
+    // Serial.println("assignment of pins in order ");
+    // Serial.println(motor_a1);
+    // Serial.println(motor_a2);
+    // Serial.println(motor_b1);
+    // Serial.println(motor_b2);
+    // Serial.println(ena);
+    // Serial.println(enb);
 }
 
 /********** Forward ********
@@ -63,8 +84,8 @@ void BotMotions::forward() {
 
     // analogWrite(enb, SPEED);
     // analogWrite(ena, SPEED); 
-    analogWrite(enb, SPEED );
-    analogWrite(ena, SPEED ); 
+    analogWrite(enb, SPEED / 2);
+    analogWrite(ena, SPEED / 2); 
 
     // delay(MOTION_DELAY / 8);
 
