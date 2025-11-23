@@ -119,13 +119,7 @@ void setup() {
 void loop() {
     // this is the loop for the lane detection
 
-    static unsigned long lastSend = 0;
-    while (Server_31.ConnectionStatus() == true or (socketOn == false)) {
-        if (millis() - lastSend > 10000) {      
-            String message = "Hello out there";
-            Server_31.WriteServer(message);
-            lastSend = millis();
-        }
+    while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
         /*****************************************************************
         *                  Put Serial Stuff Here
         *****************************************************************/
@@ -182,8 +176,10 @@ void loop() {
                     break;
                 case STATE_11:
                     my_states.laneFollow();
-                default: 
+                    break;
+                default:
                     my_states.handleErrorState();
+                    currentState = 0;
                     break;
             }
             if(currentState != 0){
@@ -198,6 +194,11 @@ void loop() {
                 delay(1000);
             }
         }       
+    }
+    if (socketOn) {
+        Server_31.NetworkConnect();
+        Server_31.SocketConnect(clientID);
+        Server_31.PingServer();
     }
 }
 
