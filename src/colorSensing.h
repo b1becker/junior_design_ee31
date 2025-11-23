@@ -4,6 +4,13 @@
 
 enum ColorTag { COLOR_BLUE, COLOR_RED, COLOR_YELLOW, COLOR_BLACK, COLOR_UNKNOWN };
 
+struct ColorRef
+    {
+        float red;
+        float blue;
+    };
+
+#define BUFFER_SIZE 3
 
 class colorSensing
 {
@@ -27,9 +34,15 @@ public:
     ColorTag current = COLOR_UNKNOWN;
     String colorSensed;
     void Calibrate(int color);
+    
 
-    float colorVal[4];
+    ColorRef colorVal[4];
     // ~colorSensing();
+    int redV_avg[BUFFER_SIZE];
+    int blueV_avg[BUFFER_SIZE];
+
+    
+    
 };
 
 

@@ -33,7 +33,7 @@
 #define BLUE_LED_PIN 9
 
 // Right Color Sensor TO-DO
-#define R_Photoresistor_PIN A1
+#define R_Photoresistor_PIN A0
 
 
 

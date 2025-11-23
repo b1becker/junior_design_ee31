@@ -7,6 +7,10 @@
 
 #define StateDelay 50
 
+// NOTE: Can't lower forward delay too much or color sensing/distance sensing
+// voltage readings will fluctuate
+#define FORWARD_DELAY 50
+
 #define Black 0
 #define Red 1
 #define Blue 2
@@ -33,63 +37,123 @@ States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, col
 * Calibrates bot colors
 *
 ************************/   
+// void States::handleState00() {
+//     String myCommand;
+//     handleState1();
+//     ourWeb->WriteServer("Place Bot on Black");
+//     while (myCommand != "Black"){
+//         myCommand = ourWeb->ReadServer();
+//         delay(2);
+//     }
+//     ourWeb->WriteServer("Starting Calibration...");
+//     ourLeftCS->Calibrate(COLOR_BLACK);
+//     ourRightCS->Calibrate(COLOR_BLACK);
+//     ourWeb->WriteServer("Black Done.");
+
+//     //Red Calibration
+//     ourWeb->WriteServer("Place Bot on Red");
+//     while (myCommand != "Red"){
+//         myCommand = ourWeb->ReadServer();
+//         delay(2);
+//     }
+//     ourWeb->WriteServer("Starting Calibration...");
+//     ourLeftCS->Calibrate(COLOR_RED);
+//     ourRightCS->Calibrate(COLOR_RED);
+//     ourWeb->WriteServer("Red Done.");
+
+//     //Blue Calibration
+//     ourWeb->WriteServer("Place Bot on Blue");
+//     while (myCommand != "Blue"){
+//         myCommand = ourWeb->ReadServer();
+//         delay(2);
+//     }
+//     ourWeb->WriteServer("Starting Calibration...");
+//     ourLeftCS->Calibrate(COLOR_BLUE);
+//     ourRightCS->Calibrate(COLOR_BLUE);
+//     ourWeb->WriteServer("Blue Done.");
+
+//     //Yellow Calibration 
+//     ourWeb->WriteServer("Place Bot on Yellow");
+//     while (myCommand != "Yellow"){
+//         myCommand = ourWeb->ReadServer();
+//         delay(2);
+//     }
+//     ourWeb->WriteServer("Starting Calibration...");
+//     handleState1();
+//     ourLeftCS->Calibrate(COLOR_YELLOW);
+//     handleState1();
+//     ourRightCS->Calibrate(COLOR_YELLOW);
+//     ourWeb->WriteServer("Yellow Done.");
+
+//     handleState0();
+    
+
+//     ourWeb->WriteServer("Final Values");
+//     String message;
+//     message = "Black - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLACK].red) + " B=" + String(ourLeftCS->colorVal[COLOR_BLACK].blue)
+//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLACK].red) + " B=" + String(ourRightCS->colorVal[COLOR_BLACK].blue)
+//         + "\nRed - Left: R=" + String(ourLeftCS->colorVal[COLOR_RED].red) + " B=" + String(ourLeftCS->colorVal[COLOR_RED].blue)
+//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_RED].red) + " B=" + String(ourRightCS->colorVal[COLOR_RED].blue)
+//         + "\nBlue - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLUE].red) + " B=" + String(ourLeftCS->colorVal[COLOR_BLUE].blue)
+//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLUE].red) + " B=" + String(ourRightCS->colorVal[COLOR_BLUE].blue)
+//         + "\nYellow - Left: R=" + String(ourLeftCS->colorVal[COLOR_YELLOW].red) + " B=" + String(ourLeftCS->colorVal[COLOR_YELLOW].blue)
+//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_YELLOW].red) + " B=" + String(ourRightCS->colorVal[COLOR_YELLOW].blue);
+//     ourWeb->WriteServer(message);
+// }
+
 void States::handleState00() {
     String myCommand;
-
-    ourWeb->WriteServer("Place Bot on Black");
-    while (myCommand != "Black"){
-        myCommand = ourWeb->ReadServer();
-        delay(2);
+    
+    // Calibrate all 4 colors
+    const char* colors[] = {"Black", "Red", "Blue", "Yellow"};
+    ColorTag colorTags[] = {COLOR_BLACK, COLOR_RED, COLOR_BLUE, COLOR_YELLOW};
+    
+    for (int i = 0; i < 4; i++) {
+        ourWeb->WriteServer("Place Bot on " + String(colors[i]));
+        myCommand = "";
+        while (myCommand != colors[i]) {
+            myCommand = ourWeb->ReadServer();
+            delay(2);
+        }
+        ourWeb->WriteServer("Starting Calibration...");
+        ourLeftCS->Calibrate(colorTags[i]);
+        ourRightCS->Calibrate(colorTags[i]);
+        ourWeb->WriteServer(String(colors[i]) + " Done.");
     }
-    ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_BLACK);
-    ourRightCS->Calibrate(COLOR_BLACK);
-    ourWeb->WriteServer("Black Done.");
-
-    //Red Calibration
-    ourWeb->WriteServer("Place Bot on Red");
-    while (myCommand != "Red"){
-        myCommand = ourWeb->ReadServer();
-        delay(2);
-    }
-    ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_RED);
-    ourRightCS->Calibrate(COLOR_RED);
-    ourWeb->WriteServer("Red Done.");
-
-    //Blue Calibration
-    ourWeb->WriteServer("Place Bot on Blue");
-    while (myCommand != "Blue"){
-        myCommand = ourWeb->ReadServer();
-        delay(2);
-    }
-    ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_BLUE);
-    ourRightCS->Calibrate(COLOR_BLUE);
-    ourWeb->WriteServer("Blue Done.");
-
-    //Yellow Calibration 
-    ourWeb->WriteServer("Place Bot on Yellow");
-    while (myCommand != "Yellow"){
-        myCommand = ourWeb->ReadServer();
-        delay(2);
-    }
-    ourWeb->WriteServer("Starting Calibration...");
-    ourLeftCS->Calibrate(COLOR_YELLOW);
-    ourRightCS->Calibrate(COLOR_YELLOW);
-    ourWeb->WriteServer("Yellow Done.");
-
+    
+    // Display all values
     ourWeb->WriteServer("Final Values");
-    String message;
-    message = "Black, Left: " + String(ourLeftCS->colorVal[COLOR_BLACK]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLACK])
-    + "\nRed, Left: " + String(ourLeftCS->colorVal[COLOR_RED]) +  " Right: " + String(ourRightCS->colorVal[COLOR_RED])
-    + "\nBlue, Left: " + String(ourLeftCS->colorVal[COLOR_BLUE]) +  " Right: " + String(ourRightCS->colorVal[COLOR_BLUE]) 
-    + "\nYellow, Left: " + String(ourLeftCS->colorVal[COLOR_YELLOW]) +  " Right: " + String(ourRightCS->colorVal[COLOR_YELLOW]);
-    ourWeb->WriteServer(message);
+
+    // Black
+    ourWeb->WriteServer("Black - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLACK].red) 
+                    + " B=" + String(ourLeftCS->colorVal[COLOR_BLACK].blue)
+                    + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLACK].red) 
+                    + " B=" + String(ourRightCS->colorVal[COLOR_BLACK].blue));
+
+    // Red
+    ourWeb->WriteServer("Red - Left: R=" + String(ourLeftCS->colorVal[COLOR_RED].red) 
+                    + " B=" + String(ourLeftCS->colorVal[COLOR_RED].blue)
+                    + " | Right: R=" + String(ourRightCS->colorVal[COLOR_RED].red) 
+                    + " B=" + String(ourRightCS->colorVal[COLOR_RED].blue));
+
+    // Blue
+    ourWeb->WriteServer("Blue - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLUE].red) 
+                    + " B=" + String(ourLeftCS->colorVal[COLOR_BLUE].blue)
+                    + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLUE].red) 
+                    + " B=" + String(ourRightCS->colorVal[COLOR_BLUE].blue));
+
+    // Yellow
+    ourWeb->WriteServer("Yellow - Left: R=" + String(ourLeftCS->colorVal[COLOR_YELLOW].red) 
+                    + " B=" + String(ourLeftCS->colorVal[COLOR_YELLOW].blue)
+                    + " | Right: R=" + String(ourRightCS->colorVal[COLOR_YELLOW].red) 
+                    + " B=" + String(ourRightCS->colorVal[COLOR_YELLOW].blue));
+
+    ourWeb->WriteServer("Ready to move!");
 }
 
 void States::laneFollow() {
     ourCollider->setup();
+    handleState0();
     // hard coded inputs
     String LeftColor;
     String RightColor;
@@ -98,17 +162,26 @@ void States::laneFollow() {
     int distance;
     // Bot 1 receives the signal and moves forward for five seconds then stop.
     static unsigned long lastSend = 0;
+    handleState1();
     while (myCommand != "Stop") {
-        distance = ourCollider->loop(&wallFound);
-        ourLeftCS->loop(LeftColor);
+        // distance = ourCollider->loop(&wallFound);
+
+
         ourRightCS->loop(RightColor);
+        ourLeftCS->loop(LeftColor);
+        
+        
+        
         
         if (millis() - lastSend > 2000) {      
             String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
             ourWeb->WriteServer(message);
             lastSend = millis();
         }
-        handleState1();
+        
+        
+
+
         // if (wallFound == true) {
         //     handleState0();
         //     break;
@@ -163,9 +236,12 @@ void States::handleState0() {
 *
 ************************/   
 void States::handleState1() {
+    delay(FORWARD_DELAY);
     Serial.println("Going Forward");
     // delay(StateDelay);
     ourBot->forward();
+    delay(FORWARD_DELAY);
+    
 }
 
 /********** State 2 ********

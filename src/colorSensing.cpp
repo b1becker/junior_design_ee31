@@ -10,7 +10,11 @@
 #define Blue 2
 #define Yellow 3
 
-#define STD_DELAY 50
+#define STD_DELAY 500
+#define BUFFER_SIZE 5
+
+#define SAMPLE_SIZE 50
+
 
 #define BLACK_RATIO 0.53
 #define RED_RATIO 0.51
@@ -37,51 +41,53 @@ void colorSensing::setup() {
 
 
 void colorSensing::loop(String &output_color) {
-    // // digitalWrite(red_led, HIGH);
-    // int vout = analogRead(photoresistor_pin);
-    // delay(STD_DELAY);
-    // Serial.print("Vout = ");Serial.println(vout);
-    // delay(STD_DELAY);
-
-    // red flash
     digitalWrite(red_led, HIGH);
     delay(STD_DELAY);
     int redv = analogRead(photoresistor_pin);
-    // delay(STD_DELAY);
-    Serial.print("RedV = "); Serial.println(redv);
     digitalWrite(red_led, LOW);
-    
     delay(STD_DELAY);
-    
-    // Measure and print blue voltage output
+
     digitalWrite(blue_led, HIGH);
     delay(STD_DELAY);
     int bluev = analogRead(photoresistor_pin);
-    // delay(STD_DELAY);
     digitalWrite(blue_led, LOW);
-    Serial.print("BlueV = "); Serial.println(bluev);
-
     delay(STD_DELAY);
 
-    String color = colorDetector(bluev, redv, 1023);
-    String detectedColor;
+    // Debug: print current reading
+    Serial.print("Sample: R=");
+    Serial.print(redv);
+    Serial.print(" B=");
+    Serial.println(bluev);
 
-    if (color == "0") {
-        detectedColor = "blue";
-    } else if (color == "1") {
-        detectedColor = "red";
-    } else if (color == "2") {
-        detectedColor = "yellow";
-    } else if (color == "3"){
-        detectedColor = "black";
-    } else {
-        detectedColor = "unknown";
+    float minDist = 999999.0;
+    int detectedColorIndex = COLOR_UNKNOWN;
+
+    for (int i = 0; i < 4; i++) {
+        float dRed = redv - colorVal[i].red;
+        float dBlue = bluev - colorVal[i].blue;
+        float distSquared = dRed * dRed + dBlue * dBlue;
+        
+        // Debug: print each distance
+        Serial.print("Color ");
+        Serial.print(i);
+        Serial.print(" dist^2=");
+        Serial.println(distSquared);
+        
+        if (distSquared < minDist) {
+            minDist = distSquared;
+            detectedColorIndex = i;
+        }
     }
 
-    output_color = detectedColor;
-    
+    switch(detectedColorIndex) {
+        case COLOR_BLUE:   output_color = "blue"; break;
+        case COLOR_RED:    output_color = "red"; break;
+        case COLOR_YELLOW: output_color = "yellow"; break;
+        case COLOR_BLACK:  output_color = "black"; break;
+        default:           output_color = "unknown"; break;
+    }
 
-    delay(STD_DELAY);
+    current = (ColorTag)detectedColorIndex;
 }
 
 void colorSensing::read_red(int &red_v) {
@@ -146,8 +152,8 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   // Sanity
   float color_ratio = 1.0 * rvout / (rvout + bvout);
 
-  Serial.println("Color ratio: ");
-  Serial.println(color_ratio);
+//   Serial.println("Color ratio: ");
+//   Serial.println(color_ratio);
   // red
     if (color_ratio >= BLACK_RATIO - TOLERANCE and color_ratio <= BLACK_RATIO + TOLERANCE) {
         current = COLOR_BLACK;
@@ -187,13 +193,28 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
 }
 
 void colorSensing::Calibrate(int color){
-    float colorSum = 0.0;
-    int redv;
-    int bluev;
-    for (int i = 0; i < 50; i++) {
+    // float colorSum = 0.0;
+    // int redv;
+    // int bluev;
+    // for (int i = 0; i < 50; i++) {
+    //     read_red(redv);
+    //     read_blue(bluev);
+    //     colorSum += 1.0 * redv / (redv + bluev);
+    // }
+    // colorVal[color] = colorSum / 50;
+
+    float redSum = 0.0;
+    float blueSum = 0.0;
+    int redv, bluev;
+
+    for(int i = 0; i < SAMPLE_SIZE; i++) {
         read_red(redv);
         read_blue(bluev);
-        colorSum += 1.0 * redv / (redv + bluev);
+        redSum += redv;
+        blueSum += bluev;
     }
-    colorVal[color] = colorSum / 50;
+
+    colorVal[color].red = redSum / 50.0;
+    colorVal[color].blue = blueSum / 50.0;
+
 }
