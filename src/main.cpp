@@ -176,8 +176,10 @@ void loop() {
                     break;
                 case STATE_11:
                     my_states.laneFollow();
-                default: 
+                    break;
+                default:
                     my_states.handleErrorState();
+                    currentState = 0;
                     break;
             }
             if(currentState != 0){
@@ -192,6 +194,11 @@ void loop() {
                 delay(1000);
             }
         }       
+    }
+    if (socketOn) {
+        Server_31.NetworkConnect();
+        Server_31.SocketConnect(clientID);
+        Server_31.PingServer();
     }
 }
 

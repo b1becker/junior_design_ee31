@@ -24,6 +24,7 @@ public:
     void read_red(int &red_v);
     void read_blue(int &blue_v);
     String colorDetector(int bvout, int rvout, int maxv);
+    String calibratedColorDetector(int bvout, int rvout, int maxv);
     ColorTag current = COLOR_UNKNOWN;
     String colorSensed;
     void Calibrate(int color);
