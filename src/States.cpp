@@ -153,6 +153,34 @@ void States::handleState00() {
     ourWeb->WriteServer("Ready to move!");
 }
 
+// void States::laneFollow() {
+
+//     ourCollider->setup();
+//     String myCommand = ourWeb->ReadServer();
+//     int distance;
+//     bool wallFound = false;
+//     handleState1();
+
+//     while (myCommand != "Stop" ) {
+//         distance = ourCollider->loop(&wallFound);
+
+//         if (wallFound == true) {
+//             handleState0();
+//             break;
+//         }
+
+//         // Check connection
+//         if (!ourWeb->ConnectionStatus()) {
+//             Serial.println("Connection lost");
+//             handleState0();
+//             break;
+//         }
+        
+//         delay(1);
+//         myCommand = ourWeb->ReadServer();
+
+//     }
+// }
 void States::laneFollow() {
     ourCollider->setup();
     handleState0();
@@ -183,6 +211,12 @@ void States::laneFollow() {
             String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
             ourWeb->WriteServer(message);
             lastSend = millis();
+        }
+
+        distance = ourCollider->loop(&wallFound);
+        if (wallFound == true) {
+            handleState0();
+            break;
         }
 
         // Lane following logic (runs every loop, not in else-if)
