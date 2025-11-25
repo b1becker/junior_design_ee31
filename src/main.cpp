@@ -55,13 +55,13 @@
 #define STATE_9 9
 #define STATE_10 10
 #define STATE_11 11
-
+#define STATE_12 12
 int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
@@ -176,6 +176,9 @@ void loop() {
                     break;
                 case STATE_11:
                     my_states.laneFollow();
+                    break;
+                case STATE_12:
+                    my_states.laneFind("red");
                     break;
                 default:
                     my_states.handleErrorState();

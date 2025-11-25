@@ -4,8 +4,8 @@
 using namespace std;
 
 #define STD_DELAY 1
-#define N_SAMPLES 10
-#define DISTANCE_THRESHOLD 300
+#define N_SAMPLES 7
+#define DISTANCE_THRESHOLD 275
 
 
 

@@ -206,8 +206,7 @@ void States::laneFollow() {
         ourRightCS->loop(RightColor, curr_ref_right);
         ourLeftCS->loop(LeftColor, curr_ref_left);
 
-        // Send status every 10ms (independent of motion control)
-        if (millis() - lastSend > 10) {      
+        if (millis() - lastSend > 2000) {      
             String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
             ourWeb->WriteServer(message);
             lastSend = millis();
@@ -218,7 +217,7 @@ void States::laneFollow() {
             handleState0();
             break;
         }
-
+        handleState1();
         // Lane following logic (runs every loop, not in else-if)
         if (LeftColor != target_color && RightColor == target_color) {
             // Left sensor off line, right on line → turn left
@@ -248,6 +247,32 @@ void States::laneFollow() {
         myCommand = ourWeb->ReadServer();
     }
     
+    handleState0();  // Stop when exiting
+}
+
+
+void States::laneFind(String targetColor) {
+    // ourCollider->setup();
+    handleState0();
+    
+    String LeftColor;
+    String RightColor;
+
+    ColorRef curr_ref_right;
+    ColorRef curr_ref_left;
+
+    String target_color = targetColor;
+
+    handleState1();  // Start moving forward
+
+    while (targetColor != RightColor && targetColor != LeftColor) {
+        // Get color readings
+        ourRightCS->loop(RightColor, curr_ref_right);
+        ourLeftCS->loop(LeftColor, curr_ref_left);
+
+        handleState1();
+        delay(1);
+    }
     handleState0();  // Stop when exiting
 }
 

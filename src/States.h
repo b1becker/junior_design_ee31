@@ -32,6 +32,8 @@ public:
 
     // for lane following testing
     void laneFollow();
+    void laneFind(String targetColor);
+
 
 private:
     BotMotions *ourBot;

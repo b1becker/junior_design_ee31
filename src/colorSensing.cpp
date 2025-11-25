@@ -179,8 +179,6 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
   // Sanity
   float color_ratio = 1.0 * rvout / (rvout + bvout);
 
-//   Serial.println("Color ratio: ");
-//   Serial.println(color_ratio);
   // red
     if (color_ratio >= BLACK_RATIO - TOLERANCE and color_ratio <= BLACK_RATIO + TOLERANCE) {
         current = COLOR_BLACK;
@@ -198,37 +196,10 @@ String colorSensing::colorDetector(int bvout, int rvout, int maxv /*=1023*/) {
         current = COLOR_UNKNOWN;
     }
 
-    // Bot Calibration code.
-    // if (color_ratio >= colorVal[Black] - TOLERANCE and color_ratio <= colorVal[Black] + TOLERANCE) {
-    //     current = COLOR_BLACK;
-    // }
-    // else if (color_ratio >= colorVal[Red] - TOLERANCE and color_ratio <= colorVal[Red] + TOLERANCE) {
-    //     current = COLOR_RED;
-    // }
-    // else if (color_ratio >= colorVal[Blue] - TOLERANCE and color_ratio <= colorVal[Blue] + TOLERANCE) {
-    //     current = COLOR_BLUE;
-    // }
-    // else if (color_ratio >= colorVal[Yellow] - TOLERANCE and color_ratio <= colorVal[Yellow] + TOLERANCE) {
-    //     current = COLOR_YELLOW;
-    // }
-    // else {
-    //     current = COLOR_UNKNOWN;
-    // }
-  
-
   return String(ColorTag(current));
 }
 
 void colorSensing::Calibrate(int color){
-    // float colorSum = 0.0;
-    // int redv;
-    // int bluev;
-    // for (int i = 0; i < 50; i++) {
-    //     read_red(redv);
-    //     read_blue(bluev);
-    //     colorSum += 1.0 * redv / (redv + bluev);
-    // }
-    // colorVal[color] = colorSum / 50;
 
     float redSum = 0.0;
     float blueSum = 0.0;
