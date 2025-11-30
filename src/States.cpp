@@ -39,70 +39,6 @@ States::States(BotMotions *MyBot, WebSocket* server, collision *my_Collider, col
 * Calibrates bot colors
 *
 ************************/   
-// void States::handleState00() {
-//     String myCommand;
-//     handleState1();
-//     ourWeb->WriteServer("Place Bot on Black");
-//     while (myCommand != "Black"){
-//         myCommand = ourWeb->ReadServer();
-//         delay(2);
-//     }
-//     ourWeb->WriteServer("Starting Calibration...");
-//     ourLeftCS->Calibrate(COLOR_BLACK);
-//     ourRightCS->Calibrate(COLOR_BLACK);
-//     ourWeb->WriteServer("Black Done.");
-
-//     //Red Calibration
-//     ourWeb->WriteServer("Place Bot on Red");
-//     while (myCommand != "Red"){
-//         myCommand = ourWeb->ReadServer();
-//         delay(2);
-//     }
-//     ourWeb->WriteServer("Starting Calibration...");
-//     ourLeftCS->Calibrate(COLOR_RED);
-//     ourRightCS->Calibrate(COLOR_RED);
-//     ourWeb->WriteServer("Red Done.");
-
-//     //Blue Calibration
-//     ourWeb->WriteServer("Place Bot on Blue");
-//     while (myCommand != "Blue"){
-//         myCommand = ourWeb->ReadServer();
-//         delay(2);
-//     }
-//     ourWeb->WriteServer("Starting Calibration...");
-//     ourLeftCS->Calibrate(COLOR_BLUE);
-//     ourRightCS->Calibrate(COLOR_BLUE);
-//     ourWeb->WriteServer("Blue Done.");
-
-//     //Yellow Calibration 
-//     ourWeb->WriteServer("Place Bot on Yellow");
-//     while (myCommand != "Yellow"){
-//         myCommand = ourWeb->ReadServer();
-//         delay(2);
-//     }
-//     ourWeb->WriteServer("Starting Calibration...");
-//     handleState1();
-//     ourLeftCS->Calibrate(COLOR_YELLOW);
-//     handleState1();
-//     ourRightCS->Calibrate(COLOR_YELLOW);
-//     ourWeb->WriteServer("Yellow Done.");
-
-//     handleState0();
-    
-
-//     ourWeb->WriteServer("Final Values");
-//     String message;
-//     message = "Black - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLACK].red) + " B=" + String(ourLeftCS->colorVal[COLOR_BLACK].blue)
-//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLACK].red) + " B=" + String(ourRightCS->colorVal[COLOR_BLACK].blue)
-//         + "\nRed - Left: R=" + String(ourLeftCS->colorVal[COLOR_RED].red) + " B=" + String(ourLeftCS->colorVal[COLOR_RED].blue)
-//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_RED].red) + " B=" + String(ourRightCS->colorVal[COLOR_RED].blue)
-//         + "\nBlue - Left: R=" + String(ourLeftCS->colorVal[COLOR_BLUE].red) + " B=" + String(ourLeftCS->colorVal[COLOR_BLUE].blue)
-//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_BLUE].red) + " B=" + String(ourRightCS->colorVal[COLOR_BLUE].blue)
-//         + "\nYellow - Left: R=" + String(ourLeftCS->colorVal[COLOR_YELLOW].red) + " B=" + String(ourLeftCS->colorVal[COLOR_YELLOW].blue)
-//         + " | Right: R=" + String(ourRightCS->colorVal[COLOR_YELLOW].red) + " B=" + String(ourRightCS->colorVal[COLOR_YELLOW].blue);
-//     ourWeb->WriteServer(message);
-// }
-
 void States::handleState00() {
     String myCommand;
     
@@ -153,34 +89,12 @@ void States::handleState00() {
     ourWeb->WriteServer("Ready to move!");
 }
 
-// void States::laneFollow() {
-
-//     ourCollider->setup();
-//     String myCommand = ourWeb->ReadServer();
-//     int distance;
-//     bool wallFound = false;
-//     handleState1();
-
-//     while (myCommand != "Stop" ) {
-//         distance = ourCollider->loop(&wallFound);
-
-//         if (wallFound == true) {
-//             handleState0();
-//             break;
-//         }
-
-//         // Check connection
-//         if (!ourWeb->ConnectionStatus()) {
-//             Serial.println("Connection lost");
-//             handleState0();
-//             break;
-//         }
-        
-//         delay(1);
-//         myCommand = ourWeb->ReadServer();
-
-//     }
-// }
+/********** LaneFollow ********
+*
+* Follow some lane.
+* Follows whatever color it starts on.
+*
+************************/
 void States::laneFollow() {
     ourCollider->setup();
     handleState0();
@@ -250,7 +164,13 @@ void States::laneFollow() {
     handleState0();  // Stop when exiting
 }
 
-
+/********** LaneFind ********
+*
+* Runs forawrds till it finds given color.
+*
+* Parameters:
+*      string for color
+************************/
 void States::laneFind(String targetColor) {
     // ourCollider->setup();
     handleState0();
@@ -282,7 +202,7 @@ void States::laneFind(String targetColor) {
 *
 ************************/   
 void States::handleState0() {
-    delay(StateDelay);
+    // delay(StateDelay);
     ourBot->stop();
 }
 
@@ -294,7 +214,7 @@ void States::handleState0() {
 void States::handleState1() {
     delay(FORWARD_DELAY);
     
-    Serial.println("Going Forward");
+    // Serial.println("Going Forward");
     // delay(StateDelay);
     ourBot->forward();
     delay(FORWARD_DELAY);
@@ -308,8 +228,8 @@ void States::handleState1() {
 *
 ************************/   
 void States::handleState2() {
-    Serial.println("Going backwards");
-    delay(StateDelay);
+    // Serial.println("Going backwards");
+    // delay(StateDelay);
     ourBot->backward();
 }
 
@@ -319,7 +239,7 @@ void States::handleState2() {
 *
 ************************/   
 void States::handleState3() {
-    Serial.println("Pivoting Clockwise");
+    // Serial.println("Pivoting Clockwise");
     delay(StateDelay / 8);
     ourBot->pivotCW();
 }
@@ -330,7 +250,7 @@ void States::handleState3() {
 *
 ************************/   
 void States::handleState4() {
-    Serial.println("Pivoting Counterclockwise");
+    // Serial.println("Pivoting Counterclockwise");
     delay(StateDelay / 8);
     ourBot->pivotCCW();
 }
@@ -341,8 +261,8 @@ void States::handleState4() {
 *
 ************************/   
 void States::handleState5() {
-    Serial.println("Turning Right");
-    delay(StateDelay);
+    // Serial.println("Turning Right");
+    // delay(StateDelay);
     ourBot->right();
 }
 
@@ -352,8 +272,8 @@ void States::handleState5() {
 *
 ************************/   
 void States::handleState6() {
-    Serial.println("Turning Left");
-    delay(StateDelay);
+    // Serial.println("Turning Left");
+    // delay(StateDelay);
     ourBot->left();
     
 }

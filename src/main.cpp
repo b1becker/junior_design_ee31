@@ -76,7 +76,7 @@ collision my_Collider(PHOTODIODE_PIN, IR_LED);
 BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 
 States my_states(&my_Bot, &Server_31, &my_Collider, &myLeftSensor, &myRightSensor);
-Demo my_demo(&my_Bot, &Server_31);
+Demo my_demo(&Server_31, &my_states);
 
 
 /*****************************************************************

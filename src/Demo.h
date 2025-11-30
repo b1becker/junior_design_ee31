@@ -4,13 +4,15 @@
 #include "BotMotions.h"
 #include "WebSocket.h"
 #include <Arduino.h>
+#include "States.h"
+
 
 class Demo {
 public:
     /*****************************************************************
     *                  Constructors & Deconstructors
     *****************************************************************/
-    Demo(BotMotions* robot, WebSocket* server);
+    Demo(WebSocket* server, States* myState);
 
 
     /*****************************************************************
@@ -22,8 +24,8 @@ public:
    void PartnerDemo();
 
 private:
-    BotMotions *ourBot;
     WebSocket *ourWeb;
+    States *ourState;
 };
 
 #endif

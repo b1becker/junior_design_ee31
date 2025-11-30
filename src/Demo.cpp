@@ -2,6 +2,8 @@
 #include "BotMotions.h"
 #include "WebSocket.h"
 #include "Demo.h"
+#include "States.h"
+
 
 #define Running true
 #define Complete false
@@ -14,9 +16,9 @@
 *      Arduino Pins
 *
 ************************/
-Demo::Demo(BotMotions *MyBot, WebSocket* server) {
-    ourBot = MyBot;
+Demo::Demo(WebSocket* server, States* myState) {
     ourWeb = server;
+    ourState = myState;
 }
 
 /********** Remote Partner Check Off ********
@@ -47,9 +49,9 @@ void Demo::remotePartnerMotions(){
         }
         delay(1);
     }
-    ourBot->forward();
+    ourState->handleState1();
     delay(5000);
-    ourBot->stop();
+    ourState->handleState0();
 }
 
 /********** SoloDemo1 ********
@@ -59,7 +61,7 @@ void Demo::remotePartnerMotions(){
 ************************/
 void Demo::SoloDemo1(){
 // Cross to the other side, 
-    ourBot->forward();
+    ourState->handleState1();
 // Stop when it senses the wall at the top and turn around
     // If (wall detected) {
     //     ourBot->stop()
@@ -67,21 +69,21 @@ void Demo::SoloDemo1(){
 
 // Cross back to find the red lane, 
     // Two 90 degree turns to 180
-    ourBot->pivotCCW(); 
-    ourBot->pivotCCW();
+    ourState->handleState4();
+    ourState->handleState4();
 
-    ourBot->forward();
-    // If (red detected) {
-    //     ourBot->stop()
-    // }
-    ourBot->pivotCCW();
-    // INSERT color following action code (Likely new class)
+    ourState->laneFind("red");
 
+    ourState->handleState4();
     // Follow the red lane until it senses the wall at the right
+    ourState->laneFollow();
     // Turn left and find the yellow lane
+    ourState->handleState6();
+    ourState->laneFind("yellow");
     // Follow the yellow lane until it senses the wall at the left
+    ourState->laneFollow();
     // Turn left and return to the starting position
-    ourBot->left();
+    ourState->handleState6();
     // If (wall detected) {
     //     ourBot->stop()
     // }
