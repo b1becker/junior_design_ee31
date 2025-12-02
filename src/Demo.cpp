@@ -63,32 +63,34 @@ void Demo::remotePartnerMotions(){
 ************************/
 void Demo::SoloDemo1(){
 // Cross to the other side, 
-        ourState->forwardUntilCollision();
-        delay(STD_DELAY);
+    ourState->forwardUntilCollision();
+    delay(STD_DELAY);
 
 // Cross back to find the red lane, 
 // Two 90 degree turns to 180
-        ourState->rightState90();
-        ourState->rightState90();
+    ourState->rightState90();
+    ourState->rightState90();
 
     // delay(STD_DELAY);
-        ourState->laneFind("red");
+    ourState->laneFind("red");
 
-        ourState->handleState4();
-        ourState->laneFind("black");
+    ourState->handleState4();
+    ourState->laneFind("black");
 // Follow the red lane until it senses the wall at the right
-        ourState->leftState90();
-        ourState->laneFollow();
+    ourState->leftState90();
+    ourState->laneFollow();
 // Turn left and find the yellow lane
-    // ourState->handleState6();
-    // ourState->laneFind("yellow");
+    ourState->leftState90();
+
+    ourState->laneFind("yellow");
+    ourState->handleState4();
+    ourState->laneFind("black");
 // Follow the yellow lane until it senses the wall at the left
-    // ourState->laneFollow();
+    ourState->leftState90();
+    ourState->laneFollow();
 // Turn left and return to the starting position
-    // ourState->handleState6();
-    // If (wall detected) {
-    //     ourBot->stop()
-    // }
+    ourState->leftState90();
+    ourState->forwardUntilCollision();
 }
 
 /********** SoloDemo2 ********
