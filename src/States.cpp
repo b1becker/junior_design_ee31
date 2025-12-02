@@ -303,7 +303,9 @@ void States::forwardUntilCollision() {
     bool wallFound = false;
 
     distance = ourCollider->loop(&wallFound);
-
+    Serial.println("distance: ");
+    Serial.println(distance);
+    
     while (!wallFound) {
         handleState1();
         distance = ourCollider->loop(&wallFound);

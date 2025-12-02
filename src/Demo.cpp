@@ -75,6 +75,7 @@ void Demo::SoloDemo1(){
         ourState->laneFind("red");
 
         ourState->handleState4();
+        ourState->laneFind("black");
 // Follow the red lane until it senses the wall at the right
         ourState->leftState90();
         ourState->laneFollow();
