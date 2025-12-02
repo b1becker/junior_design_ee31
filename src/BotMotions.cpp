@@ -7,10 +7,14 @@
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
 
+#define FLSPEED 117
 #define SPEED 117
+#define FRSPEED 145
 
 #define LSPEED 135
 #define RSPEED 250
+
+#define TURN90 930
 
 /********** Constructor ********
 *
@@ -51,8 +55,8 @@ void BotMotions::stop(){
 /********** Forward ********
 *
 * Notes:
-*      ENB: Left Motor
-*      ENA: Right Motor
+*      ENB: Right Motor
+*      ENA: Left Motor
 ************************/
 void BotMotions::forward() {
     digitalWrite(motor_b1, LOW);
@@ -61,13 +65,9 @@ void BotMotions::forward() {
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
 
-    // analogWrite(enb, SPEED);
-    // analogWrite(ena, SPEED); 
-    analogWrite(enb, SPEED );
-    analogWrite(ena, SPEED ); 
+    analogWrite(enb, FRSPEED);
+    analogWrite(ena, FLSPEED); 
 
-
-    // delay(MOTION_DELAY / 8);
 
     // stop();
 
@@ -170,5 +170,45 @@ void BotMotions::pivotCCW() {
     analogWrite(ena, LSPEED); 
 
     delay(TURN_DELAY);
+    stop();
+}
+
+/********** left90 ********
+*
+* Notes:
+*      Diff motor directions
+*      ENB Forward, ENA Backward
+************************/
+void BotMotions::left90() {
+    digitalWrite(motor_b1, LOW);
+    digitalWrite(motor_b2, HIGH);
+
+    digitalWrite(motor_a1, HIGH);
+    digitalWrite(motor_a2, LOW);
+    
+    analogWrite(enb, FRSPEED * 2);
+    analogWrite(ena, FLSPEED * 2); 
+
+    delay(TURN90);
+    stop();
+}
+
+/********** right90 ********
+*
+* Notes:
+*      Diff motor directions
+*      ENB Forward, ENA Backward
+************************/
+void BotMotions::right90() {
+    digitalWrite(motor_b1, HIGH);
+    digitalWrite(motor_b2, LOW);
+
+    digitalWrite(motor_a1, LOW);
+    digitalWrite(motor_a2, HIGH);
+
+    analogWrite(enb, FRSPEED * 2);
+    analogWrite(ena, FLSPEED * 2); 
+
+    delay(TURN90);
     stop();
 }

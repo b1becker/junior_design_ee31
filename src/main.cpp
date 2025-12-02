@@ -60,8 +60,8 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
@@ -113,6 +113,7 @@ void setup() {
     digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
+    Serial.print("we are setup");
 
 }
 

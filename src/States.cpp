@@ -185,7 +185,7 @@ void States::laneFind(String targetColor) {
 
     handleState1();  // Start moving forward
 
-    while (targetColor != RightColor && targetColor != LeftColor) {
+    while (targetColor != RightColor || targetColor != LeftColor) {
         // Get color readings
         ourRightCS->loop(RightColor, curr_ref_right);
         ourLeftCS->loop(LeftColor, curr_ref_left);
@@ -287,4 +287,47 @@ void States::handleErrorState() {
     Serial.println("MISINPUT: ABORT");
     delay(StateDelay);
 
+}
+
+/********** State 8 ********
+*
+* Bot goes forward until collison detected
+*
+************************/ 
+void States::forwardUntilCollision() {
+    handleState0();
+    Serial.println("going forward until collision");
+    ourCollider->setup();
+    int distance;
+
+    bool wallFound = false;
+
+    distance = ourCollider->loop(&wallFound);
+
+    while (!wallFound) {
+        handleState1();
+        distance = ourCollider->loop(&wallFound);
+        Serial.println("distance: ");
+        Serial.println(distance);
+        
+    }
+    
+}
+
+/********** State 10 ********
+*
+* Bot turns 90 degrees to the left
+*
+************************/ 
+void States::leftState90() {
+    ourBot->left90();
+}
+
+/********** State 9 ********
+*
+* Bot turns 90 degrees to the right
+*
+************************/ 
+void States::rightState90() {
+    ourBot->right90();
 }

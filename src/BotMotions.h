@@ -13,6 +13,8 @@ public:
     void right();
     void pivotCW();
     void pivotCCW();
+    void left90();
+    void right90();
 
 private:
     int motor_a1; 

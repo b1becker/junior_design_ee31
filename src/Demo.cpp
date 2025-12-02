@@ -8,6 +8,8 @@
 #define Running true
 #define Complete false
 
+#define STD_DELAY 1000
+
 /********** Constructir ********
 *
 * Links BotMotion Object
@@ -61,29 +63,28 @@ void Demo::remotePartnerMotions(){
 ************************/
 void Demo::SoloDemo1(){
 // Cross to the other side, 
-    ourState->handleState1();
-// Stop when it senses the wall at the top and turn around
-    // If (wall detected) {
-    //     ourBot->stop()
-    // }
+        ourState->forwardUntilCollision();
+        delay(STD_DELAY);
 
 // Cross back to find the red lane, 
-    // Two 90 degree turns to 180
-    ourState->handleState4();
-    ourState->handleState4();
+// Two 90 degree turns to 180
+        ourState->rightState90();
+        ourState->rightState90();
 
-    ourState->laneFind("red");
+    // delay(STD_DELAY);
+        ourState->laneFind("red");
 
-    ourState->handleState4();
-    // Follow the red lane until it senses the wall at the right
-    ourState->laneFollow();
-    // Turn left and find the yellow lane
-    ourState->handleState6();
-    ourState->laneFind("yellow");
-    // Follow the yellow lane until it senses the wall at the left
-    ourState->laneFollow();
-    // Turn left and return to the starting position
-    ourState->handleState6();
+        ourState->handleState4();
+// Follow the red lane until it senses the wall at the right
+        ourState->leftState90();
+        ourState->laneFollow();
+// Turn left and find the yellow lane
+    // ourState->handleState6();
+    // ourState->laneFind("yellow");
+// Follow the yellow lane until it senses the wall at the left
+    // ourState->laneFollow();
+// Turn left and return to the starting position
+    // ourState->handleState6();
     // If (wall detected) {
     //     ourBot->stop()
     // }

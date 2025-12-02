@@ -30,9 +30,15 @@ public:
     void handleState6();
     void handleErrorState();
 
+    void leftState90();
+    void rightState90();
+
     // for lane following testing
     void laneFollow();
     void laneFind(String targetColor);
+
+    // methods for solo bot motions
+    void States::forwardUntilCollision();
 
 
 private:

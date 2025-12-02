@@ -1,5 +1,3 @@
-// Simple Photoresistor Analog Read with LED Control
-// UTI 1893 Photoresistor connected to A0
 #include <Arduino.h>
 #include "colorSensing.h"
 

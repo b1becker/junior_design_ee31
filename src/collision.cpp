@@ -8,8 +8,6 @@ using namespace std;
 #define DISTANCE_THRESHOLD 275
 
 
-
-
 collision::collision(int photodiode_pin, int irLED_pin) {
     photodiode = photodiode_pin;
     irLED = irLED_pin;
