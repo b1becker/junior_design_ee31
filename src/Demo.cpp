@@ -74,10 +74,12 @@ void Demo::SoloDemo1(){
     // delay(STD_DELAY);
     ourState->laneFind("red");
 
-    ourState->handleState4();
+    // State4: pivot slight right
+    // ourState->handleState4();
     ourState->laneFind("black");
+    ourState->LeftColorTurn("red");
 // Follow the red lane until it senses the wall at the right
-    ourState->leftState90();
+    // ourState->leftState90();
     ourState->laneFollow();
 // Turn left and find the yellow lane
     ourState->leftState90();
@@ -86,10 +88,10 @@ void Demo::SoloDemo1(){
     ourState->handleState4();
     ourState->laneFind("black");
 // Follow the yellow lane until it senses the wall at the left
-    ourState->leftState90();
+    ourState->LeftColorTurn("yellow");
     ourState->laneFollow();
 // Turn left and return to the starting position
-    ourState->leftState90();
+    ourState->rightState90();
     ourState->forwardUntilCollision();
 }
 

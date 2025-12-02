@@ -5,7 +5,7 @@ using namespace std;
 
 #define STD_DELAY 1
 #define N_SAMPLES 7
-#define DISTANCE_THRESHOLD 210
+#define DISTANCE_THRESHOLD 190
 
 
 collision::collision(int photodiode_pin, int irLED_pin) {

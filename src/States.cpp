@@ -333,3 +333,44 @@ void States::leftState90() {
 void States::rightState90() {
     ourBot->right90();
 }
+
+void States::LeftColorTurn(String targetColor) {
+    handleState0();
+    
+    String RightColor;
+
+    ColorRef curr_ref_right;
+
+    String target_color = targetColor;
+
+    handleState4();  // Start moving forward
+
+    while (targetColor != RightColor) {
+        // Get color readings
+        ourRightCS->loop(RightColor, curr_ref_right);
+
+        handleState4();
+        delay(1);
+    }
+    handleState0();
+}
+
+void States::RightColorTurn(String targetColor) {
+    handleState0();
+    
+    String RightColor;
+
+    ColorRef curr_ref_right;
+
+    String target_color = targetColor;
+
+    handleState3();  // Start moving forward
+
+    while (targetColor != RightColor) {
+        ourRightCS->loop(RightColor, curr_ref_right);
+
+        handleState3();
+        delay(1);
+    }
+    handleState0();
+}

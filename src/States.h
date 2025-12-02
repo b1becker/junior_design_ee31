@@ -32,8 +32,9 @@ public:
 
     void leftState90();
     void rightState90();
-
-    // for lane following testing
+    void LeftColorTurn(String targetColor);
+    void RightColorTurn(String targetColor);
+    
     void laneFollow();
     void laneFind(String targetColor);
 
