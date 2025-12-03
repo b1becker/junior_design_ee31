@@ -38,6 +38,8 @@ public:
     void laneFollow();
     void laneFind(String targetColor);
 
+    void collisionDetection();
+
     // methods for solo bot motions
     void States::forwardUntilCollision();
 

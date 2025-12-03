@@ -56,6 +56,8 @@
 #define STATE_10 10
 #define STATE_11 11
 #define STATE_12 12
+#define STATE_13 13
+
 int currentState = STATE_0;
 
 // Declare Connection Data
@@ -152,10 +154,10 @@ void loop() {
                     my_states.handleState2(); 
                     break;
                 case STATE_3: 
-                    my_states.handleState3(); 
+                    my_states.leftState90(); 
                     break;
                 case STATE_4: 
-                    my_states.handleState4(); 
+                    my_states.rightState90(); 
                     break;
                 case STATE_5: 
                     my_states.handleState5(); 
@@ -181,6 +183,10 @@ void loop() {
                 case STATE_12:
                     my_states.laneFind("red");
                     break;
+                // testing for collision detection
+                case STATE_13:
+                    my_states.forwardUntilCollision();
+                
                 default:
                     my_states.handleErrorState();
                     currentState = 0;

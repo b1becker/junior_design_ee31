@@ -91,7 +91,7 @@ void Demo::SoloDemo1(){
     ourState->LeftColorTurn("yellow");
     ourState->laneFollow();
 // Turn left and return to the starting position
-    ourState->rightState90();
+    ourState->leftState90();
     ourState->forwardUntilCollision();
 }
 

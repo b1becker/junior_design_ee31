@@ -14,7 +14,7 @@
 #define LSPEED 135
 #define RSPEED 250
 
-#define TURN90 930
+#define TURN90 880
 
 /********** Constructor ********
 *

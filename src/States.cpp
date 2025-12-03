@@ -306,14 +306,26 @@ void States::forwardUntilCollision() {
     Serial.println("distance: ");
     Serial.println(distance);
     
+    unsigned long startTime = millis();  // Capture start time
+    const unsigned long maxDuration = 2000;  // 2 seconds in milliseconds
+    
     while (!wallFound) {
+        // Check if 2 seconds have elapsed
+        if (millis() - startTime >= maxDuration) {
+            handleState0();  // Stop the robot
+            delay(100);  // Brief pause (adjust as needed)
+            startTime = millis();  // Reset the timer
+        }
+        
         handleState1();
         distance = ourCollider->loop(&wallFound);
         Serial.println("distance: ");
         Serial.println(distance);
-        
     }
     
+    // Stop when wall is found
+    handleState0();
+    Serial.println("Wall found - stopping");
 }
 
 /********** State 10 ********
@@ -374,3 +386,5 @@ void States::RightColorTurn(String targetColor) {
     }
     handleState0();
 }
+
+void collisionDetection();
