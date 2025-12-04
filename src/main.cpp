@@ -66,8 +66,8 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
