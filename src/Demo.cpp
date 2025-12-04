@@ -91,7 +91,6 @@ void Demo::SoloDemo1(){
     if(interruptTriggered) {return;}  
 // Turn left and find the yellow lane
     ourState->leftState90();
-
     ourState->laneFind("yellow");
     if(interruptTriggered) {return;}  
     ourState->handleState4();
@@ -114,13 +113,34 @@ void Demo::SoloDemo1(){
 *
 ************************/
 void Demo::SoloDemo2(){
-    // Cross to the other side
-    // Stop when it senses the wall at the top and turn around 
-    // Cross back to find the blue lane
-    // Follow the blue lane until it senses the wall at the right
-    // Turn right and find the yellow lane
-    // Follow the yellow lane until it senses the wall at the left
-    // Turn right and return to the starting position
+// Cross to the other side
+    ourState->forwardUntilCollision();
+    if(interruptTriggered) {return;}  
+    delay(STD_DELAY);
+// Stop when it senses the wall at the top and turn around 
+    ourState->rightState90();
+    if(interruptTriggered) {return;} 
+    ourState->rightState90();
+    if(interruptTriggered) {return;} 
+// Cross back to find the blue lane
+    ourState->laneFind("blue");
+    if(interruptTriggered) {return;}  
+    ourState->LeftColorTurn("blue");
+    if(interruptTriggered) {return;} 
+// Follow the blue lane until it senses the wall at the right
+    ourState->laneFollow();
+    if(interruptTriggered) {return;}  
+// Turn right and find the yellow lane
+    ourState->leftState90();
+    ourState->laneFind("yellow");
+    if(interruptTriggered) {return;} 
+    ourState->LeftColorTurn("yellow");
+    ourState->laneFollow();
+    if(interruptTriggered) {return;} 
+// Follow the yellow lane until it senses the wall at the left
+// Turn right and return to the starting position
+    ourState->leftState90();
+    ourState->forwardUntilCollision();
 }
 
 /********** PartnerDemo ********

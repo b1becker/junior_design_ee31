@@ -66,8 +66,8 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
@@ -126,7 +126,6 @@ void setup() {
 }
 
 void loop() {
-    // this is the loop for the lane detection
 
     while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
         if (socketOn == true) {
@@ -169,9 +168,11 @@ void loop() {
                     break;
                 case STATE_8:
                     my_demo.SoloDemo1();
+                    interruptTriggered = false;
                     break;
                 case STATE_9:   
                     my_demo.SoloDemo2();
+                    interruptTriggered = false;
                     break;
                 case STATE_10:
                     my_demo.PartnerDemo();
@@ -182,10 +183,9 @@ void loop() {
                 case STATE_12:
                     my_states.laneFind("red");
                     break;
-                // testing for collision detection
                 case STATE_13:
                     my_states.forwardUntilCollision();
-                
+            
                 default:
                     my_states.handleErrorState();
                     currentState = 0;

@@ -311,25 +311,31 @@ void States::forwardUntilCollision() {
     Serial.println(distance);
     
     unsigned long startTime = millis();  // Capture start time
-    const unsigned long maxDuration = 2000;  // 2 seconds in milliseconds
+    const unsigned long maxDuration = 500;  // 2 seconds in milliseconds
     
-    while (!wallFound) {
+    while (true) {
         // Check if 2 seconds have elapsed
-        if (millis() - startTime >= maxDuration) {
-            handleState0();  // Stop the robot
-            delay(100);  // Brief pause (adjust as needed)
-            startTime = millis();  // Reset the timer
+        if (wallFound == true) {
+            handleState0();
+            break;
         }
         
         handleState1();
         distance = ourCollider->loop(&wallFound);
-        Serial.println("distance: ");
-        Serial.println(distance);
+        // Serial.println("Distance :" + String(distance));
+        // if (millis() - startTime >= maxDuration) {
+            // ourWeb->WriteServer("Distance :" + String(distance));
+        //     handleState0();  // Stop the robot
+        //     delay(100);  // Brief pause (adjust as needed)
+            startTime = millis();  // Reset the timer
+        // }
+        // Serial.println("distance: ");
+        // Serial.println(distance);
         if(interruptTriggered) {
-            Serial.println("WORKS");
             handleState0();
             break;
         }
+
     }
     
     // Stop when wall is found
