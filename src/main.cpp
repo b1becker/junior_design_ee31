@@ -9,6 +9,10 @@
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h> 
 
+volatile bool interruptTriggered = false;
+void interrupt();
+
+
 //Color Sensing Calibration:
 #define Black 0
 #define Red 1
@@ -35,7 +39,7 @@
 // Right Color Sensor TO-DO
 #define R_Photoresistor_PIN A0
 
-
+#define InterruptPin 13
 
 // Collision Sensor
 #define PHOTODIODE_PIN A2
@@ -62,8 +66,8 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
@@ -97,6 +101,9 @@ void setup() {
         Server_31.PingServer();
     }
     
+    // Interrupt Setup
+    pinMode(InterruptPin, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(InterruptPin), interrupt, FALLING);
     
     // Motor Setup
     pinMode(MOTOR_A1, OUTPUT);
@@ -115,7 +122,6 @@ void setup() {
     digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
-    Serial.print("we are setup");
 
 }
 
@@ -123,13 +129,6 @@ void loop() {
     // this is the loop for the lane detection
 
     while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
-        /*****************************************************************
-        *                  Put Serial Stuff Here
-        *****************************************************************/
-
-        /*****************************************************************
-        *                  Websocket Stuff Here
-        *****************************************************************/
         if (socketOn == true) {
             message = Server_31.ReadServer();
             if(message != "NULL") {
@@ -210,6 +209,10 @@ void loop() {
         Server_31.SocketConnect(clientID);
         Server_31.PingServer();
     }
+}
+
+void interrupt() {
+  interruptTriggered = !interruptTriggered;
 }
 
 

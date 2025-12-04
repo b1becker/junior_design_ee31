@@ -5,6 +5,8 @@
 #include "colorSensing.h"
 #include "collision.h"
 
+extern volatile bool interruptTriggered;
+
 #define StateDelay 50
 
 // NOTE: Can't lower forward delay too much or color sensing/distance sensing
@@ -115,7 +117,7 @@ void States::laneFollow() {
     static unsigned long lastSend = 0;
     handleState1();  // Start moving forward
 
-    while (myCommand != "Stop") {
+    while (wallFound != true) {
         // Get color readings
         ourRightCS->loop(RightColor, curr_ref_right);
         ourLeftCS->loop(LeftColor, curr_ref_left);
@@ -127,10 +129,10 @@ void States::laneFollow() {
         }
 
         distance = ourCollider->loop(&wallFound);
-        if (wallFound == true) {
-            handleState0();
-            break;
-        }
+        // if (wallFound == true) {
+        //     handleState0();
+        //     break;
+        // }
         handleState1();
         // Lane following logic (runs every loop, not in else-if)
         if (LeftColor != target_color && RightColor == target_color) {
@@ -151,16 +153,15 @@ void States::laneFollow() {
         }
         
         // Check connection
-        if (!ourWeb->ConnectionStatus()) {
-            Serial.println("Connection lost");
-            handleState0();
-            break;
-        }
+        // if (!ourWeb->ConnectionStatus()) {
+        //     Serial.println("Connection lost");
+        //     handleState0();
+        //     break;
+        // }
         
         delay(1);
-        myCommand = ourWeb->ReadServer();
+        // myCommand = ourWeb->ReadServer();
     }
-    
     handleState0();  // Stop when exiting
 }
 
@@ -192,6 +193,9 @@ void States::laneFind(String targetColor) {
 
         handleState1();
         delay(1);
+        if(interruptTriggered) {
+            break;
+        }
     }
     handleState0();  // Stop when exiting
 }
@@ -321,6 +325,11 @@ void States::forwardUntilCollision() {
         distance = ourCollider->loop(&wallFound);
         Serial.println("distance: ");
         Serial.println(distance);
+        if(interruptTriggered) {
+            Serial.println("WORKS");
+            handleState0();
+            break;
+        }
     }
     
     // Stop when wall is found
@@ -363,6 +372,9 @@ void States::LeftColorTurn(String targetColor) {
 
         handleState4();
         delay(1);
+        if(interruptTriggered) {
+            break;
+        }
     }
     handleState0();
 }
@@ -383,8 +395,10 @@ void States::RightColorTurn(String targetColor) {
 
         handleState3();
         delay(1);
+        if(interruptTriggered) {
+            break;
+        }
     }
     handleState0();
 }
 
-void collisionDetection();

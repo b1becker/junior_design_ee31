@@ -4,6 +4,7 @@
 #include "Demo.h"
 #include "States.h"
 
+extern volatile bool interruptTriggered;
 
 #define Running true
 #define Complete false
@@ -64,32 +65,44 @@ void Demo::remotePartnerMotions(){
 void Demo::SoloDemo1(){
 // Cross to the other side, 
     ourState->forwardUntilCollision();
+    if(interruptTriggered) {return;}  
     delay(STD_DELAY);
 
 // Cross back to find the red lane, 
 // Two 90 degree turns to 180
     ourState->rightState90();
+    if(interruptTriggered) {return;} 
     ourState->rightState90();
-
+    if(interruptTriggered) {return;} 
+    
     // delay(STD_DELAY);
     ourState->laneFind("red");
+    if(interruptTriggered) {return;}  
 
     // State4: pivot slight right
     // ourState->handleState4();
     ourState->laneFind("black");
+    if(interruptTriggered) {return;}  
     ourState->LeftColorTurn("red");
+    if(interruptTriggered) {return;}  
 // Follow the red lane until it senses the wall at the right
     // ourState->leftState90();
     ourState->laneFollow();
+    if(interruptTriggered) {return;}  
 // Turn left and find the yellow lane
     ourState->leftState90();
 
     ourState->laneFind("yellow");
+    if(interruptTriggered) {return;}  
     ourState->handleState4();
+    if(interruptTriggered) {return;} 
     ourState->laneFind("black");
+    if(interruptTriggered) {return;}  
 // Follow the yellow lane until it senses the wall at the left
     ourState->LeftColorTurn("yellow");
+    if(interruptTriggered) {return;}  
     ourState->laneFollow();
+    if(interruptTriggered) {return;}  
 // Turn left and return to the starting position
     ourState->leftState90();
     ourState->forwardUntilCollision();
