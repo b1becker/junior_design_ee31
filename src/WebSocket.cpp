@@ -49,11 +49,11 @@ void WebSocket::NetworkConnect()
 
     while (status != WL_CONNECTED) {
         Serial.print("Attempting to connect to Network named: ");
-
         Serial.println(ssid);                   
 
-
         status = WiFi.begin(ssid, pass);
+        delay(1000);
+        Serial.print(status);
     }
 
 

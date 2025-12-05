@@ -81,7 +81,6 @@ void Demo::SoloDemo1(){
 
     // State4: pivot slight right
     // ourState->handleState4();
-    ourState->laneFind("black");
     if(interruptTriggered) {return;}  
     ourState->LeftColorTurn("red");
     if(interruptTriggered) {return;}  
