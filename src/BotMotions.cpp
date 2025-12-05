@@ -7,9 +7,9 @@
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
 
-#define FLSPEED 117
+#define FLSPEED 110
 #define SPEED 117
-#define FRSPEED 145
+#define FRSPEED 135
 
 #define LSPEED 135
 #define RSPEED 250

@@ -327,7 +327,7 @@ void States::forwardUntilCollision() {
         distance = ourCollider->loop(&wallFound);
         // Serial.println("Distance :" + String(distance));
         // if (millis() - startTime >= maxDuration) {
-            // ourWeb->WriteServer("Distance :" + String(distance));
+        ourWeb->WriteServer("Distance :" + String(distance));
         //     handleState0();  // Stop the robot
         //     delay(100);  // Brief pause (adjust as needed)
             startTime = millis();  // Reset the timer

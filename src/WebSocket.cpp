@@ -74,16 +74,20 @@ void WebSocket::NetworkConnect()
 void WebSocket::SocketConnect(String clientID)
 {
     Serial.println("Starting WebSocket connection...");
-  
-
+    
     myClient->begin();
     
-
+    // Send client ID
     myClient->beginMessage(TYPE_TEXT);
     myClient->print(clientID);
     myClient->endMessage();
     
-    Serial.println("WebSocket connected and client ID sent!");
+    Serial.println("Client ID sent, waiting for server response...");
+    
+    // Wait a bit for server to process and connect to Docker
+    delay(1000); // Give middleware time to connect to Docker
+    
+    Serial.println("WebSocket connected!");
     Serial.println("Listening for messages...");
 }
 
@@ -129,33 +133,64 @@ void WebSocket::WriteServer(String message)
 String WebSocket::ReadServer()
 {
     String message = "";
-    // String ID = "WebClient_56FC703ACE1A";
-    String ID = "DEI";
     String command;
-    bool ours;
-    bool valid_com;
+    
     int messageSize = myClient->parseMessage();
     if (messageSize > 0) {      
         while (myClient->available()) {
             message += (char)myClient->read();
         }
-        for (unsigned int i = 0; i < ID.length(); i++)
-        {
-            if(message.charAt(i) == ID.charAt(i))
-            {
-                ours = true;
+        
+        Serial.print("Raw received: ");
+        Serial.println(message);
+        
+        // Parse messages in format: "SenderID,Command"
+        // Examples: 
+        //   "WebClient_56FC703ACE1A,C1"
+        //   "WebClient_56FC703ACE1A,DEI_CMD_C1"
+        //   "DEI,C1"
+        
+        int commaIndex = message.indexOf(',');
+        if (commaIndex > 0) {
+            // Extract command after the comma
+            command = message.substring(commaIndex + 1);
+            Serial.print("After comma: ");
+            Serial.println(command);
+            
+            // Check if it's in DEI_CMD_CX format
+            if (command.startsWith("DEI_CMD_C")) {
+                command = command.substring(9); // Skip "DEI_CMD_C"
+                Serial.print("Extracted state: ");
+                Serial.println(command);
+                return command;
+            }
+            // Check if it's just CX format
+            else if (command.startsWith("C") && command.length() >= 2) {
+                command = command.substring(1); // Skip "C"
+                Serial.print("Extracted state: ");
+                Serial.println(command);
+                return command;
+            }
+        }
+        
+        // Fallback: Check for old "DEI" format
+        String ID = "DEI";
+        bool ours = true;
+        
+        for (unsigned int i = 0; i < ID.length(); i++) {
+            if(message.charAt(i) == ID.charAt(i)) {
                 continue;
             } else {
                 ours = false;
                 break;
             }
         }
-        if(ours == true)
-        {
+        
+        if(ours == true) {
             command = message.substring(ID.length());
             if(command.charAt(1) == 'C'){
                 return command.substring(2);
-            }else if(command.charAt(0) == '_'){
+            } else if(command.charAt(0) == '_'){
                 command = command.substring(6);
                 return command;
             }

@@ -66,12 +66,13 @@ int currentState = STATE_0;
 
 // Declare Connection Data
 String clientID = "56FC703ACE1A";
-// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+char serverAddress[] = "10.5.15.148"; // Middleware Server
+int port = 8081; // Middleware WebSocket port
+// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
-int port = 80;
+
 bool zeroEnter = true;
 int count = 0;
 String message;
@@ -85,7 +86,6 @@ BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
 States my_states(&my_Bot, &Server_31, &my_Collider, &myLeftSensor, &myRightSensor);
 Demo my_demo(&Server_31, &my_states);
 
-
 /*****************************************************************
 *                  SET ON WHEN SOCKET CONNECTED
 *****************************************************************/
@@ -96,10 +96,11 @@ void setup() {
     if (socketOn == false) {
         Serial.println("Not looking for socket");
     }
+    
     if (socketOn) {
         Server_31.NetworkConnect();
         Server_31.SocketConnect(clientID);
-        Server_31.PingServer();
+        // Server_31.PingServer();
     }
     
     // Interrupt Setup
@@ -123,11 +124,9 @@ void setup() {
     digitalWrite(BLUE_LED_PIN, LOW);
     
     my_Collider.setup();
-
 }
 
 void loop() {
-
     while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
         if (socketOn == true) {
             message = Server_31.ReadServer();
@@ -141,7 +140,10 @@ void loop() {
                     break;
                 case STATE_0:
                     if (zeroEnter) {
-                        Server_31.WriteServer("Ready to move!");
+                        // Check connection before sending
+                        if (Server_31.ConnectionStatus()) {
+                            Server_31.WriteServer("Ready to move!");
+                        }
                         zeroEnter = false;
                     }
                     my_states.handleState0(); 
@@ -186,6 +188,7 @@ void loop() {
                     break;
                 case STATE_13:
                     my_states.forwardUntilCollision();
+                    break;
             
                 default:
                     my_states.handleErrorState();
@@ -215,5 +218,3 @@ void loop() {
 void interrupt() {
   interruptTriggered = !interruptTriggered;
 }
-
-

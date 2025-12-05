@@ -3,9 +3,9 @@
 
 using namespace std;
 
-#define STD_DELAY 1
-#define N_SAMPLES 7
-#define DISTANCE_THRESHOLD 150
+#define STD_DELAY 10
+#define N_SAMPLES 15
+#define DISTANCE_THRESHOLD 19
 
 
 collision::collision(int photodiode_pin, int irLED_pin) {
@@ -79,6 +79,8 @@ int collision::loop(bool* wall) {
     // Average the two on samples
     int curr_on_read = (on_sample1 + on_sample2) / 2;
     onBuffer[curr_buffer_index] = curr_on_read;
+
+
     
     // Update running average
     onAVG -= curr_on_buffer / N_SAMPLES;
@@ -88,12 +90,14 @@ int collision::loop(bool* wall) {
     curr_buffer_index = (curr_buffer_index + 1) % N_SAMPLES;
     
     int reflected = onAVG - offAVG;
+
+    *wall = false;
     
-    if (reflected > DISTANCE_THRESHOLD) {
-        *wall = true;
-    } else {
-        *wall = false;
-    }
+    // if (reflected > DISTANCE_THRESHOLD) {
+    //     *wall = true;
+    // } else {
+    //     *wall = false;
+    // }
     
     return reflected;
 }
