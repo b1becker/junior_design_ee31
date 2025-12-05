@@ -68,6 +68,18 @@ int currentState = STATE_0;
 String clientID = "56FC703ACE1A";
 // char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
 char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+// char serverAddress[] = "35.239.140.61"; //Halligan Server
+
+/*****************************************************************
+*                  HALLIGAN SERVER GUIDE
+*
+*   Comment in the above sever addr for the code.
+*   Install wscat (npm install -g wscat)
+*   In terminal, run wscat -c ws:135.239.140.61
+*   If issues, call me.
+*
+*****************************************************************/
+
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;

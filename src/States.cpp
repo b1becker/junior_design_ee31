@@ -158,8 +158,11 @@ void States::laneFollow() {
         //     handleState0();
         //     break;
         // }
-        
-        delay(1);
+        if(myCommand == "Stop") {
+            handleState0();
+            break;
+        }
+        myCommand = ourWeb->ReadServer();
         // myCommand = ourWeb->ReadServer();
     }
     handleState0();  // Stop when exiting
@@ -299,6 +302,7 @@ void States::handleErrorState() {
 *
 ************************/ 
 void States::forwardUntilCollision() {
+    String message = ourWeb->ReadServer();
     handleState0();
     Serial.println("going forward until collision");
     ourCollider->setup();
@@ -312,9 +316,8 @@ void States::forwardUntilCollision() {
     
     unsigned long startTime = millis();  // Capture start time
     const unsigned long maxDuration = 500;  // 2 seconds in milliseconds
-    
+
     while (true) {
-        // Check if 2 seconds have elapsed
         if (wallFound == true) {
             handleState0();
             break;
@@ -335,7 +338,11 @@ void States::forwardUntilCollision() {
             handleState0();
             break;
         }
-
+        if(message == "Stop") {
+            handleState0();
+            break;
+        }
+        message = ourWeb->ReadServer();
     }
     
     // Stop when wall is found
@@ -365,9 +372,7 @@ void States::LeftColorTurn(String targetColor) {
     handleState0();
     
     String RightColor;
-
     ColorRef curr_ref_right;
-
     String target_color = targetColor;
 
     handleState4();  // Start moving forward
