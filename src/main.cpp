@@ -8,58 +8,16 @@
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h> 
+#include "Constants.h"
 
 volatile bool interruptTriggered = false;
 void interrupt();
 
-
-//Color Sensing Calibration:
-#define Black 0
-#define Red 1
-#define Blue 2
-#define Yellow 3
-
-
-// Motor A (Right Motor)
-#define MOTOR_A1 4    // L293 IN1
-#define MOTOR_A2 7    // L293 IN2  
-#define ENA 6        // L293 EN1 (PWM pin for Motor A)
-
-// Motor B (Left Motor)
-#define MOTOR_B1 12    // L293 IN3
-#define MOTOR_B2 8    // L293 IN4
-#define ENB 10         // L293 EN2 (PWM pin for Motor B)
-
-
-// Left Color Sensor
-#define L_Photoresistor_PIN A3 
-#define RED_LED_PIN 5 
-#define BLUE_LED_PIN 9
-
-// Right Color Sensor TO-DO
-#define R_Photoresistor_PIN A0
-
-#define InterruptPin 13
-
-// Collision Sensor
-#define PHOTODIODE_PIN A2
-#define IR_LED 2
-
-// State Definition
-#define STATE_00 100
-enum State {
-    STATE_0, STATE_1, STATE_2, STATE_3,
-    STATE_4, STATE_5, STATE_6, STATE_7,
-    STATE_8, STATE_9, STATE_10, STATE_11,
-    STATE_12, STATE_13, STATE_14
-};
-
 int currentState = STATE_0;
 
-// Declare Connection Data
 String clientID = "56FC703ACE1A";
-// char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
+// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
 
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
@@ -116,7 +74,6 @@ void loop() {
             if(message != "NULL") {
                 currentState = message.toInt();
             }
-
             switch (currentState) {
                 case STATE_00:
                     my_states.handleState00();
@@ -168,6 +125,7 @@ void loop() {
                     break;
                 case STATE_13:
                     my_states.forwardUntilCollision();
+                    break;
                 case STATE_14:
                     my_states.laneFollow();
                     break;
@@ -180,14 +138,12 @@ void loop() {
                 currentState = 0;
                 zeroEnter = true;
             }
-
             delay(1); 
-
             if(Server_31.ConnectionStatus() == false){
                 Serial.println("WebSocket connection lost.");
                 delay(1000);
             }
-        }       
+        }
     Server_31.NetworkConnect();
     Server_31.SocketConnect(clientID);
     Server_31.PingServer();

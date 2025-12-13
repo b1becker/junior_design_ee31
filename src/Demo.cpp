@@ -193,32 +193,43 @@ void Demo::SoloDemo2(){
 // Cross to the other side
     ourState->forwardUntilCollision();
     if(interruptTriggered) {return;}  
-    delay(STD_DELAY);
+
 // Stop when it senses the wall at the top and turn around 
     ourState->rightState90();
     if(interruptTriggered) {return;} 
+
     ourState->rightState90();
     if(interruptTriggered) {return;} 
+
 // Cross back to find the blue lane
     ourState->laneFind("blue");
     if(interruptTriggered) {return;}  
+
     ourState->Nudge();
+
     ourState->LeftColorTurn("blue");
     if(interruptTriggered) {return;} 
+
 // Follow the blue lane until it senses the wall at the right
     ourState->laneFollow();
-    if(interruptTriggered) {return;}  
+    if(interruptTriggered) {return;} 
+
 // Turn right and find the yellow lane
     ourState->leftState90();
     ourState->laneFind("yellow");
     if(interruptTriggered) {return;} 
+
     ourState->Nudge();
+
     ourState->LeftColorTurn("yellow");
     ourState->laneFollow();
+
     if(interruptTriggered) {return;} 
+    delay(STD_DELAY);
 // Follow the yellow lane until it senses the wall at the left
 // Turn right and return to the starting position
     ourState->leftState90();
+    ourState->Nudge();
     ourState->forwardUntilCollision();
 }
 

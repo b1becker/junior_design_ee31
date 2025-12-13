@@ -3,16 +3,11 @@
 
 #define MOTION_DELAY 1700
 #define TURN_DELAY 1124 / 8
-
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
 
-#define FLSPEED 92 //0.709% of FR
-#define SPEED 11
-#define FRSPEED 130
-
-#define LSPEED 135
-#define RSPEED 250
+#define FLSPEED 108 //0.709% of FR
+#define FRSPEED 155
 
 #define TURN90 800
 
@@ -33,8 +28,6 @@ BotMotions::BotMotions(int motor_a1, int motor_a2, int motor_b1, int motor_b2,
     this->motor_b2 = motor_b2;
     this->ena = ena;
     this->enb = enb;
-    
-
 }
 
 /********** Stop ********
@@ -86,12 +79,8 @@ void BotMotions::backward() {
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
 
-    analogWrite(enb, SPEED);
-    analogWrite(ena, SPEED); 
-
-    // delay(MOTION_DELAY);
-
-    // stop();
+    analogWrite(enb, FRSPEED);
+    analogWrite(ena, FLSPEED); 
 }
 
 /********** Left ********
@@ -111,8 +100,6 @@ void BotMotions::left() {
     
     delay(MOTION_DELAY);
     stop();
-    
-
 }
 
 /********** Right ********
@@ -147,8 +134,8 @@ void BotMotions::pivotCW() {
 
     digitalWrite(motor_a1, LOW);
     digitalWrite(motor_a2, HIGH);
-    analogWrite(enb, LSPEED);
-    analogWrite(ena, RSPEED); 
+    analogWrite(enb, FLSPEED * 2);
+    analogWrite(ena, FRSPEED * 2); 
 
     delay(TURN_DELAY);
     stop();
@@ -166,8 +153,8 @@ void BotMotions::pivotCCW() {
 
     digitalWrite(motor_a1, HIGH);
     digitalWrite(motor_a2, LOW);
-    analogWrite(enb, RSPEED);
-    analogWrite(ena, LSPEED); 
+    analogWrite(enb, FRSPEED * 2);
+    analogWrite(ena, FLSPEED * 2); 
 
     delay(TURN_DELAY);
     stop();
