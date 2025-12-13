@@ -113,7 +113,6 @@ void WebSocket::PingServer()
 ************************/
 void WebSocket::WriteServer(String message)
 {
-    Serial.println("Writing Server\n");
     myClient->beginMessage(TYPE_TEXT);
     myClient->print(message);
     myClient->endMessage();

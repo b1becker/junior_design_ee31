@@ -109,39 +109,36 @@ void States::laneFollow() {
 
     int distance;
 
-    distance = ourCollider->loop(&wallFound);
-    distance = ourCollider->loop(&wallFound);
-    distance = ourCollider->loop(&wallFound);
-    distance = ourCollider->loop(&wallFound);
-    distance = ourCollider->loop(&wallFound);
+    // distance = ourCollider->loop(&wallFound);
+    // distance = ourCollider->loop(&wallFound);
+    // distance = ourCollider->loop(&wallFound);
+    // distance = ourCollider->loop(&wallFound);
+    // distance = ourCollider->loop(&wallFound);
     
-    wallFound = false;
+    // wallFound = false;
 
     String target_color;
     ourRightCS->loop(target_color, curr_ref_right);
 
     
 
-    static unsigned long lastSend = 0;
     handleState1(); 
 
     // holdds off on collision detection until 4 secs passed
-    int four_seconds_buffer = millis();
+    static unsigned long four_seconds_buffer = millis();
 
     while (true) {
         // Get color readings
         ourRightCS->loop(RightColor, curr_ref_right);
         ourLeftCS->loop(LeftColor, curr_ref_left);
-        ourWeb->WriteServer("Distance :" + String(distance));
-        // if (millis() - lastSend > ) {      
-        //     String message = "R: " + RightColor + " L: " + LeftColor + " D: " + String(distance);
-        //     ourWeb->WriteServer(message);
-        //     lastSend = millis();
+        // ourWeb->WriteServer("Distance :" + String(distance));
+        // if (millis() - four_seconds_buffer > 2500) {      
+            // if (wallFound != true) {
+            //     break;
+            // }
         // }
-        distance = ourCollider->loop(&wallFound);
-        if (wallFound != true) {
-            break;
-        }
+        // distance = ourCollider->loop(&wallFound);
+        
         handleState1();
         // Lane following logic (runs every loop, not in else-if)
         if (LeftColor != target_color && RightColor == target_color) {
@@ -304,16 +301,16 @@ void States::forwardUntilCollision() {
     const unsigned long maxDuration = 500;
 
     while (true) {
-        if (wallFound == true) {
-            handleState0();
-            break;
-        }
+        // if (wallFound == true) {
+        //     handleState0();
+        //     break;
+        // }
         
         handleState1();
-        distance = ourCollider->loop(&wallFound);
+        // distance = ourCollider->loop(&wallFound);
         
         // if (millis() - startTime >= maxDuration) {
-            ourWeb->WriteServer("Distance :" + String(distance));
+            // ourWeb->WriteServer("Distance :" + String(distance));
             // delay(100);
         //     startTime = millis();
         // }

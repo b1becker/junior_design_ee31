@@ -116,9 +116,11 @@ void loop() {
                     break;
                 case STATE_10:
                     my_demo.PartnerDemo1();
+                    interruptTriggered = false;
                     break;
                 case STATE_11:
                     my_demo.PartnerDemo2();
+                    interruptTriggered = false;
                     break;
                 case STATE_12:
                     my_states.laneFind("red");

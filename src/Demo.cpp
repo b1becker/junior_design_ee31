@@ -155,6 +155,7 @@ void Demo::PartnerDemo1(){
     while (partnerCommand != "State: Blue") {
         partnerCommand = ourWeb->PartnerReadServer();
         delay(1);
+        if(interruptTriggered) {return;}  
     }
     ourWeb->WriteServer("State: Yellow");
     /*
@@ -179,6 +180,7 @@ void Demo::PartnerDemo1(){
     while (partnerCommand != "State: Done") {
         partnerCommand = ourWeb->PartnerReadServer();
         delay(1);
+        if(interruptTriggered) {return;}  
     }
     ourWeb->WriteServer("Hooray!");
     
@@ -249,6 +251,7 @@ void Demo::PartnerDemo2(){
     while (partnerCommand != "State: Red") {
         partnerCommand = ourWeb->PartnerReadServer();
         delay(1);
+        if(interruptTriggered) {return;}  
     }
     /*
     Bot 2 beeps its horn and starts.  
@@ -263,14 +266,14 @@ void Demo::PartnerDemo2(){
     if(interruptTriggered) {return;}  
     delay(STD_DELAY);
 // Stop when it senses the wall at the top and turn around 
-    ourState->rightState90();
+    ourState->leftState90();
     if(interruptTriggered) {return;} 
-    ourState->rightState90();
+    ourState->leftState90();
     if(interruptTriggered) {return;} 
 // Cross back to find the blue lane
     ourState->laneFind("blue");
     if(interruptTriggered) {return;}  
-    ourState->LeftColorTurn("blue");
+    ourState->RightColorTurn("blue");
     if(interruptTriggered) {return;} 
 // Follow the blue lane until it senses the wall at the right
     ourWeb->WriteServer("State: Blue");
@@ -282,19 +285,21 @@ void Demo::PartnerDemo2(){
     This tells bot 2 that it is safe to proceed along the yellow lane.
     */
 // Turn right and find the yellow lane
-    ourState->leftState90();
+    ourState->rightState90();
     ourState->laneFind("yellow");
     if(interruptTriggered) {return;} 
-    ourState->LeftColorTurn("yellow");
-        while (partnerCommand != "State: Done") {
+    ourState->Nudge();
+    ourState->RightColorTurn("yellow");
+    while (partnerCommand != "State: Done") {
         partnerCommand = ourWeb->PartnerReadServer();
         delay(1);
+        if(interruptTriggered) {return;}  
     }
     ourState->laneFollow();
     if(interruptTriggered) {return;} 
 // Follow the yellow lane until it senses the wall at the left
 // Turn right and return to the starting position
-    ourState->leftState90();
+    ourState->rightState90();
     ourState->forwardUntilCollision();
     /*
     Bot 2 follows the yellow lane and returns home.  
