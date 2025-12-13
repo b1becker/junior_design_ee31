@@ -39,7 +39,7 @@ public:
     void laneFind(String targetColor);
 
     void collisionDetection();
-
+    void Nudge();
     // methods for solo bot motions
     void States::forwardUntilCollision();
 

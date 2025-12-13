@@ -47,20 +47,12 @@ void interrupt();
 
 // State Definition
 #define STATE_00 100
-#define STATE_0 0
-#define STATE_1 1
-#define STATE_2 2
-#define STATE_3 3
-#define STATE_4 4
-#define STATE_5 5
-#define STATE_6 6
-#define STATE_7 7
-#define STATE_8 8
-#define STATE_9 9
-#define STATE_10 10
-#define STATE_11 11
-#define STATE_12 12
-#define STATE_13 13
+enum State {
+    STATE_0, STATE_1, STATE_2, STATE_3,
+    STATE_4, STATE_5, STATE_6, STATE_7,
+    STATE_8, STATE_9, STATE_10, STATE_11,
+    STATE_12, STATE_13, STATE_14
+};
 
 int currentState = STATE_0;
 
@@ -176,17 +168,19 @@ void loop() {
                     interruptTriggered = false;
                     break;
                 case STATE_10:
-                    my_demo.PartnerDemo();
+                    my_demo.PartnerDemo1();
                     break;
                 case STATE_11:
-                    my_states.laneFollow();
+                    my_demo.PartnerDemo2();
                     break;
                 case STATE_12:
                     my_states.laneFind("red");
                     break;
                 case STATE_13:
                     my_states.forwardUntilCollision();
-            
+                case STATE_14:
+                    my_states.laneFollow();
+                    break;
                 default:
                     my_states.handleErrorState();
                     currentState = 0;

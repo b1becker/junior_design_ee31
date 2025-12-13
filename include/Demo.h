@@ -21,7 +21,8 @@ public:
    void remotePartnerMotions();
    void SoloDemo1();
    void SoloDemo2();
-   void PartnerDemo();
+   void PartnerDemo1();
+   void PartnerDemo2();
 
 private:
     WebSocket *ourWeb;

@@ -7,14 +7,14 @@
 #define TURN_SPEED 200
 #define NEG_TURN_SPEED 100
 
-#define FLSPEED 117
-#define SPEED 117
-#define FRSPEED 145
+#define FLSPEED 92 //0.709% of FR
+#define SPEED 11
+#define FRSPEED 130
 
 #define LSPEED 135
 #define RSPEED 250
 
-#define TURN90 780
+#define TURN90 800
 
 /********** Constructor ********
 *
