@@ -322,15 +322,15 @@ void States::forwardUntilCollision() {
             break;
         }
         
-        handleState1();
+        // handleState1();
         distance = ourCollider->loop(&wallFound);
-        // Serial.println("Distance :" + String(distance));
-        // if (millis() - startTime >= maxDuration) {
-            // ourWeb->WriteServer("Distance :" + String(distance));
-        //     handleState0();  // Stop the robot
-        //     delay(100);  // Brief pause (adjust as needed)
+        
+        if (millis() - startTime >= maxDuration) {
+            Serial.println("Distance :" + String(distance));
+            handleState0();  // Stop the robot
+            delay(100);  // Brief pause (adjust as needed)
             startTime = millis();  // Reset the timer
-        // }
+        }
         // Serial.println("distance: ");
         // Serial.println(distance);
         if(interruptTriggered) {

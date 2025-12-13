@@ -78,22 +78,14 @@ States my_states(&my_Bot, &Server_31, &my_Collider, &myLeftSensor, &myRightSenso
 Demo my_demo(&Server_31, &my_states);
 
 
-/*****************************************************************
-*                  SET ON WHEN SOCKET CONNECTED
-*****************************************************************/
-bool socketOn = true;
 
 void setup() {
     Serial.begin(9600);
-    if (socketOn == false) {
-        Serial.println("Not looking for socket");
-    }
-    if (socketOn) {
-        Server_31.NetworkConnect();
-        Server_31.SocketConnect(clientID);
-        Server_31.PingServer();
-    }
-    
+
+    Server_31.NetworkConnect();
+    Server_31.SocketConnect(clientID);
+    Server_31.PingServer();
+
     // Interrupt Setup
     pinMode(InterruptPin, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(InterruptPin), interrupt, FALLING);
@@ -119,9 +111,7 @@ void setup() {
 }
 
 void loop() {
-
-    while (Server_31.ConnectionStatus() == true or (socketOn == false)) { 
-        if (socketOn == true) {
+    while (Server_31.ConnectionStatus() == true) { 
             message = Server_31.ReadServer();
             if(message != "NULL") {
                 currentState = message.toInt();
@@ -198,12 +188,9 @@ void loop() {
                 delay(1000);
             }
         }       
-    }
-    if (socketOn) {
-        Server_31.NetworkConnect();
-        Server_31.SocketConnect(clientID);
-        Server_31.PingServer();
-    }
+    Server_31.NetworkConnect();
+    Server_31.SocketConnect(clientID);
+    Server_31.PingServer();
 }
 
 void interrupt() {
