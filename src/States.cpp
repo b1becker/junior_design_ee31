@@ -117,8 +117,8 @@ void States::laneFollow() {
     static unsigned long lastSend = 0;
     handleState1();  // Start moving forward
 
-    // while (wallFound != true) {
-    while (true) {
+    while (wallFound != true) {
+    // while (true) {
 
         // Get color readings
         ourRightCS->loop(RightColor, curr_ref_right);
@@ -131,10 +131,7 @@ void States::laneFollow() {
         }
 
         distance = ourCollider->loop(&wallFound);
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        
         handleState1();
         // Lane following logic (runs every loop, not in else-if)
         if (LeftColor != target_color && RightColor == target_color) {
@@ -320,10 +317,10 @@ void States::forwardUntilCollision() {
     const unsigned long maxDuration = 500;  // 2 seconds in milliseconds
 
     while (true) {
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        if (wallFound == true) {
+            handleState0();
+            break;
+        }
         
         handleState1();
         distance = ourCollider->loop(&wallFound);
