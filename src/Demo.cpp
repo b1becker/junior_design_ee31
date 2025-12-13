@@ -260,7 +260,6 @@ void Demo::PartnerDemo2(){
     This tells bot 1 that it is safe to proceed along the yellow lane.  
     Bot 1 sends an acknowledgment signal, which tells bot 2 that it is safe to continue to the start of the yellow lane.
     */
-    ourWeb->WriteServer("Beep!");
 // Cross to the other side
     ourState->forwardUntilCollision();
     if(interruptTriggered) {return;}  
@@ -269,6 +268,7 @@ void Demo::PartnerDemo2(){
     ourState->leftState90();
     if(interruptTriggered) {return;} 
     ourState->leftState90();
+    delay(2500);
     if(interruptTriggered) {return;} 
 // Cross back to find the blue lane
     ourState->laneFind("blue");
