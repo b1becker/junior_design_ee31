@@ -290,11 +290,16 @@ void Demo::PartnerDemo2(){
     if(interruptTriggered) {return;} 
     ourState->Nudge();
     ourState->RightColorTurn("yellow");
+    partnerCommand = ourWeb->PartnerReadServer();
+    ourWeb->WriteServer("Waiting to read finish");
     while (partnerCommand != "State: Done") {
+        // ourWeb->WriteServer("state has finished");
+
         partnerCommand = ourWeb->PartnerReadServer();
         delay(1);
         if(interruptTriggered) {return;}  
     }
+    ourWeb->WriteServer("finishing up lane following");
     ourState->laneFollow();
     if(interruptTriggered) {return;} 
 // Follow the yellow lane until it senses the wall at the left
