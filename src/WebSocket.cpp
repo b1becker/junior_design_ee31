@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
-
 #include "WebSocket.h"
+
 /********** Constructor ********
 *
 * Sets all needed strings to establish connection

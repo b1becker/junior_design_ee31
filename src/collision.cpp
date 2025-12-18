@@ -1,13 +1,16 @@
 #include <Arduino.h>
-#include "collision.h"
+#include "Constants.h"
+#include "Collision.h"
 
-using namespace std;
-
-#define STD_DELAY 1
-#define N_SAMPLES 5
-#define DISTANCE_THRESHOLD 15
-
-
+/********** Constructor ********
+*
+* Sets needed pin values
+*
+* Parameters:
+*      Photodiode pin #
+*      IR LED pin #
+*
+************************/
 collision::collision(int photodiode_pin, int irLED_pin) {
     photodiode = photodiode_pin;
     irLED = irLED_pin;
@@ -15,6 +18,14 @@ collision::collision(int photodiode_pin, int irLED_pin) {
     curr_buffer_index = 0;
 }
 
+/********** Setup ********
+*
+* Initializes needed pin modes and takes a test sample.
+*
+* Parameters:
+*      None
+*
+************************/
 void collision::setup() {
     pinMode(photodiode, INPUT);
     pinMode(irLED, OUTPUT);
@@ -22,28 +33,35 @@ void collision::setup() {
     
     for (int i = 0; i < N_SAMPLES; i++) {
         // irLED low and sample OFF
-        
         digitalWrite(irLED, LOW);
-        delay(STD_DELAY);
+        delay(COLLIDE_DELAY);
         
         
         offBuffer[i] = analogRead(photodiode);
         offAVG += offBuffer[i];
         
         // irLED high and sample ON
-        
         digitalWrite(irLED, HIGH);
-        delay(STD_DELAY);
+        delay(COLLIDE_DELAY);
         
         onBuffer[i] = analogRead(photodiode);
         onAVG += onBuffer[i];
     }
-    
-    // Calculate initial averages
+
     offAVG /= N_SAMPLES;
     onAVG /= N_SAMPLES;
 }
 
+/********** Loop ********
+*
+* Returns the distance detected from the collision sensor to 
+* some object in front of it.
+* Sets a boolean for whether a collision is incoming.
+*
+* Parameters:
+*      Bool* for our wall boolean.
+*
+************************/
 int collision::loop(bool* wall) {
     // Get old values that will be replaced
     int curr_off_buffer = offBuffer[curr_buffer_index];
@@ -51,7 +69,7 @@ int collision::loop(bool* wall) {
     
     // === OFF SAMPLE ===
     digitalWrite(irLED, LOW);
-    delay(STD_DELAY);
+    delay(COLLIDE_DELAY);
     int curr_off_read = analogRead(photodiode);
     
     offBuffer[curr_buffer_index] = curr_off_read;
@@ -62,7 +80,7 @@ int collision::loop(bool* wall) {
     
     // === ON SAMPLE ===
     digitalWrite(irLED, HIGH);
-    delay(STD_DELAY);
+    delay(COLLIDE_DELAY);
     int curr_on_read = analogRead(photodiode);
     
     onBuffer[curr_buffer_index] = curr_on_read;

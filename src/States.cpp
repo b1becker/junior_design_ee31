@@ -2,14 +2,10 @@
 #include <WiFiNINA.h>
 #include "States.h"
 #include "BotMotions.h"
-#include "colorSensing.h"
-#include "collision.h"
+#include "ColorSensing.h"
+#include "Collision.h"
+#include "Constants.h"
 
-extern volatile bool interruptTriggered;
-
-#define StateDelay 50
-
-#define FORWARD_DELAY 50
 
 /********** Constructir ********
 *
@@ -84,119 +80,9 @@ void States::handleState00() {
     ourWeb->WriteServer("Ready to move!");
 }
 
-/********** LaneFollow ********
-*
-* Follow some lane.
-* Follows whatever color it starts on.
-*
-************************/
-void States::laneFollow() {
-    
-    handleState0();
-    Serial.println("follwinguntil collision");
-    delay(FORWARD_DELAY);
-    // ourCollider->setup();
-
-
-    
-    String LeftColor;
-    String RightColor;
-    String myCommand = ourWeb->ReadServer();
-
-    ColorRef curr_ref_right;
-    ColorRef curr_ref_left;
-    bool wallFound = false;
-
-    int distance;
-
-    // distance = ourCollider->loop(&wallFound);
-    // distance = ourCollider->loop(&wallFound);
-    // distance = ourCollider->loop(&wallFound);
-    // distance = ourCollider->loop(&wallFound);
-    // distance = ourCollider->loop(&wallFound);
-    
-    // wallFound = false;
-
-    String target_color;
-    ourRightCS->loop(target_color, curr_ref_right);
-
-    
-
-    handleState1(); 
-
-    // holdds off on collision detection until 4 secs passed
-    static unsigned long four_seconds_buffer = millis();
-
-    while (true) {
-        // Get color readings
-        ourRightCS->loop(RightColor, curr_ref_right);
-        ourLeftCS->loop(LeftColor, curr_ref_left);
-        // ourWeb->WriteServer("Distance :" + String(distance));
-        // if (millis() - four_seconds_buffer > 2500) {      
-            // if (wallFound != true) {
-            //     break;
-            // }
-        // }
-        // distance = ourCollider->loop(&wallFound);
-        
-        handleState1();
-        // Lane following logic (runs every loop, not in else-if)
-        if (LeftColor != target_color && RightColor == target_color) {
-            // Left sensor off line, right on line → turn left
-            handleState3();
-        }
-        else if (RightColor != target_color && LeftColor == target_color) {
-            // Right sensor off line, left on line → turn right
-            handleState4();
-        }
-        else if (LeftColor == target_color && RightColor == target_color) {
-            // Both on line → go straight
-            handleState1();
-        }
-        else {
-            // Both off line → stop or continue last action
-            handleState3();
-        }
-
-        if(myCommand == "Stop") {
-            handleState0();
-            break;
-        }
-        myCommand = ourWeb->ReadServer();
-    }
-    handleState0();
-}
-
-/********** LaneFind ********
-*
-* Runs forawrds till it finds given color.
-*
-* Parameters:
-*      string for color
-************************/
-void States::laneFind(String targetColor) {
-    handleState0();
-    
-    String LeftColor;
-    String RightColor;
-    ColorRef curr_ref_right;
-    ColorRef curr_ref_left;
-    String target_color = targetColor;
-
-    handleState1();
-
-    while (targetColor != RightColor || targetColor != LeftColor) {
-        ourRightCS->loop(RightColor, curr_ref_right);
-        ourLeftCS->loop(LeftColor, curr_ref_left);
-
-        handleState1();
-        delay(1);
-        if(interruptTriggered) {
-            break;
-        }
-    }
-    handleState0();
-}
+/*****************************************************************
+*                  Simple Functions
+*****************************************************************/
 
 /********** State 0 ********
 *
@@ -279,6 +165,138 @@ void States::handleErrorState() {
 
 }
 
+/********** leftState90 ********
+*
+* Bot turns 90 degrees to the left
+*
+************************/ 
+void States::leftState90() {
+    ourBot->left90();
+}
+
+/********** rightState90 ********
+*
+* Bot turns 90 degrees to the right
+*
+************************/ 
+void States::rightState90() {
+    ourBot->right90();
+}
+
+/********** Nudge ********
+*
+* Moves the bot forward a teensy amount
+*
+************************/
+void States::Nudge() {
+    ourBot->forward();
+    delay(500);
+    ourBot->stop();
+}
+
+/********** TimeForward ********
+*
+* Moves the bot forward for a given amount of time.
+*
+* Parameters:
+*      Length of time in ms to move forward for.
+*
+************************/
+void States::TimeForward(int time) {
+    ourBot->forward();
+    delay(time);
+    ourBot->stop();
+}
+
+
+/*****************************************************************
+*                  Complex Functions
+*****************************************************************/
+
+/********** LaneFollow ********
+*
+* Follow some lane.
+* Follows whatever color it starts on.
+*
+************************/
+void States::laneFollow() {
+    
+    handleState0();
+    Serial.println("follwinguntil collision");
+    delay(FORWARD_DELAY);
+    
+    String LeftColor;
+    String RightColor;
+    String myCommand = ourWeb->ReadServer();
+
+    ColorRef curr_ref_right;
+    ColorRef curr_ref_left;
+    bool wallFound = false;
+
+    int distance;
+
+    String target_color;
+    ourRightCS->loop(target_color, curr_ref_right);
+
+    handleState1(); 
+
+    static unsigned long four_seconds_buffer = millis();
+
+    while (true) {
+        ourRightCS->loop(RightColor, curr_ref_right);
+        ourLeftCS->loop(LeftColor, curr_ref_left);
+
+        
+        handleState1();
+
+        if (LeftColor != target_color && RightColor == target_color) {
+            handleState3();
+        }
+        else if (RightColor != target_color && LeftColor == target_color) {
+            handleState4();
+        }
+        else if (LeftColor == target_color && RightColor == target_color) {
+            handleState1();
+        }
+        else {
+            handleState3();
+        }
+
+        if(myCommand == "Stop") {break;}
+        myCommand = ourWeb->ReadServer();
+    }
+    handleState0();
+}
+
+/********** LaneFind ********
+*
+* Runs forawrds till it finds given color.
+*
+* Parameters:
+*      string for color
+************************/
+void States::laneFind(String targetColor) {
+    handleState0();
+    
+    String LeftColor;
+    String RightColor;
+    ColorRef curr_ref_right;
+    ColorRef curr_ref_left;
+    String target_color = targetColor;
+
+    handleState1();
+
+    while (targetColor != RightColor || targetColor != LeftColor) {
+        ourRightCS->loop(RightColor, curr_ref_right);
+        ourLeftCS->loop(LeftColor, curr_ref_left);
+
+        handleState1();
+        delay(1);
+        if(interruptTriggered){break;}
+    }
+    handleState0();
+}
+
 /********** forwardUntilCollision ********
 *
 * Bot goes forward until collison detected
@@ -301,50 +319,21 @@ void States::forwardUntilCollision() {
     const unsigned long maxDuration = 500;
 
     while (true) {
-        // if (wallFound == true) {
-        //     handleState0();
-        //     break;
-        // }
+        if (wallFound == true) {
+            handleState0();
+            break;
+        }
         
         handleState1();
-        // distance = ourCollider->loop(&wallFound);
-        
-        // if (millis() - startTime >= maxDuration) {
-            // ourWeb->WriteServer("Distance :" + String(distance));
-            // delay(100);
-        //     startTime = millis();
-        // }
+        distance = ourCollider->loop(&wallFound);
 
-        if(interruptTriggered) {
-            handleState0();
-            break;
-        }
-        if(message == "Stop") {
-            handleState0();
-            break;
-        }
+
+        if(interruptTriggered){break;}
+        if(message == "Stop") {break;}
         message = ourWeb->ReadServer();
     }
     
     handleState0();
-}
-
-/********** leftState90 ********
-*
-* Bot turns 90 degrees to the left
-*
-************************/ 
-void States::leftState90() {
-    ourBot->left90();
-}
-
-/********** rightState90 ********
-*
-* Bot turns 90 degrees to the right
-*
-************************/ 
-void States::rightState90() {
-    ourBot->right90();
 }
 
 /********** LeftColorTUrn ********
@@ -362,17 +351,14 @@ void States::LeftColorTurn(String targetColor) {
     ColorRef curr_ref_right;
     String target_color = targetColor;
 
-    handleState4();  // Start moving forward
+    handleState4();
 
     while (targetColor != RightColor) {
-        // Get color readings
         ourRightCS->loop(RightColor, curr_ref_right);
 
         handleState4();
         delay(1);
-        if(interruptTriggered) {
-            break;
-        }
+        if(interruptTriggered){break;}
     }
     handleState0();
 }
@@ -394,27 +380,15 @@ void States::RightColorTurn(String targetColor) {
 
     String target_color = targetColor;
 
-    handleState3();  // Start moving forward
+    handleState3();
 
     while (targetColor != RightColor) {
         ourRightCS->loop(RightColor, curr_ref_right);
 
         handleState3();
         delay(1);
-        if(interruptTriggered) {
-            break;
-        }
+        if(interruptTriggered){break;}
     }
     handleState0();
 }
 
-/********** Nudge ********
-*
-* Moves the bot forward a teensy amount
-*
-************************/
-void States::Nudge() {
-    ourBot->forward();
-    delay(600);
-    ourBot->stop();
-}

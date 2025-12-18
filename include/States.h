@@ -5,8 +5,8 @@
 #include <Arduino.h>
 #include "WebSocket.h"
 #include "BotMotions.h"
-#include "colorSensing.h"
-#include "collision.h"
+#include "ColorSensing.h"
+#include "Collision.h"
 
 class States {
 public:
@@ -40,6 +40,7 @@ public:
 
     void collisionDetection();
     void Nudge();
+    void TimeForward(int time);
     // methods for solo bot motions
     void States::forwardUntilCollision();
 

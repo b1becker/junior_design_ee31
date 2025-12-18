@@ -3,8 +3,8 @@
 #include "WebSocket.h"
 #include "BotMotions.h"
 #include "States.h"
-#include "colorSensing.h"
-#include "collision.h"
+#include "ColorSensing.h"
+#include "Collision.h"
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h> 
@@ -16,27 +16,34 @@ void interrupt();
 int currentState = STATE_0;
 
 String clientID = "56FC703ACE1A";
-char serverAddress[] = "10.5.15.148"; //Brian-Hosted Server
-// char serverAddress[] = "10.5.12.14"; //Josh-Hosted Server
+char serverAddress[] = "10.5.12.14";
 
 char ssid[] = "tufts_eecs";
 char password[] = "foundedin1883";
 int port = 80;
-bool zeroEnter = true;
+
 int count = 0;
 String message;
 
+/*****************************************************************
+*                  Object Creation & Initialization
+*****************************************************************/
 WebSocket Server_31(serverAddress, port, ssid, password);
 colorSensing myLeftSensor(RED_LED_PIN, BLUE_LED_PIN, L_Photoresistor_PIN);
 colorSensing myRightSensor(RED_LED_PIN, BLUE_LED_PIN, R_Photoresistor_PIN);
 collision my_Collider(PHOTODIODE_PIN, IR_LED);
 BotMotions my_Bot(MOTOR_A1, MOTOR_A2, MOTOR_B1, MOTOR_B2, ENA, ENB);
-
 States my_states(&my_Bot, &Server_31, &my_Collider, &myLeftSensor, &myRightSensor);
 Demo my_demo(&Server_31, &my_states);
 
-
-
+/********** setup ********
+*
+* Initializes all pins and object setup routines.
+*
+* Parameters:
+*       None.
+*
+************************/
 void setup() {
     Serial.begin(9600);
 
@@ -44,23 +51,19 @@ void setup() {
     Server_31.SocketConnect(clientID);
     Server_31.PingServer();
 
-    // Interrupt Setup
     pinMode(InterruptPin, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(InterruptPin), interrupt, FALLING);
     
-    // Motor Setup
     pinMode(MOTOR_A1, OUTPUT);
     pinMode(MOTOR_A2, OUTPUT);
     pinMode(MOTOR_B1, OUTPUT);
     pinMode(MOTOR_B2, OUTPUT);
     my_Bot.stop();
-    // Set LED pins as outputs
-    // color sensing setup
+
     pinMode(RED_LED_PIN, OUTPUT);
     pinMode(BLUE_LED_PIN, OUTPUT);
     pinMode(L_Photoresistor_PIN, INPUT);
     
-    // Turn off LEDs initially
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(BLUE_LED_PIN, LOW);
     
@@ -68,7 +71,19 @@ void setup() {
 
 }
 
+/********** Loop ********
+*
+* Main loop for our program, contains and handles state-machine
+* that carries out any/all requested subroutines.
+*
+* Parameters:
+*      None.
+*
+* Notes:
+*      If not connected to websocket, most functionality is gone.
+************************/
 void loop() {
+    bool zeroEnter = true;
     while (Server_31.ConnectionStatus() == true) { 
             message = Server_31.ReadServer();
             if(message != "NULL") {
@@ -151,6 +166,11 @@ void loop() {
     Server_31.PingServer();
 }
 
+/********** Interrupt ********
+*
+* Function to run when an interrupt is detected.
+*
+************************/
 void interrupt() {
   interruptTriggered = !interruptTriggered;
 }

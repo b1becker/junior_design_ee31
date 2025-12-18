@@ -2,10 +2,16 @@
 #define CONSTANTS_H
 
 
+
 /*****************************************************************
 *                  Interrupt Pin
 *****************************************************************/
 #define InterruptPin 13
+extern volatile bool interruptTriggered;
+#define InterruptReturn() \
+    do {                        \
+        if (interruptTriggered) return; \
+    } while (0)
 
 
 /*****************************************************************
@@ -43,5 +49,49 @@ enum State {
     STATE_8, STATE_9, STATE_10, STATE_11,
     STATE_12, STATE_13, STATE_14
 };
+#define StateDelay 50
+#define FORWARD_DELAY 50
+
+/*****************************************************************
+*                  Demo Definitions
+*****************************************************************/
+#define Running true
+#define Complete false
+#define DEMO_DELAY 1000
+
+
+/*****************************************************************
+*                  BotMotions Definitions
+*****************************************************************/
+#define MOTION_DELAY 1700
+#define TURN_DELAY 1124 / 8
+#define TURN_SPEED 200
+#define NEG_TURN_SPEED 100
+#define FLSPEED 114
+#define FRSPEED 155
+#define TURN90 820
+
+/*****************************************************************
+*                  Collison Definitions
+*****************************************************************/
+#define COLLIDE_DELAY 1
+#define N_SAMPLES 5
+#define DISTANCE_THRESHOLD 15
+
+/*****************************************************************
+*                  Color Sensing Definitions
+*****************************************************************/
+#define Black 0
+#define Red 1
+#define Blue 2
+#define Yellow 3
+#define COLOR_DELAY 5
+#define BUFFER_SIZE 5
+#define SAMPLE_SIZE 50
+#define BLACK_RATIO 0.53
+#define RED_RATIO 0.51
+#define BLUE_RATIO 0.65
+#define YELLOW_RATIO 0.45
+#define TOLERANCE 15000
 
 #endif
